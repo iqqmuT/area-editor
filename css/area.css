@@ -1,0 +1,54 @@
+html { height: 100% }
+body {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  font-size: 10px;
+}
+#map_canvas { height: 100% }
+.infowindow {
+  font-family: Arial,sans-serif;
+  font-size: 12px;
+}
+.infowindow .field {
+  font-size: 12px;
+  font-family: Arial,sans-serif;
+  width: 200px;
+}
+.infowindow .area {
+  font-size: 12px;
+  font-family: Arial,sans-serif;
+  width: 200px;
+  height: 50px;
+}
+
+/* for file dialog */
+#file_dialog {
+  font-family: Arial,sans-serif;
+  font-size: 12px;
+}
+.file_column {
+  float: left;
+  width: 270px;
+}
+.file_column h1 {
+  margin: 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  background-color: #222;
+  padding: 4px;
+}
+#file_import_column {
+  border-right: 1px solid #ccc;
+  padding-right: 10px;
+}
+#file_export_column {
+  padding-left: 10px;
+}
+.ui-dialog-titlebar {
+  font-size: 14px;
+}
+.file_menu_item:hover {
+  background-color: #eeeeee;
+}
