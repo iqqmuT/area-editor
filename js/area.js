@@ -39,7 +39,8 @@ function initialize() {
 	tileSize: new google.maps.Size(256, 256),
 	isPng: true,
 	alt: "OpenStreetMap layer",
-	name: "OpenStreetMap"
+	name: "OSM",
+	maxZoom: 19
   });
 
   //var latlng = new google.maps.LatLng(-0.320662, -78.517540);
@@ -47,15 +48,19 @@ function initialize() {
   var mapOptions = {
     zoom: 3,
     center: latlng,
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    disableDefaultUI: false
-    //mapTypeControl: false
+    mapTypeId: 'OSM',
+    mapTypeControlOptions: {
+      mapTypeIds: ['OSM', google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID,
+        google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.TERRAIN ],
+      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+    },
+    disableDefaultUI: false,
   };
   map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-  map.overlayMapTypes.insertAt(0, osm_map_type);
-  // following line is commented out so we can see controls
-  //map.setMapTypeId('OpenStreetMap');
 
+  // set OpenStreetMap map type as default  
+  map.mapTypes.set('OSM', osm_map_type);
+  map.setMapTypeId('OSM');
 
   // create the div to hold our custom controls
   var $control_div = $("<div></div>");
@@ -131,15 +136,17 @@ function MenuControl() {
 	    'background-color': 'white',
 	    'border': '2px solid black'
   });
-  var $file_ui = $('<div id="file_button" style="padding-left: 30px"><span style="float:left">Menu</span><span id="file_button_icon" class="ui-icon ui-icon-triangle-1-s" style="float: left;"></span><div style="clear:both"></div></div>');
+  var $file_ui = $('<div id="file_button" style="padding-left: 30px" title="Click to open / close menu"><span style="float:left">Menu</span><span id="file_button_icon" class="ui-icon ui-icon-triangle-1-s" style="float: left;"></span><div style="clear:both"></div></div>');
   $div.append($file_ui);
   $menu_div = $('<div id="file_menu"></div>');
   $menu_div.css({ 'display': 'none' });
   $div.append($menu_div);
-  var $open_file_ui = $('<div id="open_file_button" class="file_menu_item">Open file...</div>');
+  var $open_file_ui = $('<div id="open_file_button" class="file_menu_item" title="Import data from file">Open file...</div>');
   $menu_div.append($open_file_ui);
-  var $save_file_ui = $('<div id="save_file_button" class="file_menu_item">Save file...</div>');
+  var $save_file_ui = $('<div id="save_file_button" class="file_menu_item" title="Export data into file">Save file...</div>');
   $menu_div.append($save_file_ui);
+  //var $print_ui = $('<div id="print_button" class="file_menu_item">Print</div>');
+  //$menu_div.append($print_ui);
   var $help_ui = $('<div id="help_button" class="file_menu_item">Help</div>');
   $menu_div.append($help_ui);
   
@@ -159,6 +166,9 @@ function MenuControl() {
   $save_file_ui.click(function() {
     $("#file_save_dialog").dialog('open');
   });
+  //$print_ui.click(function() {
+  //  openPrintablePage();
+  //});
   $help_ui.click(function() {
     $("#help_dialog").dialog('open');
   });
@@ -178,7 +188,7 @@ function AreaControl($div, visible, editable) {
   var css_visible = { 'opacity': '1' };
   var css_invisible = { 'opacity': '0.1' };
 
-  var $ui = $("<div>Area</div>");
+  var $ui = $('<div title="Click to edit layer">Area</div>');
   $ui.css({ 'cursor': 'pointer',
 	    'width': '95px',
             'font-family': 'Arial,sans-serif',
@@ -194,7 +204,7 @@ function AreaControl($div, visible, editable) {
   }
   $div.append($ui);
   
-  var $visible_ui = $('<div><img src="images/stock-eye-20.png" alt="x" style="margin-top: 3px" /></div>');
+  var $visible_ui = $('<div title="Click to toggle visiblity"><img src="images/stock-eye-20.png" alt="x" style="margin-top: 3px" /></div>');
   $visible_ui.css({ 'float': 'left',
                     'padding-left': '4px',
 		    'padding-right': '4px' });
@@ -254,7 +264,7 @@ function PoiControl($div, visible, editable) {
   var css_visible = { 'opacity': '1' };
   var css_invisible = { 'opacity': '0.1' };
 
-  var $ui = $("<div>POI</div>");
+  var $ui = $('<div title="Click to edit layer">POI</div>');
   $ui.css({ 'cursor': 'pointer',
 	    'width': '95px',
             'font-family': 'Arial,sans-serif',
@@ -270,7 +280,7 @@ function PoiControl($div, visible, editable) {
   }
   $div.append($ui);
   
-  var $visible_ui = $('<div><img src="images/stock-eye-20.png" alt="x" style="margin-top: 3px" /></div>');
+  var $visible_ui = $('<div title="Click to toggle visibility"><img src="images/stock-eye-20.png" alt="x" style="margin-top: 3px" /></div>');
   $visible_ui.css({ 'float': 'left',
                     'padding-left': '4px',
 		    'padding-right': '4px' });
