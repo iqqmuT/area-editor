@@ -52,7 +52,7 @@ function initialize() {
     mapTypeControlOptions: {
       mapTypeIds: ['OSM', google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID,
         google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.TERRAIN ],
-      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+      style: google.maps.MapTypeControlStyle.DEFAULT
     },
     disableDefaultUI: false,
   };
@@ -145,8 +145,8 @@ function MenuControl() {
   $menu_div.append($open_file_ui);
   var $save_file_ui = $('<div id="save_file_button" class="file_menu_item" title="Export data into file">Save file...</div>');
   $menu_div.append($save_file_ui);
-  //var $print_ui = $('<div id="print_button" class="file_menu_item">Print</div>');
-  //$menu_div.append($print_ui);
+  var $print_ui = $('<div id="print_button" class="file_menu_item">Print</div>');
+  $menu_div.append($print_ui);
   var $help_ui = $('<div id="help_button" class="file_menu_item">Help</div>');
   $menu_div.append($help_ui);
   
@@ -166,9 +166,9 @@ function MenuControl() {
   $save_file_ui.click(function() {
     $("#file_save_dialog").dialog('open');
   });
-  //$print_ui.click(function() {
-  //  openPrintablePage();
-  //});
+  $print_ui.click(function() {
+    openPrintablePage();
+  });
   $help_ui.click(function() {
     $("#help_dialog").dialog('open');
   });
@@ -327,6 +327,13 @@ function PoiControl($div, visible, editable) {
   };
 }
 
+function openPrintablePage() {
+  var $print_form = $('<form target="print_window" action="print.php" method="post"><input type="hidden" name="foo" value="bar" /></form>');
+  $print_form.append('<input type="hidden" name="map-type" value="' + map.getMapTypeId() + '" />');
+  $("body").append($print_form);
+  var printable_page = window.open('about:blank', 'print_window', "status=1,toolbar=1,location=1,scrollbars=1,menubar=1,width=900,height=700");
+  $print_form.submit().remove();
+}
 
 function determineKey(e) {
   e = e || window.event;
