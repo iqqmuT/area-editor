@@ -438,9 +438,11 @@ function fitBounds() {
   if (areas.areas.length) {
     bounds.union(areas.getBounds());
   }
+  console.log(bounds);
   if (pois.pois.length) {
     bounds.union(pois.getBounds());
   }
+  console.log(bounds, pois.getBounds());
   if (!bounds.isEmpty()) {
     map.fitBounds(bounds);
   }
@@ -485,11 +487,13 @@ function PoiManager() {
     var poi = new Poi(this.get_new_id(), '', '', '', latLng);
     this.add(poi);
     poi.show();
+    poi.showInfoWindow();
   };
 
   this.get_new_id = function() {
     var time = new Date();
-    return "-" + time.getTime();
+    var new_id = "" + time.getTime();
+    return "-" + new_id.substring(new_id.length - 8);
   };
 
   // returns POI with given id or null
@@ -553,7 +557,7 @@ function PoiManager() {
   this.getBounds = function() {
     var bounds = new google.maps.LatLngBounds();
     for (var i in this.pois) {
-      bounds.extend(this.pois[i].latLng);
+      bounds.extend(this.pois[i].marker.getPosition());
     }
     return bounds;
   };
@@ -571,57 +575,52 @@ function PoiManager() {
 
 function Poi(id, address, name, notes, latLng) {
   this.id = id;
-  this.latLng = latLng;
+  //this.latLng = latLng;
   this.address = address;
   this.name = name;
   this.notes = notes;
-  this.marker;
   this.changed = false;
   var poi = this;
-  
+  this.marker = new google.maps.Marker({
+        position: latLng,
+        map: map,
+        draggable: true,
+        title: 'Click to see details'
+      });
+
+  // marker drag functionality
+  google.maps.event.addListener(poi.marker, 'drag', function(event) {
+    // normally drag marker for all areas linked here
+    poi.marker.setPosition(event.latLng);
+  });
+    
+  /*google.maps.event.addListener(marker, 'dragend', function(event) {
+    this.latLng = event.latLng;
+    poi.changed = true;
+  });*/
+      
+  google.maps.event.addListener(poi.marker, 'click', function(event) {
+    if (poi_control.editable) {
+      if (shift_is_down) {
+        if (confirm("Are you sure you want to delete this POI?")) {
+	  console.log('remove this POI');
+	  pois.remove(poi);
+	}
+	event.preventDefault(); 
+      } else {
+        poi.showInfoWindow();
+      }
+    }
+  });
+
   // create a marker for this
   this.show = function() {
-    console.log("Poi.showMarker ", this.latLng);
+    console.log("Poi.showMarker");
     if (this.marker) {
       // marker already created, just show it again
       this.marker.setMap(map);
     }
     else {
-      // first time when we create a marker for this
-      var marker = new google.maps.Marker({
-        position: this.latLng,
-        map: map,
-        draggable: true,
-        //icon: 'http://google-maps-icons.googlecode.com/files/factory.png',
-        title: 'Click to see details'
-      });
-
-      // marker drag functionality
-      google.maps.event.addListener(marker, 'drag', function(event) {
-        // normally drag marker for all areas linked here
-        marker.setPosition(event.latLng);
-      });
-    
-      google.maps.event.addListener(marker, 'dragend', function(event) {
-        this.latLng = event.latLng;
-	poi.changed = true;
-      });
-      
-      google.maps.event.addListener(marker, 'click', function(event) {
-        if (poi_control.editable) {
-          if (shift_is_down) {
-  	    if (confirm("Are you sure you want to delete this POI?")) {
-	      console.log('remove this POI');
-  	      pois.remove(poi);
-	    }
-  	    event.preventDefault(); 
-	  } else {
-	    poi.showInfoWindow();
-  	  }
-	}
-      });
-      
-      this.marker = marker;
     }
   };
 
@@ -644,9 +643,13 @@ function Poi(id, address, name, notes, latLng) {
       '</table></form></div>';
     info_window.setOptions({
       content: contentString,
-      position: poi.latLng
+      position: poi.marker.getPosition()
     });
     info_window.open(map);
+    // move keyboard focus to the textarea when it's ready
+    google.maps.event.addListener(info_window, 'domready', function() {
+      $("#poi_notes").focus();
+    });
   };
   
   this.belongsTo = function() {
@@ -659,7 +662,7 @@ function Poi(id, address, name, notes, latLng) {
     json += '"address":"' + encodeJSON(this.address) + '",';
     json += '"name":"' + encodeJSON(this.name) + '",';
     json += '"notes":"' + encodeJSON(this.notes) + '",';
-    json += '"latLng":' + this.latLng.toJSON() + '';
+    json += '"latLng":' + this.marker.getPosition().toJSON() + '';
     json += '}';
     console.log("export pois: ", json);
     return json;
@@ -856,9 +859,8 @@ function AreaManager() {
   
   this.get_new_id = function() {
     var time = new Date();
-    return "-" + time.getTime();
-    //var new_id = "new" + this.new_id++;
-    //return new_id;
+    var new_id = "" + time.getTime();
+    return "-" + new_id.substring(new_id.length - 8);
   };
 
   // this function is called when user clicks Save on AreaInfoWindow
@@ -1016,9 +1018,6 @@ function Area(id, number, name, path) {
       if (shift_is_down) {
         console.log("CREATE NEW POI");
 	pois.create(event.latLng);
-        //var poi = new Poi(pois.get_new_id(), '', event.latLng);
-        //pois.add(poi);
-        //poi.show();
       }
     }
   };
@@ -1093,6 +1092,10 @@ function Area(id, number, name, path) {
       position: bounds.getCenter()
     });
     info_window.open(map);
+    // move keyboard focus to the info window when it's ready
+    google.maps.event.addListener(info_window, 'domready', function() {
+      $("#area_number").focus();
+    });
   };
 
   // serialize this area to JSON, for posting to server

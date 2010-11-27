@@ -90,15 +90,18 @@ class OSMExport extends ExportBase {
 	        $newnode->setAttribute("lat", $poi->latLng[0]);
 	        $newnode->setAttribute("lon", $poi->latLng[1]);
 	  
-    	        if (isset($poi->address) && strcmp($poi->address, 'undefined')) {
+    	        if (isset($poi->address) && strlen($poi->address) && strcmp($poi->address, 'undefined')) {
 	            $this->addTag($newnode, "address", $poi->address);
 	        }
-	        if (isset($poi->name) && strcmp($poi->name, 'undefined')) {
+	        if (isset($poi->name) && strlen($poi->name) && strcmp($poi->name, 'undefined')) {
 	            $this->addTag($newnode, "name", $poi->name);
 	        }
-	        if (isset($poi->notes) && strcmp($poi->notes, 'undefined')) {
-	            $this->addTag($newnode, "visit", $poi->notes);
-    	        }
+		// we have to add visit tag or else we can't know this is POI
+		$value = "";
+	        if (isset($poi->notes) && strlen($poi->notes) && strcmp($poi->notes, 'undefined')) {
+		    $value = $poi->notes;
+		}
+		$this->addTag($newnode, "visit", $value);
 	    }
 	}
     }
@@ -186,7 +189,8 @@ class OSMExport extends ExportBase {
     
     function getNewNodeId() {
         $this->id_counter = $this->id_counter + 1;
-        return "-" . strftime("%s") . $this->id_counter;
+	$seconds = substr(strftime("%s"), 0, 8);
+        return "-" . $seconds . $this->id_counter;
     }
     
     function genFilename() {
