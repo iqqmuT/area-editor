@@ -27,7 +27,7 @@ echo count($areas);
 die();*/
 
 // download output as file
-$export->as_file();
+$export->asFile();
 exit;
 
 // EXPORT CLASSES
@@ -40,7 +40,6 @@ class ExportBase {
         $this->pois = $pois;
 	$this->areas = $areas;
     }
-    
 }
 
 // OSM Exporter 
@@ -69,7 +68,7 @@ class OSMExport extends ExportBase {
         return $this->dom->saveXML();
     }
     
-    function as_file() {
+    function asFile() {
         $output = $this->output();
         $filename = $this->genFilename();
         header("Content-Type: text/xml");

@@ -327,10 +327,26 @@ function PoiControl($div, visible, editable) {
   };
 }
 
+// creates a temporary form, opens a new window and submits needed data to new page
 function openPrintablePage() {
   var $print_form = $('<form target="print_window" action="print.php" method="post"><input type="hidden" name="foo" value="bar" /></form>');
   $print_form.append('<input type="hidden" name="map-type" value="' + map.getMapTypeId() + '" />');
+  var center = map.getCenter();
+  $print_form.append('<input type="hidden" name="map-center" value="' + center.lat() + ',' + center.lng() + '" />');
+  $print_form.append('<input type="hidden" name="map-zoom" value="' + map.getZoom() + '" />');
+  $print_form.append('<input type="textarea" name="areas" id="print_areas_json" style="display:none"></textarea>');
+  $print_form.append('<input type="textarea" name="pois" id="print_pois_json" style="display:none"></textarea>');
   $("body").append($print_form);
+  
+  if (areas.active_area) {
+    // let's print only the active area and POIs inside it
+    $("#print_areas_json").val(arrayToJSON([ areas.active_area ]));
+    $("#print_pois_json").val(arrayToJSON(areas.active_area.getPOIs()));
+  } else {
+    // let's print everything
+    $("#print_areas_json").val(areas.toJSON());
+    $("#print_pois_json").val(pois.toJSON());
+  }
   var printable_page = window.open('about:blank', 'print_window', "status=1,toolbar=1,location=1,scrollbars=1,menubar=1,width=900,height=700");
   $print_form.submit().remove();
 }
@@ -415,6 +431,20 @@ function encodeJSON(str) {
   encoded = encoded.replace(/\"/g, "\\\"");
   //encoded = encoded.replace(/\'/g, "\\\'");
   return encoded;
+}
+
+// very simple function to create JSON array
+// element of array must have method .toJSON()
+function arrayToJSON(arr) {
+  var json = "[";
+  for (var i in arr) {
+    if (i > 0) {
+      json += ",";
+    }
+    json += arr[i].toJSON();
+  }
+  json += "]";
+  return json;
 }
 
 function importData(data) {
@@ -531,15 +561,7 @@ function PoiManager() {
   
   // serialize all POIs to JSON
   this.toJSON = function() {
-    var json = "[";
-    for (var i in this.pois) {
-      if (i > 0) {
-        json += ",";
-      }
-      json += this.pois[i].toJSON();
-    }
-    json += "]";
-    return json;
+    return arrayToJSON(this.pois);
   };
   
   // import POIs from JSON data
@@ -561,7 +583,7 @@ function PoiManager() {
   this.getBounds = function() {
     var bounds = new google.maps.LatLngBounds();
     for (var i in this.pois) {
-      bounds.extend(this.pois[i].marker.getPosition());
+      bounds.extend(this.pois[i].getPosition());
     }
     return bounds;
   };
@@ -647,13 +669,17 @@ function Poi(id, address, name, notes, latLng) {
       '</table></form></div>';
     info_window.setOptions({
       content: contentString,
-      position: poi.marker.getPosition()
+      position: poi.getPosition()
     });
     info_window.open(map);
     // move keyboard focus to the textarea when it's ready
     google.maps.event.addListener(info_window, 'domready', function() {
       $("#poi_notes").focus();
     });
+  };
+  
+  this.getPosition = function() {
+    return this.marker.getPosition();
   };
   
   this.belongsTo = function() {
@@ -666,7 +692,7 @@ function Poi(id, address, name, notes, latLng) {
     json += '"address":"' + encodeJSON(this.address) + '",';
     json += '"name":"' + encodeJSON(this.name) + '",';
     json += '"notes":"' + encodeJSON(this.notes) + '",';
-    json += '"latLng":' + this.marker.getPosition().toJSON() + '';
+    json += '"latLng":' + this.getPosition().toJSON() + '';
     json += '}';
     console.log("export pois: ", json);
     return json;
@@ -907,16 +933,7 @@ function AreaManager() {
 
   // serialize all areas to JSON, this is for sending areas to server
   this.toJSON = function() {
-    var json = "[";
-    for (var i in this.areas) {
-      if (i > 0) {
-        json += ",";
-      }
-      json += this.areas[i].toJSON();
-    }
-    json += "]";
-    console.log("export areas: ", json);
-    return json;
+    return arrayToJSON(this.areas);
   };
 
   // import areas from JSON data
@@ -1123,6 +1140,18 @@ function Area(id, number, name, path) {
     json += ']';
     json += '}';
     return json;
+  };
+  
+  // return array of POIs that are inside the area
+  this.getPOIs = function() {
+    var area_pois = [];
+    for (var i in pois.pois) {
+      var poi = pois.pois[i];
+      if (this.polygon.containsLatLng(poi.getPosition())) {
+        area_pois.push(poi);
+      }
+    }
+    return area_pois;
   };
 
   // private functions

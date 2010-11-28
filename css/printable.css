@@ -1,3 +1,32 @@
 body {
   font-size: 10px;
 }
+
+.map {
+  border: 1px solid #909090;
+}
+
+ol.poi-list {
+  /*padding: 0px;*/
+  font-size: 16px;
+  color: #aaa;
+  margin: 0px;
+  margin-top: 10px;
+  padding: 0px;
+}
+
+.poi-list li {
+  float: left;
+  margin-left: 30px;
+  margin-right: 30px;
+  padding-left: 0px;
+}
+
+.poi-list li p {
+  color: black;
+  font-size: 10px;
+  width: 150px;
+  height: 40px;
+  background-color: #eeeeee;
+}
+
