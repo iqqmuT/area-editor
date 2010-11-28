@@ -29,7 +29,7 @@ else {
   </head>
   <body>
     <?php print $map->generate(); ?>
-    <?php print show_poi_details($pois); ?>
+    <?php print $map->show_poi_details($pois); ?>
   </body>
 </html>
 
@@ -53,9 +53,30 @@ class OSMMap extends MapBase {
     public function generate() {
         return 'no osm map support';
     }
+    public function show_poi_details($pois) {
+	$output = "";
+	if (count($pois)) {
+	    $i = 0;
+	    $output .= '<ul class="poi-list">';
+	    foreach ($pois as $poi) {
+                $label = $this->labels[$i];
+		$i = $i + 1;
+	        if ($i == count($this->labels)) { $i = 0; }
+	        $output .= "<li><p>";
+	        //$output .= $i . ": ";
+	        $output .= str_replace("\n", "<br/>", $poi->notes);
+	        $output .= "</p></li>";
+           }
+	   $output .= '</ul>';
+        }
+        return $output;
+    }
 }
 
 class GoogleMap extends MapBase {
+    // static google map api support only single character label
+    public $labels = array('1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z');
+
     public function generate() {
 	$this->output .= '<img class="map" src="http://maps.google.com/maps/api/staticmap?size=' . $this->width . 'x' . $this->height;
 	$this->output .= '&center=' . $this->center;
@@ -68,10 +89,12 @@ class GoogleMap extends MapBase {
     
     public function handlePOIs() {
         if (count($this->pois)) {
-	    $label = 0;
+	    $i = 0;
 	    foreach ($this->pois as $poi) {
 	        $color = "red";
-		$label = $label + 1;
+		$label = $this->labels[$i];
+		$i = $i + 1;
+		if ($i > count($this->labels)) { $i = 0; }
 		$position = $poi->latLng[0] . "," . $poi->latLng[1];
 		$this->output .= "&markers=color:$color|label:$label|" . $position; 
 	    }
@@ -97,23 +120,26 @@ class GoogleMap extends MapBase {
 	    }
 	}
     }
+
+    public function show_poi_details($pois) {
+	$output = "";
+	if (count($pois)) {
+	    $i = 0;
+	    $output .= '<ul class="poi-list">';
+	    foreach ($pois as $poi) {
+                $label = $this->labels[$i];
+		$i = $i + 1;
+	        if ($i == count($this->labels)) { $i = 0; }
+	        $output .= '<li><span class="label">';
+		$output .= $label . ":</span> ";
+	        $output .= str_replace("\n", "<br/>", $poi->notes);
+	        $output .= "</li>";
+           }
+	   $output .= '</ul>';
+        }
+        return $output;
+    }
 }
 
-function show_poi_details($pois) {
-    $output = "";
-    if (count($pois)) {
-        $i = 0;
-        $output .= '<ol class="poi-list">';
-	foreach ($pois as $poi) {
-	     $i++;
-	     $output .= "<li><p>";
-	     //$output .= $i . ": ";
-	     $output .= str_replace("\n", "<br/>", $poi->notes);
-	     $output .= "</p></li>";
-        }
-	$output .= '</ol>';
-    }
-    return $output;
-}
 
 ?>
