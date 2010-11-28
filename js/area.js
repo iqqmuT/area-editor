@@ -453,6 +453,10 @@ function PoiManager() {
   this.new_id = 1;
   
   this.add = function(poi) {
+    if (this.find_by_id(poi.id)) {
+      console.log("id " + poi.id + " is reserved, generating a new id for POI");
+      poi.id = this.get_new_id();
+    }
     this.pois.push(poi);
   };
 
@@ -824,6 +828,10 @@ function AreaManager() {
   this.new_id = 1;
   
   this.add = function(area) {
+    if (this.find_by_id(area.id)) {
+      console.log("id " + area.id + " is reserved, generating a new id for area");
+      area.id = this.get_new_id();
+    }
     this.areas.push(area);
   };
   

@@ -44,6 +44,8 @@ class ExportBase {
 }
 
 // OSM Exporter 
+//
+// Id's for nodes and ways will be re-generated
 class OSMExport extends ExportBase {
     private $minLat, $minLng, $maxLat, $maxLng;
     private $dom, $parnode;
@@ -84,7 +86,8 @@ class OSMExport extends ExportBase {
 	    foreach ($this->pois as $poi) {
 	        $node = $this->dom->createElement("node");
   	        $newnode = $this->parnode->appendChild($node);
-	        $newnode->setAttribute("id", $poi->id);
+	        //$newnode->setAttribute("id", $poi->id);
+	        $newnode->setAttribute("id", $this->getNewNodeId());
 	        $newnode->setAttribute("visible", "true");
 	        $newnode->setAttribute("timestamp", $this->getTimestamp());
 	        $newnode->setAttribute("lat", $poi->latLng[0]);
@@ -140,7 +143,8 @@ class OSMExport extends ExportBase {
 	            $node = $this->dom->createElement("way");
   	            $newnode = $this->parnode->appendChild($node);
 		    $newnode->setAttribute("timestamp", $this->getTimestamp());
-	            $newnode->setAttribute("id", $area->id);
+	            //$newnode->setAttribute("id", $area->id);
+	            $newnode->setAttribute("id", $this->getNewNodeId());
 	            $newnode->setAttribute("visible", "true");
 	            $newnode->setAttribute("timestamp", $this->getTimestamp());
 	            if (isset($area->name) && strcmp($area->name, 'undefined')) {
@@ -189,12 +193,14 @@ class OSMExport extends ExportBase {
     
     function getNewNodeId() {
         $this->id_counter = $this->id_counter + 1;
-	$seconds = substr(strftime("%s"), 0, 8);
-        return "-" . $seconds . $this->id_counter;
+	return "-" . $this->id_counter;
+	//$seconds = strftime("%s");
+	//$seconds = substr($seconds, strlen($seconds) - 8);
+        //return "-" . $seconds . $this->id_counter;
     }
     
     function genFilename() {
-        return strftime("%Y-%m-%d_%H%M%S.osm");	// '2010-10-28T18:06:03Z'
+        return strftime("area_%Y-%m-%d_%H%M%S.osm");	// 'area_2010-10-28180603.osm'
     }
 }
 
