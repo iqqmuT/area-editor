@@ -1,0 +1,197 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/14469/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules
+END
+svgG.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/svgG.js
+END
+ruleFile.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/!svn/ver/14469/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/ruleFile.js
+END
+selectorRule.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/!svn/ver/14224/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/selectorRule.js
+END
+_svgFeature.js
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/!svn/ver/14093/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/_svgFeature.js
+END
+Tag.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/Tag.js
+END
+svgPath.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/svgPath.js
+END
+svgRect.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/svgRect.js
+END
+Directive.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/Directive.js
+END
+renderingInstruction.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/renderingInstruction.js
+END
+Line.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/Line.js
+END
+svgPattern.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/svgPattern.js
+END
+Caption.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/Caption.js
+END
+_svgDirective.js
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/_svgDirective.js
+END
+pathText.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/!svn/ver/14224/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/pathText.js
+END
+ruleFileAttr.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/!svn/ver/14224/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/ruleFileAttr.js
+END
+Symbol.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/Symbol.js
+END
+xmlText.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/!svn/ver/14093/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/xmlText.js
+END
+xslProcessingInstruction.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/!svn/ver/14093/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/xslProcessingInstruction.js
+END
+Rule.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/!svn/ver/14224/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/Rule.js
+END
+Area.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/Area.js
+END
+includeSection.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/!svn/ver/14224/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/includeSection.js
+END
+cssSection.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/!svn/ver/14224/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/cssSection.js
+END
+rulesSection.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/rulesSection.js
+END
+xmlComment.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/!svn/ver/14093/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/xmlComment.js
+END
+svgSymbol.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/svgSymbol.js
+END
+ruleFileMemberFactory.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/!svn/ver/14093/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/ruleFileMemberFactory.js
+END
+Else.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/Else.js
+END
+cmyk.rules.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/cmyk.rules.js
+END
+ruleFileMember.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/ruleFileMember.js
+END
+Circle.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/Circle.js
+END
+svgMarker.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/!svn/ver/14216/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/svgMarker.js
+END
+wayMarker.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/!svn/ver/14224/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/rules/wayMarker.js
+END

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/21672/applications/rendering/osmarender/orp
+END
+project.pm
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/20620/applications/rendering/osmarender/orp/project.pm
+END
+orp-bobkare-area-center.pm
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/!svn/ver/11123/applications/rendering/osmarender/orp/orp-bobkare-area-center.pm
+END
+SAXOsmHandler.pm
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/13669/applications/rendering/osmarender/orp/SAXOsmHandler.pm
+END
+cclogo.svg
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/11123/applications/rendering/osmarender/orp/cclogo.svg
+END
+orp-drawing.pm
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/21672/applications/rendering/osmarender/orp/orp-drawing.pm
+END
+orp-sax.pm
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/11123/applications/rendering/osmarender/orp/orp-sax.pm
+END
+orp-bbox-area-center.pm
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/20641/applications/rendering/osmarender/orp/orp-bbox-area-center.pm
+END
+orp-select.pm
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/14383/applications/rendering/osmarender/orp/orp-select.pm
+END
+orp.pl
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/21629/applications/rendering/osmarender/orp/orp.pl
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/11123/applications/rendering/osmarender/orp/README
+END

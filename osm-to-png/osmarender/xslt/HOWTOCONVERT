@@ -1,0 +1,9 @@
+#from http://wiki.openstreetmap.org/wiki/Osmarender/Howto
+#
+# The map data M.U.S.T. be named data.osm
+
+#  xsltproc osmarender.xsl osm-map-features-z17.xml > map.svg
+
+cd `dirname $0`
+#xsltproc osmarender.xsl osm-map-features-z17.xml > $1
+xsltproc osmarender.xsl terriz17.xml > $1

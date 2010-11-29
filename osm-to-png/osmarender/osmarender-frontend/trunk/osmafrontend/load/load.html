@@ -1,0 +1,72 @@
+<div>
+	<style type="text/css">
+		.loadTabContainer {
+			height: 100%;
+			width: 100%;
+		}
+		.loadPresetFile {
+			height: 100%;
+		}
+		.loadLocalFile {
+			height: 100%;
+		}
+		.loadFromUrl {
+			height: 100%;
+		}
+		.bold {
+			font-weight: bold;
+		}
+	</style>
+	<div dojoType="dijit.layout.TabContainer" dojoAttachPoint="load_tab_container" class="loadTabContainer">
+		<div dojoType="osmafrontend.load.preset" title="{{ _nls.loadPresetFile }}" selected="true" class="loadPresetFile"></div>
+		<div dojoType="osmafrontend.load.local" title="{{ _nls.loadLocalFile }}" class="loadLocalFile"></div>
+		<div dojoType="osmafrontend.load.url" title="{{ _nls.loadFromUrl }}" class="loadFromUrl"></div>
+<!--		</div>
+		<div id="load_custom" title="Load a custom file" dojoType="dijit.layout.ContentPane">
+			<br />
+			Data File: 
+			<input id="data_file_name_custom" type="text" dojoType="dijit.form.TextBox" onKeyup="this.handleLoadPreset(dojo.byId('rule_file_name_custom').value,dojo.byId('data_file_name_custom').value)" />
+			<br />
+			Rule File: 
+			<input id="rule_file_name_custom" type="text" dojoType="dijit.form.TextBox" onKeyup="this.handleLoadPreset(dojo.byId('rule_file_name_custom').value,dojo.byId('data_file_name_custom').value)" />
+			<br /><br />
+			<script type="dojo/method" event="onShow">
+				this.handleLoadPreset(dojo.byId("rule_file_name_custom").value,dojo.byId("data_file_name_custom").value);
+			</script>
+		</div>
+		<div id="load_url" title="Load URL" dojoType="dijit.layout.ContentPane">
+			<p>Feature not yet implemented</p>
+			<script type="dojo/method" event="onShow">
+				dojo.fadeOut({node:"load_preset_button_div"}).play();
+			</script>
+		</div>
+	</div>
+	<div id="load_button_progress" dojoType="dijit.layout.ContentPane">
+			<button id="load_preset_button" dojoType="dijit.form.Button">Load <span id="span_load_preset_data" dojoAttachPoint="span_load_preset_data" class="bold"></span> data file<br />with <span id="span_load_preset_rule" dojoAttachPoint="span_load_preset_rule" class="bold"></span> rule file
+				<script type="dojo/method" event="onClick">
+					var fadeOutButton = dojo.fx.wipeOut({node:"load_preset_button_div"});
+					var fadeInProgressBar = dojo.fadeIn({node:"progressContainer"});
+					var Chain = dojo.fx.chain([fadeOutButton,fadeInProgressBar]);
+					dojo.connect(Chain,"onEnd",function() {
+						var rule_file_name="";
+						var osm_file_name="";
+						if (dijit.byId("load_file_tab").selectedChildWidget.id=="load_preset") {
+							rule_file_name=dojo.byId('rules_file_name').value;
+							osm_file_name=dojo.byId('osm_file_name_selected').value;
+						} else if(dijit.byId("load_file_tab").selectedChildWidget.id=="load_custom") {
+							rule_file_name=dojo.byId('rule_file_name_custom').value;
+							osm_file_name=dojo.byId('data_file_name_custom').value;
+						}
+						loadOsmAndRules(rule_file_name,osm_file_name,"progressTotal","progressStep",dojo.byId('transform_on_load').checked)
+					});
+					Chain.play();
+				</script>
+			</button><br />
+			<input dojoType="dijit.form.CheckBox" id="transform_on_load" />Render map after loading
+	</div>
+	<div id="progressContainer" dojoType="dijit.layout.ContentPane" style="opacity:0">
+		<div annotate="true" id="progressTotal" dojoType="dijit.ProgressBar" class="progressBarLoad"></div>
+		<div annotate="true" id="progressStep" dojoType="dijit.ProgressBar" class="progressBarLoad"></div>
+	</div>-->
+	</div>
+</div>

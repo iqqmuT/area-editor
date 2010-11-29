@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/osmarender_frontend/panels/rules
+END
+list_css.xml
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/osmarender_frontend/panels/rules/list_css.xml
+END
+list_symbols.xml
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/osmarender_frontend/panels/rules/list_symbols.xml
+END
+select_key.xml
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/osmarender_frontend/panels/rules/select_key.xml
+END
+select_value.xml
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/osmarender_frontend/panels/rules/select_value.xml
+END
+tree.xml
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/osmarender_frontend/panels/rules/tree.xml
+END

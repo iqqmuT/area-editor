@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/13622/applications/rendering/osmarender/osmAtHome
+END
+osm-map-features.xml
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/!svn/ver/11877/applications/rendering/osmarender/osmAtHome/osm-map-features.xml
+END
+osmarender.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/13622/applications/rendering/osmarender/osmAtHome/osmarender.xsl
+END
+osmAtHome.pl
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/11123/applications/rendering/osmarender/osmAtHome/osmAtHome.pl
+END
+somerights20.png
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/11123/applications/rendering/osmarender/osmAtHome/somerights20.png
+END
+Osm_linkage.png
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/11123/applications/rendering/osmarender/osmAtHome/Osm_linkage.png
+END
+randomUpdate.pl
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/11123/applications/rendering/osmarender/osmAtHome/randomUpdate.pl
+END
+lines2curves.pl
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/11123/applications/rendering/osmarender/osmAtHome/lines2curves.pl
+END

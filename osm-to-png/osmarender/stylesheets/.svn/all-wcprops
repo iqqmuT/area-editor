@@ -1,0 +1,245 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/21674/applications/rendering/osmarender/stylesheets
+END
+osm-map-features-z6.xml
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/!svn/ver/21561/applications/rendering/osmarender/stylesheets/osm-map-features-z6.xml
+END
+osm-map-features-z7.xml
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/!svn/ver/21561/applications/rendering/osmarender/stylesheets/osm-map-features-z7.xml
+END
+osm-map-features-z8.xml
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/!svn/ver/21561/applications/rendering/osmarender/stylesheets/osm-map-features-z8.xml
+END
+osm-map-features-z9.xml
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/!svn/ver/21561/applications/rendering/osmarender/stylesheets/osm-map-features-z9.xml
+END
+surfaces.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/15074/applications/rendering/osmarender/stylesheets/surfaces.tcl
+END
+verify-hw.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/15327/applications/rendering/osmarender/stylesheets/verify-hw.tcl
+END
+markers.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/12010/applications/rendering/osmarender/stylesheets/markers.xml
+END
+caption-z10.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/caption-z10.xml
+END
+caption-z11.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/caption-z11.xml
+END
+osm-POI-features-z12.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/osm-POI-features-z12.xml
+END
+osm-POI-features-z13.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/osm-POI-features-z13.xml
+END
+osm-POI-features-z14.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/osm-POI-features-z14.xml
+END
+osm-POI-features-z15.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/osm-POI-features-z15.xml
+END
+verify-rw.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/15327/applications/rendering/osmarender/stylesheets/verify-rw.tcl
+END
+osm-POI-features-z16.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/osm-POI-features-z16.xml
+END
+osm-POI-features-z17.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/osm-POI-features-z17.xml
+END
+caption-z0.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/caption-z0.xml
+END
+caption-z1.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/caption-z1.xml
+END
+surfacepatterns.tmpl
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/!svn/ver/15074/applications/rendering/osmarender/stylesheets/surfacepatterns.tmpl
+END
+caption-z2.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/caption-z2.xml
+END
+verify.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/15327/applications/rendering/osmarender/stylesheets/verify.tcl
+END
+caption-z3.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/caption-z3.xml
+END
+caption-z4.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/caption-z4.xml
+END
+caption-z5.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/caption-z5.xml
+END
+caption-z6.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/12779/applications/rendering/osmarender/stylesheets/caption-z6.xml
+END
+caption-z7.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/19142/applications/rendering/osmarender/stylesheets/caption-z7.xml
+END
+caption-z8.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/caption-z8.xml
+END
+osm-map-features-z10.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/21561/applications/rendering/osmarender/stylesheets/osm-map-features-z10.xml
+END
+caption-z9.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/11608/applications/rendering/osmarender/stylesheets/caption-z9.xml
+END
+osm-map-features-z11.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/21561/applications/rendering/osmarender/stylesheets/osm-map-features-z11.xml
+END
+captionless-z12.xml
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/!svn/ver/16702/applications/rendering/osmarender/stylesheets/captionless-z12.xml
+END
+osm-map-features-z12.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/21660/applications/rendering/osmarender/stylesheets/osm-map-features-z12.xml
+END
+osm-map-features-z13.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/21660/applications/rendering/osmarender/stylesheets/osm-map-features-z13.xml
+END
+standard.xml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/11877/applications/rendering/osmarender/stylesheets/standard.xml
+END
+osm-map-features-z14.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/21673/applications/rendering/osmarender/stylesheets/osm-map-features-z14.xml
+END
+osm-map-features-z15.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/21673/applications/rendering/osmarender/stylesheets/osm-map-features-z15.xml
+END
+poi-testfile.osm
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/!svn/ver/11123/applications/rendering/osmarender/stylesheets/poi-testfile.osm
+END
+osm-map-features-z16.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/21673/applications/rendering/osmarender/stylesheets/osm-map-features-z16.xml
+END
+osm-map-features-z17.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/21674/applications/rendering/osmarender/stylesheets/osm-map-features-z17.xml
+END
+maplint.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/11792/applications/rendering/osmarender/stylesheets/maplint.xml
+END

@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' generator='JOSM'>
+  <node id='-36' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.29260627394' lon='-78.5567843914' />
+  <node id='-34' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.291340287723' lon='-78.5567307472' />
+  <node id='-32' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.289623696015' lon='-78.5558831692' />
+  <node id='-30' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.288840500962' lon='-78.5515487194' />
+  <node id='-28' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.289752440402' lon='-78.5503792763' />
+  <node id='-26' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.291029155495' lon='-78.551967144' />
+  <node id='-24' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.291383202512' lon='-78.5555505753' />
+  <node id='-22' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.27695309553' lon='-78.5422360897' />
+  <node id='-20' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.27623427189' lon='-78.5405623913' />
+  <node id='-18' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.278648231703' lon='-78.5388350487' />
+  <node id='-16' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.279367055196' lon='-78.5388028622' />
+  <node id='-14' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.27940997003' lon='-78.5391139984' />
+  <node id='-12' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.281105105848' lon='-78.5403156281' />
+  <node id='-10' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.279667459031' lon='-78.5425150394' />
+  <node id='-8' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.279302682945' lon='-78.5427296162' />
+  <node id='-6' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.291833807791' lon='-78.5552608967'>
+    <tag k='visit' v='Outsider' />
+  </node>
+  <node id='-4' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.290181588349' lon='-78.5517203808'>
+    <tag k='visit' v='Tuomas' />
+  </node>
+  <node id='-2' timestamp='2010-11-29T04:33:18Z' visible='true' lat='-0.279474342281' lon='-78.5421180725'>
+    <tag k='visit' v='Arno' />
+  </node>
+  <way id='-40' action='modify' timestamp='2010-11-29T04:33:18Z' visible='true'>
+    <nd ref='-24' />
+    <nd ref='-26' />
+    <nd ref='-28' />
+    <nd ref='-30' />
+    <nd ref='-32' />
+    <nd ref='-34' />
+    <nd ref='-36' />
+    <nd ref='-24' />
+    <tag k='area' v='yes' />
+    <tag k='name' v='Amaru Ñan' />
+    <tag k='number' v='11' />
+  </way>
+  <way id='-38' timestamp='2010-11-29T04:33:18Z' visible='true'>
+    <nd ref='-8' />
+    <nd ref='-10' />
+    <nd ref='-12' />
+    <nd ref='-14' />
+    <nd ref='-16' />
+    <nd ref='-18' />
+    <nd ref='-20' />
+    <nd ref='-22' />
+    <nd ref='-8' />
+    <tag k='name' v='Turubamba' />
+    <tag k='number' v='41' />
+  </way>
+</osm>

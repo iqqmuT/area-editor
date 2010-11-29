@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.47pre4 r22446"
+   width="248"
+   height="203"
+   sodipodi:docname="SURFING_images.jpeg"
+   style="display:inline">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       id="perspective10" />
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1680"
+     inkscape:window-height="975"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="4.6699507"
+     inkscape:cx="88.994769"
+     inkscape:cy="71.771508"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="img"
+     style="display:none">
+    <image
+       sodipodi:absref="/home/arnop/teokratisk/congregacion/Kichwa Quito sur/territorios/osmarender/osmarender/stylesheets/symbols/SURFING_images.jpeg"
+       xlink:href="SURFING_images.jpeg"
+       y="0"
+       x="0"
+       id="image12"
+       height="203"
+       width="248" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="man"
+     style="display:inline">
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
+       d="M 130.40625 73.875 C 126.50355 73.875 123.34375 77.034804 123.34375 80.9375 C 123.34375 84.840196 126.50355 88 130.40625 88 C 134.30895 88 137.46875 84.840196 137.46875 80.9375 C 137.46875 77.034804 134.30895 73.875 130.40625 73.875 z M 123.96875 89.71875 C 118.47262 90.245713 112.99613 90.634676 107.5 93.375 L 94.65625 104.9375 C 95.282666 107.03137 94.930705 109.93306 99.34375 108.78125 L 110.9375 98.5 C 115.24742 96.40281 117.185 96.664769 119.28125 96.78125 L 106 109.4375 C 101.31413 117.08095 107.12256 120.4878 110.71875 120.5625 L 121.625 120.34375 L 115.46875 135.53125 L 110.5 136.84375 C 91.024925 141.34058 81.622883 145.81567 77.53125 150.3125 C 93.280509 151.53392 108.06865 150.41709 122.6875 148.8125 L 158.25 134.25 L 148.1875 126.96875 L 141.21875 128.78125 L 146.03125 117.78125 C 146.35327 115.46976 147.05355 112.88918 145.1875 112.21875 L 126.34375 112.40625 L 139.84375 98.5 L 156.75 115.625 C 158.73684 115.39129 160.51506 114.83064 160.8125 111.78125 C 153.80381 104.65125 145.25342 90.26163 139.84375 90.59375 L 123.96875 89.71875 z M 135.34375 120.34375 L 130.375 131.625 L 124.8125 133.09375 L 130.40625 120.5625 L 135.34375 120.34375 z "
+       id="path2818" />
+  </g>
+</svg>

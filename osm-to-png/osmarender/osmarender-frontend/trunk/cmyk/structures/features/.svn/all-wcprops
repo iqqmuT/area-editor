@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/structures/features
+END
+Feature.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/structures/features/Feature.js
+END
+Category.js
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/structures/features/Category.js
+END
+Facet.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/structures/features/Facet.js
+END
+cmyk.structures.features.js
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/trunk/cmyk/structures/features/cmyk.structures.features.js
+END

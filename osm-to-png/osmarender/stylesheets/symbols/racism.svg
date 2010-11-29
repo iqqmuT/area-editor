@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="18.64"
+   id="symbol-windmill"
+   viewBox="0 0 480 480"
+   height="18.64"
+   inkscape:version="0.47pre4 r22446"
+   sodipodi:docname="racism.svg">
+  <metadata
+     id="metadata15">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs13">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 9.3199997 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="18.639999 : 9.3199997 : 1"
+       inkscape:persp3d-origin="9.3199997 : 6.2133331 : 1"
+       id="perspective17" />
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1680"
+     inkscape:window-height="975"
+     id="namedview11"
+     showgrid="true"
+     inkscape:zoom="16"
+     inkscape:cx="9.2790985"
+     inkscape:cy="-1.7612023"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="symbol-windmill">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2830" />
+  </sodipodi:namedview>
+  <g
+     id="g2815"
+     transform="translate(412.06031,367.88891)">
+    <path
+       id="path2838"
+       d="m 304.9053,63.550306 -143.88603,0.301919 0,0.08626 -6.72848,0 0.17252,125.425825 -94.457549,0.0863 -0.215657,-117.705319 -33.124841,0.04313 0.301919,150.830169 7.418584,0 120.120674,-0.12933 0.0863,86.78018 -121.026438,0.25879 0.08626,33.12484 120.983308,-0.25878 0,0.0863 33.12484,-0.0431 -0.1294,-119.99143 91.00705,-0.0863 0.21566,113.47846 33.12484,-0.0863 -0.30192,-146.64644 -33.12484,0.0431 0,0.0863 -90.96392,0.0863 -0.12942,-92.387245 117.48967,-0.258788 -0.0431,-33.124841 z"
+       style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:23.99999809;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Andale Mono;-inkscape-font-specification:Andale Mono" />
+    <text
+       id="text2861"
+       y="376.9957"
+       x="334.76395"
+       style="font-size:453.58843994px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       xml:space="preserve"><tspan
+         y="376.9957"
+         x="334.76395"
+         id="tspan2863"
+         sodipodi:role="line">!</tspan></text>
+  </g>
+</svg>

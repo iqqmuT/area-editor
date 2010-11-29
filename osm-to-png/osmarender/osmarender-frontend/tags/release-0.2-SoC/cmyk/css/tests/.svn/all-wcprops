@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/tags/release-0.2-SoC/cmyk/css/tests
+END
+test_features.xml
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/tags/release-0.2-SoC/cmyk/css/tests/test_features.xml
+END
+cmyk.css.tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/tags/release-0.2-SoC/cmyk/css/tests/cmyk.css.tests.html
+END

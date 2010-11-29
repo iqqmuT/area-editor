@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/tags/release-0.1/gr/abiss/js/sarissa
+END
+sarissa.js
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/tags/release-0.1/gr/abiss/js/sarissa/sarissa.js
+END
+sarissa-compressed.js
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/tags/release-0.1/gr/abiss/js/sarissa/sarissa-compressed.js
+END
+sarissa-table-utils.js
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/tags/release-0.1/gr/abiss/js/sarissa/sarissa-table-utils.js
+END
+sarissa-table-utils-compressed.js
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/tags/release-0.1/gr/abiss/js/sarissa/sarissa-table-utils-compressed.js
+END
+sarissa_ieemu_xpath.js
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/tags/release-0.1/gr/abiss/js/sarissa/sarissa_ieemu_xpath.js
+END
+sarissa_ieemu_xpath-compressed.js
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/!svn/ver/12026/applications/rendering/osmarender/osmarender-frontend/tags/release-0.1/gr/abiss/js/sarissa/sarissa_ieemu_xpath-compressed.js
+END

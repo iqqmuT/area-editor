@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="Online area editor 0.1.20101128">
+  <node id="-1" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.279149129734" lon="-78.5416756535">
+    <tag k="visit" v="Arno"/>
+  </node>
+  <node id="-2" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.290993618116" lon="-78.5552798176">
+    <tag k="visit" v="outsider"/>
+  </node>
+  <node id="-3" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.289920748296" lon="-78.552704897">
+    <tag k="visit" v="Tuomas"/>
+  </node>
+  <node id="-4" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.279302558475" lon="-78.5426522475"/>
+  <node id="-5" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.280948041656" lon="-78.5403202451"/>
+  <node id="-6" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.27923443337" lon="-78.5391359023"/>
+  <node id="-7" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.279197750621" lon="-78.5389053222"/>
+  <node id="-8" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.27874707684" lon="-78.5390992191"/>
+  <node id="-9" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.278023902596" lon="-78.5391306618"/>
+  <node id="-10" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.276771448547" lon="-78.5402363978"/>
+  <node id="-11" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.276111158911" lon="-78.5408547715"/>
+  <node id="-12" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.277022987446" lon="-78.5421229616"/>
+  <node id="-13" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.277190680043" lon="-78.542243492"/>
+  <node id="-14" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.277887652371" lon="-78.5424688316"/>
+  <node id="-15" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.292237061202" lon="-78.55693435"/>
+  <node id="-16" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.292400823287" lon="-78.5566579979"/>
+  <node id="-17" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.291203312984" lon="-78.5558903531"/>
+  <node id="-18" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.290978140093" lon="-78.5520930704"/>
+  <node id="-19" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.289801099904" lon="-78.5504247224"/>
+  <node id="-20" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.289473575656" lon="-78.5504247224"/>
+  <node id="-21" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.288798056864" lon="-78.552195423"/>
+  <node id="-22" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.289534986453" lon="-78.5555321189"/>
+  <node id="-23" visible="true" timestamp="2010-11-29T06:31:14Z" lat="-0.290190034937" lon="-78.5559722352"/>
+  <way timestamp="2010-11-29T06:31:14Z" id="-24" visible="true">
+    <tag k="name" v=""/>
+    <tag k="number" v=""/>
+    <nd ref="-4"/>
+    <nd ref="-5"/>
+    <nd ref="-6"/>
+    <nd ref="-7"/>
+    <nd ref="-8"/>
+    <nd ref="-9"/>
+    <nd ref="-10"/>
+    <nd ref="-11"/>
+    <nd ref="-12"/>
+    <nd ref="-13"/>
+    <nd ref="-14"/>
+    <nd ref="-4"/>
+  </way>
+  <way timestamp="2010-11-29T06:31:14Z" id="-25" visible="true">
+    <tag k="name" v=""/>
+    <tag k="number" v=""/>
+    <nd ref="-15"/>
+    <nd ref="-16"/>
+    <nd ref="-17"/>
+    <nd ref="-18"/>
+    <nd ref="-19"/>
+    <nd ref="-20"/>
+    <nd ref="-21"/>
+    <nd ref="-22"/>
+    <nd ref="-23"/>
+    <nd ref="-15"/>
+  </way>
+</osm>

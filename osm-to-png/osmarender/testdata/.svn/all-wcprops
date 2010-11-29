@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/20669/applications/rendering/osmarender/testdata
+END
+highwaysmr.osm
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/15075/applications/rendering/osmarender/testdata/highwaysmr.osm
+END
+highways.osm
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/15328/applications/rendering/osmarender/testdata/highways.osm
+END
+tracks.osm
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/15328/applications/rendering/osmarender/testdata/tracks.osm
+END
+lock.osm
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/20609/applications/rendering/osmarender/testdata/lock.osm
+END
+parking.osm
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/13185/applications/rendering/osmarender/testdata/parking.osm
+END
+highway_links.osm
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/13185/applications/rendering/osmarender/testdata/highway_links.osm
+END
+stadion.osm
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/16689/applications/rendering/osmarender/testdata/stadion.osm
+END
+oneway.osm
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/13270/applications/rendering/osmarender/testdata/oneway.osm
+END
+waterway_width.osm
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/13478/applications/rendering/osmarender/testdata/waterway_width.osm
+END
+waterway.osm
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/18107/applications/rendering/osmarender/testdata/waterway.osm
+END
+dosvg.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/15328/applications/rendering/osmarender/testdata/dosvg.tcl
+END
+comprehensive.osm
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/20669/applications/rendering/osmarender/testdata/comprehensive.osm
+END
+sport.osm
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/20642/applications/rendering/osmarender/testdata/sport.osm
+END
+railway.osm
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/15544/applications/rendering/osmarender/testdata/railway.osm
+END
+barriers.osm
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/13571/applications/rendering/osmarender/testdata/barriers.osm
+END
+highwayscu.osm
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/15075/applications/rendering/osmarender/testdata/highwayscu.osm
+END
+border.osm
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/13685/applications/rendering/osmarender/testdata/border.osm
+END
+highwaysmrcy.osm
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/!svn/ver/15075/applications/rendering/osmarender/testdata/highwaysmrcy.osm
+END
+highwayscy.osm
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/15075/applications/rendering/osmarender/testdata/highwayscy.osm
+END
+highwaysno.osm
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/15328/applications/rendering/osmarender/testdata/highwaysno.osm
+END
+bus_stops.osm
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/13638/applications/rendering/osmarender/testdata/bus_stops.osm
+END
+upsidedown.osm
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/13185/applications/rendering/osmarender/testdata/upsidedown.osm
+END
