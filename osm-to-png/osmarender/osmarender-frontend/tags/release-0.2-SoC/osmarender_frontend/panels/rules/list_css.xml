@@ -1,3 +1,0 @@
-<strong>CSS classes associated:</strong><br />
-<select id="select_css_class" size="5" onClick="javascript:loadCSS(this.value);">
-</select>

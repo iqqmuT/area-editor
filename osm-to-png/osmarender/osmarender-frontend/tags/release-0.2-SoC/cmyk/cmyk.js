@@ -1,4 +1,0 @@
-/**
-	@name cmyk
-	@namespace
-*/ 
