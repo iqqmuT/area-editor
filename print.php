@@ -56,14 +56,15 @@ class OSMMap extends MapBase {
     public function show_poi_details($pois) {
 	$output = "";
 	if (count($pois)) {
-	    $i = 0;
+	    $i = 1;
 	    $output .= '<ul class="poi-list">';
 	    foreach ($pois as $poi) {
-                $label = $this->labels[$i];
+                //$label = $this->labels[$i];
+		$label = $i;
 		$i = $i + 1;
-	        if ($i == count($this->labels)) { $i = 0; }
+	        //if ($i == count($this->labels)) { $i = 0; }
 	        $output .= "<li><p>";
-	        //$output .= $i . ": ";
+	        $output .= $label . ": ";
 	        $output .= str_replace("\n", "<br/>", $poi->notes);
 	        $output .= "</p></li>";
            }
@@ -74,6 +75,8 @@ class OSMMap extends MapBase {
 }
 
 class GoogleMap extends MapBase {
+    // http://code.google.com/intl/fi-FI/apis/maps/documentation/staticmaps/#Limits
+    // Static Map URLs are restricted to 2048 characters in size.
     // static google map api support only single character label
     public $labels = array('1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z');
 
@@ -94,9 +97,11 @@ class GoogleMap extends MapBase {
 	        $color = "red";
 		$label = $this->labels[$i];
 		$i = $i + 1;
-		if ($i > count($this->labels)) { $i = 0; }
-		$position = $poi->latLng[0] . "," . $poi->latLng[1];
-		$this->output .= "&markers=color:$color|label:$label|" . $position; 
+		if ($i == count($this->labels)) { $i = 0; }
+		// round the latlng to 6 decimals to save some chars
+		// 6 decimals should be enough for everyone
+		$position = $this->handleLatLng($poi->latLng);
+		$this->output .= "&markers=label:$label|" . $position; 
 	    }
 	}
     }
@@ -106,15 +111,17 @@ class GoogleMap extends MapBase {
 	    foreach ($this->areas as $area) {
 	        $color = "0xff0000a0";
 		$weight = 5;
-		$this->output .= "&path=color:$color|weight:$weight";
+		//$fillcolor = "0x00000000";
+		$this->output .= "&path=color:$color|weight:$weight";//|fillcolor:$fillcolor";
 		if ($area->path && count($area->path)) {
 		    foreach ($area->path as $latLng) {
-		        $position = $latLng[0] . "," . $latLng[1]; 
+		        //$position = $latLng[0] . "," . $latLng[1]; 
+		        $position = $this->handleLatLng($latLng);
 		        $this->output .= '|' . $position;
 		    }
 		    // we gotta do the last node still to close it
 		    $latLng = $area->path[0];
-		    $position = $latLng[0] . "," . $latLng[1]; 
+		    $position = $this->handleLatLng($latLng);
 		    $this->output .= '|' . $position;
 		}
 	    }
@@ -138,6 +145,14 @@ class GoogleMap extends MapBase {
 	   $output .= '</ul>';
         }
         return $output;
+    }
+
+    private function handleLatLng($latLng) {
+        // round the latlng to 6 decimals to save some chars
+	// 6 decimals should be enough for everyone
+        $lat = round($latLng[0], 6);
+	$lng = round($latLng[1], 6);
+	return $lat . "," . $lng;
     }
 }
 
