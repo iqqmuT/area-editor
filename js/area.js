@@ -570,6 +570,9 @@ function PoiManager() {
     var c = 0;
     for (var i in data) {
       var poi = data[i];
+
+// XXX arnos hack
+console.log("IN POI " + poi.id + '=' + poi.notes);
       this.add(new Poi(poi.id, '', '', poi.notes, new google.maps.LatLng(poi.latLng[0], poi.latLng[1])));
       c++;
     }
@@ -937,7 +940,7 @@ function AreaManager() {
   };
 
   // import areas from JSON data
-  // returns integer of how many POIs imported
+  // returns integer of how many AREAs imported
   this.importJSON = function(data) {
     var c = 0;
     for (var i in data) {
@@ -950,6 +953,9 @@ function AreaManager() {
           lng = area.path[j][1];
           path.push(new google.maps.LatLng(lat, lng));
       }
+// XXX arnos hack
+console.log("IN AREA " + area.name + '=' + area.number);
+
       this.add(new Area(area.id, '', '', path));
       c++;
     }
