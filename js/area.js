@@ -1001,8 +1001,8 @@ function AreaManager() {
           lng = area.path[j][1];
           path.push(new google.maps.LatLng(lat, lng));
       }
-// XXX the area-missing-number&name bug is here
-      this.add(new Area(area.id, '', '', path));
+      // XXX the area-missing-number&name bug is here
+      this.add(new Area(area.id, area.number, area.name, path));
       c++;
     }
     if (area_control.visible) {
@@ -1011,8 +1011,8 @@ function AreaManager() {
 
 
 
-// XXX arnos hack
-console.log(dump(data));
+    // XXX arnos hack
+    console.log(dump(data));
 
 
     return c;
@@ -1362,9 +1362,6 @@ function pointDistance(a, b) {
   var d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
   return d;
 }
-
-// initialize the whole thing by calling initialize()
-google.maps.event.addDomListener(window, 'load', initialize);
 
 // extensions to Google Maps API v3
 // --------------------------------

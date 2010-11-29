@@ -101,7 +101,7 @@ class OSMImport {
 	// way is array of node ids
 	$path = array();
 	
-	// let's see if this node has a subnode <nd>
+	// let's see if this node has a subnode <nd> or <tag>
 	$nb = $node->childNodes->length;
 	for ($i = 0; $i < $nb; $i++) {
 	    $subnode = $node->childNodes->item($i);
@@ -109,6 +109,13 @@ class OSMImport {
 	        // this has a subnode <nd>
 		$ref = $subnode->getAttribute("ref");
 		array_push($path, $ref);
+	    }
+	    if (isset($subnode->tagName) && !strcmp($subnode->tagName, "tag") && $subnode->hasAttribute("k") && $subnode->hasAttribute("v")) {
+	        // this has a subnode <tag>
+		// save all tags to way's array
+		$key = $subnode->getAttribute("k");
+		$value = $subnode->getAttribute("v");
+		$this->ways[$id][$key] = $value;
 	    }
 	}
 	if (count($path)) {
@@ -152,6 +159,12 @@ class OSMImport {
 			    $latLng = $this->nodes[$nodeid]['latLng'];
 			    array_push($area['path'], array($latLng[0], $latLng[1]));
 			}
+		    }
+		    if (isset($way['name'])) {
+		        $area['name'] = $way['name'];
+		    }
+		    if (isset($way['number'])) {
+		        $area['number'] = $way['number'];
 		    }
 		    array_push($areas, $area);
 		}

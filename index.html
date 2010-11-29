@@ -10,6 +10,10 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
     <script type="text/javascript" src="js/area.js"></script>
+    <script type="text/javascript">
+      // initialize the whole thing by calling initialize()
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
     <title>Online area editor</title>
   </head>
   <body>
