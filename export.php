@@ -161,6 +161,8 @@ class OSMExport extends ExportBase {
 			$ref = $way_nodes[$this->latLngToString($area->path[0])]['id'];
 			$this->addWayNode($newnode, $ref);
 		    }
+		    // add tag "area" = "yes" to tell this is an area
+		    $this->addTag($newnode, "area", "yes");
 		}
 		    
 	    }
