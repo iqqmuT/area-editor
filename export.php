@@ -102,6 +102,8 @@ class OSMExport extends ExportBase {
 		$value = "";
 	        if (isset($poi->notes) && strlen($poi->notes) && strcmp($poi->notes, 'undefined')) {
 		    $value = $poi->notes;
+		    // get rid of newlines in tag, looks weird in JOSM
+		    $value = str_replace("\n", " ", $value);
 		}
 		$this->addTag($newnode, "visit", $value);
 	    }
