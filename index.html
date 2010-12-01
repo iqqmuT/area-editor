@@ -23,7 +23,7 @@
       <form action="import.php" method="post" enctype="multipart/form-data" target="upload_target" id="import_form">
         Supported file formats: .osm<br />
 	<input type="file" name="import_file" id="import_file" /><br /><br />
-	<input type="submit" id="open_button" name="" value="Open" />
+	<input type="submit" id="open_button" name="" value="Open" class="button" />
       </form>
     </div>
     <div id="file_save_dialog" style="display:none">
@@ -32,7 +32,21 @@
 	<input type="radio" name="format" value="osm" checked="" id="export_format_osm"> <label for="export_format_osm">OSM (Openstreetmap)</label><br /><br />
 	<textarea id="pois_json" name="pois" style="display:none"></textarea>
 	<textarea id="areas_json" name="areas" style="display:none"></textarea>
-	<input type="submit" name="" value="Save" id="save_button" />
+	<input type="submit" name="" value="Save" id="save_button" class="button" />
+      </form>
+    </div>
+    <div id="print_dialog" style="display:none">
+      <form action="print.php" method="post" id="print_form" target="print_window">
+        <input type="hidden" name="map-type" value="" id="print_map_type" />
+	<input type="hidden" name="map-center" value="" id="print_map_center" />
+	<input type="hidden" name="map-zoom" value="" id="print_map_zoom" />
+	<input type="hidden" name="map-bounds" value="" id="print_map_bounds" />
+	<textarea id="print_areas_json" name="areas" style="display:none"></textarea>
+	<textarea id="print_pois_json" name="pois" style="display:none"></textarea>
+	
+	Map format:<br />
+	<input type="radio" name="format" value="dyn" checked="" id="print_format_dyn"> <label for="export_format_dyn">Google Maps API</label><br /><br />
+	<input type="submit" name="" value="Print" id="print_button" class="button" />
       </form>
     </div>
     <div id="help_dialog" style="display:none">

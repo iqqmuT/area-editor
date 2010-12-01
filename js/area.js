@@ -128,11 +128,11 @@ function initialize() {
   // initialize info window, there is just one window here
   info_window = new google.maps.InfoWindow({});
   
-  // initialize file dialog, and open the dialog in initialize
-  initializeFileDialogs(true);
+  // initialize file dialog, and open the file-open dialog in initialize
+  initializeDialogs(true);
 }
 
-function initializeFileDialogs(autoOpen) {  
+function initializeDialogs(autoOpen) {  
   // initialize file dialogs
   $("#file_open_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-folder-open" style="float:left; margin-right: 5px;"></span>Open file',
                                   'width': '300px',
@@ -146,10 +146,14 @@ function initializeFileDialogs(autoOpen) {
                                   'width': '500px',
 				  'autoOpen': false,
 			          'resizable': false });
-  $("#open_button").button();
-  $("#save_button").button();
+  $("#print_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-print" style="float:left; margin-right: 5px;"></span>Print',
+                                  'width': '300px',
+				  'autoOpen': false,
+			          'resizable': false });
+  $(".button").button();
   
   $("#export_form").submit(exportFile);
+  $("#print_form").submit(openPrintablePage);
 }
 
   // in export form submit, send values as JSON to server
@@ -205,7 +209,7 @@ function MenuControl() {
     $("#file_save_dialog").dialog('open');
   });
   $print_ui.click(function() {
-    openPrintablePage();
+    $("#print_dialog").dialog('open');
   });
   $help_ui.click(function() {
     $("#help_dialog").dialog('open');
@@ -365,28 +369,37 @@ function PoiControl($div, visible, editable) {
   };
 }
 
-// creates a temporary form, opens a new window and submits needed data to new page
+// opens a new window and submits needed data to new page
 function openPrintablePage() {
-  var $print_form = $('<form target="print_window" action="print.php" method="post"><input type="hidden" name="foo" value="bar" /></form>');
-  $print_form.append('<input type="hidden" name="map-type" value="' + map.getMapTypeId() + '" />');
-  $print_form.append('<input type="hidden" name="map-center" value="' + map.getCenter().toString() + '" />');
-  $print_form.append('<input type="hidden" name="map-zoom" value="' + map.getZoom() + '" />');
-  $print_form.append('<input type="hidden" name="map-bounds" value="' + map.getBounds().toString() + '" />');
-  $print_form.append('<input type="textarea" name="areas" id="print_areas_json" style="display:none"></textarea>');
-  $print_form.append('<input type="textarea" name="pois" id="print_pois_json" style="display:none"></textarea>');
-  $("body").append($print_form);
+  var printable_page = window.open('about:blank', 'print_window', "status=1,toolbar=1,location=1,scrollbars=1,menubar=1,width=900,height=700");
   
+  $("#print_map_type").val(map.getMapTypeId());
+  $("#print_map_center").val(map.getCenter().toString());
+  $("#print_map_zoom").val(map.getZoom());
+  $("#print_map_bounds").val(map.getBounds().toString());
+  
+  // clear possible previous values
+  $("#print_areas_json").val('[]');
+  $("#print_pois_json").val('[]');
   if (areas.active_area) {
     // let's print only the active area and POIs inside it
-    $("#print_areas_json").val(arrayToJSON([ areas.active_area ]));
-    $("#print_pois_json").val(arrayToJSON(areas.active_area.getPOIs()));
+    if (areas.visible) {
+      $("#print_areas_json").val(arrayToJSON([ areas.active_area ]));
+    }
+    if (pois.visible) {
+      $("#print_pois_json").val(arrayToJSON(areas.active_area.getPOIs()));
+    }
   } else {
     // let's print everything
-    $("#print_areas_json").val(areas.toJSON());
-    $("#print_pois_json").val(pois.toJSON());
+    if (area_control.visible) {
+      $("#print_areas_json").val(areas.toJSON());
+    }
+    if (poi_control.visible) {
+      $("#print_pois_json").val(pois.toJSON());
+    }
   }
-  var printable_page = window.open('about:blank', 'print_window', "status=1,toolbar=1,location=1,scrollbars=1,menubar=1,width=900,height=700");
-  $print_form.submit().remove();
+  $("#print_dialog").dialog('close');
+  return true;
 }
 
 function determineKey(e) {
