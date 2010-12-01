@@ -383,10 +383,10 @@ function openPrintablePage() {
   $("#print_pois_json").val('[]');
   if (areas.active_area) {
     // let's print only the active area and POIs inside it
-    if (areas.visible) {
+    if (area_control.visible) {
       $("#print_areas_json").val(arrayToJSON([ areas.active_area ]));
     }
-    if (pois.visible) {
+    if (poi_control.visible) {
       $("#print_pois_json").val(arrayToJSON(areas.active_area.getPOIs()));
     }
   } else {
