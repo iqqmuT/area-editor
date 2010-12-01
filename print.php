@@ -5,12 +5,14 @@
 
 $areas = json_decode($_POST['areas']); // area information is received as JSON
 $pois = json_decode($_POST['pois']); // POI information is received as JSON
+$map = new DynMap($pois, $areas);
+/*
 if (!strcmp($_POST['map-type'], 'OSM')) {
     $map = new OSMMap($pois, $areas);
 }
 else {
     $map = new GoogleMap($pois, $areas);
-}
+}*/
 ?>
 
 <!DOCTYPE html>
@@ -19,13 +21,8 @@ else {
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <!--<link type="text/css" href="css/ui-darkness/jquery-ui-1.8.6.custom.css" rel="stylesheet" />-->
     <link type="text/css" href="css/printable.css" rel="stylesheet" />
-    <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
-    <!--<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
-    <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>-->
-    <!-- <script type="text/javascript" src="js/printable_area.js"></script>-->
-    <title>Online area editor - print page</title>
+    <title>Online area editor - print</title>
   </head>
   <body>
     <?php print $map->generate(); ?>
@@ -36,7 +33,7 @@ else {
 <?php
 
 class MapBase {
-    public $pois, $areas, $width, $height, $output, $center, $zoom;
+    public $pois, $areas, $width, $height, $output, $center, $zoom, $bounds;
     
     public function __construct($pois, $areas) {
         $this->pois = $pois;
@@ -46,6 +43,49 @@ class MapBase {
 	$this->output = "";
         $this->center = $_POST['map-center'];
         $this->zoom = $_POST['map-zoom'];
+	$this->bounds = $_POST['map-bounds'];
+    }
+    
+    public function parseGoogleLatLng($str) {
+        return "new google.maps.LatLng" . $str;
+    }
+}
+
+// dynmap uses google maps api to show draggable map
+// for printing to work ok, user maybe should use FF 3.6 and enable
+// printing background colors and images from print options
+class DynMap extends MapBase {
+    public function generate() {
+	$this->output .= '<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
+	$this->output .= '<script type="text/javascript" src="js/print.js"></script>';
+        $this->output .= '<div id="map_canvas" class="map"></div>';
+        $this->output .= '<script type="text/javascript">' . 
+	'var center = ' . $this->parseGoogleLatLng($this->center) . ';' .
+        'var zoom = ' . $this->zoom . ';' . "\n" .
+	'var map_type = "' . $_POST['map-type'] . '";' . "\n" .
+	'var pois_data = ' . $_POST['pois'] . ';' . "\n" .
+	'var areas_data = ' . $_POST['areas'] . ';' . "\n" .
+	'google.maps.event.addDomListener(window, "load", function() { initialize(center, zoom, map_type); } );</script>';
+	print $this->output;
+    }
+    
+    public function show_poi_details($pois) {
+	$output = "";
+	if (count($pois)) {
+	    $i = 1;
+	    $output .= '<ul class="poi-list">';
+	    foreach ($pois as $poi) {
+		$label = $i;
+		$i = $i + 1;
+		$li_class = ($i % 2 == 0) ? "odd" : "even";
+	        $output .= '<li class="' . $li_class . '"><span class="label">';
+	        $output .= $label . ":</span> ";
+	        $output .= str_replace("\n", "<br/>", $poi->notes);
+	        $output .= "</li>";
+           }
+	   $output .= '</ul>';
+        }
+        return $output;
     }
 }
 
@@ -155,6 +195,5 @@ class GoogleMap extends MapBase {
 	return $lat . "," . $lng;
     }
 }
-
 
 ?>

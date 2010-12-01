@@ -1,38 +1,32 @@
 body {
-  font-size: 10px;
+  font-size: 12px;
+  font-family: times, serif;
 }
 
 .map {
   border: 1px solid #909090;
+  width: 700px;
+  height: 700px;
 }
 
-/*
-.poi-list {
-  font-size: 16px;
-  color: #aaa;
-  margin: 0px;
-  margin-top: 10px;
-  padding: 0px;
-}
-*/
 .poi-list {
   margin: 0px;
   padding: 0px;
+  page-break-before: always;
 }
 
 .poi-list li {
-  float: left;
   margin: 2px;
   padding: 1px;
-  width: 200px;
-  border-top: 1px solid #ccc;
-  border-left: 1px solid #ccc;
   list-style: none;
+}
+
+.poi-list li.even {
+  background-color: #eee;
 }
 
 .poi-list .label {
   font-weight: bold;
   font-size: 12px;
+  font-family: Arial, sans-serif;
 }
-
-

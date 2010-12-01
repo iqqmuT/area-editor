@@ -81,7 +81,6 @@ function initialize() {
 	maxZoom: 19
   });
 
-  //var latlng = new google.maps.LatLng(-0.320662, -78.517540);
   var latlng = new google.maps.LatLng(0, 0);
   var mapOptions = {
     zoom: 3,
@@ -93,6 +92,7 @@ function initialize() {
       style: google.maps.MapTypeControlStyle.DEFAULT
     },
     disableDefaultUI: false,
+    scaleControl: true
   };
   map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
@@ -369,9 +369,9 @@ function PoiControl($div, visible, editable) {
 function openPrintablePage() {
   var $print_form = $('<form target="print_window" action="print.php" method="post"><input type="hidden" name="foo" value="bar" /></form>');
   $print_form.append('<input type="hidden" name="map-type" value="' + map.getMapTypeId() + '" />');
-  var center = map.getCenter();
-  $print_form.append('<input type="hidden" name="map-center" value="' + center.lat() + ',' + center.lng() + '" />');
+  $print_form.append('<input type="hidden" name="map-center" value="' + map.getCenter().toString() + '" />');
   $print_form.append('<input type="hidden" name="map-zoom" value="' + map.getZoom() + '" />');
+  $print_form.append('<input type="hidden" name="map-bounds" value="' + map.getBounds().toString() + '" />');
   $print_form.append('<input type="textarea" name="areas" id="print_areas_json" style="display:none"></textarea>');
   $print_form.append('<input type="textarea" name="pois" id="print_pois_json" style="display:none"></textarea>');
   $("body").append($print_form);
