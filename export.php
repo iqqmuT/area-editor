@@ -2,6 +2,7 @@
 
 /*
  * Exporting POI and area data.
+ * Requires at least PHP 5.2.
  */
 
 $VERSION = "0.1." . strftime("%Y%m%d", filemtime("export.php"));

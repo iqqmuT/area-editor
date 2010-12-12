@@ -4,3 +4,6 @@ area-editor uses following JavaScript libraries:
  * Google Maps JavaScript API V3
  * jQuery 1.4.4
  * jQuery UI 1.8.6
+
+Requirements from server side:
+ * PHP >= 5.2

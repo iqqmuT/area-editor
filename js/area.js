@@ -612,7 +612,9 @@ function PoiManager() {
   
   // serialize all POIs to JSON
   this.toJSON = function() {
-    return arrayToJSON(this.pois);
+    var json = arrayToJSON(this.pois);
+    console.log("export pois: ", json);
+    return json;
   };
   
   // import POIs from JSON data
@@ -752,7 +754,6 @@ function Poi(id, address, name, notes, latLng) {
     json += '"notes":"' + encodeJSON(this.notes) + '",';
     json += '"latLng":' + this.getPosition().toJSON() + '';
     json += '}';
-    console.log("export pois: ", json);
     return json;
   };
 }
@@ -991,14 +992,10 @@ function AreaManager() {
 
   // serialize all areas to JSON, this is for sending areas to server
   this.toJSON = function() {
-    return arrayToJSON(this.areas);
+    var json = arrayToJSON(this.areas);
+    console.log("export areas: ", json);
+    return json;
   };
-
-
-
-
-
-
 
   // import areas from JSON data
   // returns integer of how many AREAs imported
