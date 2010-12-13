@@ -6,7 +6,7 @@
 # $0 <territory file> <territory NUMBER to print>
 
 
-if [ $? -lt 2 ]; then
+if [ $# -lt 2 ]; then
    echo "ERROR: syntax is $0 <territory file> <territory NUMBER to print>"
    exit 1
 fi
@@ -63,7 +63,7 @@ $OSMOSIS --read-xml file=$TMPDIR/pois.osm --sort-0.6 --read-xml file=$BACKGROUND
 # XXX CAVEAT: The pattern below in the sed
 #dialog --menu "Select territory to generate" 15 20 7 `cat $1 | tr "\n" " "| sed "s/'/\"/g" |sed 's/\(..way.\)/\n\1/g' |grep "<way"|sed 's/^.*k="name" *v="\([^"]*\)".*k=.number" *v="\([^"]*\).*/\2|\1/'|sed 's/ /_/g'|sed 's/|/ /g'` 2> $TMPDIR/chosen
 echo "$2" >$TMPDIR/chosen
-exit
+#exit
 
 # start mask file
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<osm version=\"0.6\" generator=\"JOSM\">" > $TMPDIR/mask
