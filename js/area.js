@@ -1241,8 +1241,8 @@ function Area(id, number, name, path) {
       draggable: true,
       icon: image,
       shape: shape,
-      //icon: 'http://google-maps-icons.googlecode.com/files/factory.png',
-      title: 'Drag to edit, shift-click to remove'
+      title: 'Drag to edit, shift-click to remove',
+      raiseOnDrag: false
     });
     // marker drag functionality
     var boundary = boundaries.find(latLng);
