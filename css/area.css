@@ -52,3 +52,7 @@ body {
 .file_menu_item:hover {
   background-color: #eeeeee;
 }
+.area-functions {
+  float: right;
+  margin-right: 15px;
+}

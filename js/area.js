@@ -209,13 +209,18 @@ function MenuControl() {
     $("#file_save_dialog").dialog('open');
   });
   $print_ui.click(function() {
-    $("#print_dialog").dialog('open');
+    openPrintDialog();
   });
   $help_ui.click(function() {
     $("#help_dialog").dialog('open');
   });
   
   map.controls[google.maps.ControlPosition.RIGHT].push($div[0]);
+}
+
+function openPrintDialog() {
+  $("#print_dialog").dialog('open');
+  return false;
 }
 
 function AreaControl($div, visible, editable) {
@@ -924,9 +929,10 @@ function AreaManager() {
   this.remove = function(area) {
     for (var i = 0; i < this.areas.length; i++) {
       if (this.areas[i] == area) {
-        if (confirm('Are you sure you want to delete the area with id ' + area.id + '?')) {
+        if (confirm('Are you sure you want to delete the selected area?')) {
           area.remove();
           this.areas.splice(i, 1);
+	  info_window.close(); // shut info window, because user might have used that to delete the area
           return true;
 	}
       }
@@ -1176,9 +1182,15 @@ function Area(id, number, name, path) {
     var contentString = '<div class="infowindow"><form action="" method="post">' +
       '<input type="hidden" id="area_id" value="' + escape(area.id) + '" />' +
       '<table>' +
+      '<tr><td></td><td>' +
+      '<div class="area-functions">' +
+      '<a href="#" onclick="return openPrintDialog();">Print</a> | <a href="#" onclick="return areas.remove(areas.active_area)">Delete</a>' +
+      '</div>' +
+      '</td></tr>' +
       '<tr><td>Number:</td><td><input type="text" id="area_number" value="' + area.number + '" class="field" /></td></tr>' +
       '<tr><td>Name:</td><td><input type="text" id="area_name" value="' + area.name + '" class="field" /></td></tr>' +
-      '<tr><td></td><td><input type="submit" id="area_submit" value="Save" onclick="return areas.saveInfo(event)"/></td></tr>' +
+      '<tr><td></td><td><input type="submit" id="area_submit" value="Save" onclick="return areas.saveInfo(event)"/>' +
+      '</td></tr>' +
       '</table></form></div>';
     var bounds = area.polygon.getBounds();
     info_window.setOptions({
