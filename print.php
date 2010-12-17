@@ -52,8 +52,6 @@ class MapBase {
 }
 
 // dynmap uses google maps api to show draggable map
-// for printing to work ok, user maybe should use FF 3.6 and enable
-// printing background colors and images from print options
 class DynMap extends MapBase {
     public function generate() {
 	$this->output .= '<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';

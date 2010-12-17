@@ -161,6 +161,7 @@ function exportFile() {
   console.log("exporting...");
   $("#pois_json").val(pois.toJSON());
   $("#areas_json").val(areas.toJSON());
+  $("#export_map_bounds").val(map.getBounds().toString());
   $("#file_save_dialog").dialog('close');
   return true;
 }

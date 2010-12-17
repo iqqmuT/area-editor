@@ -56,3 +56,6 @@ body {
   float: right;
   margin-right: 15px;
 }
+.area-functions a {
+  color: blue;
+}

@@ -5,5 +5,7 @@ area-editor uses following JavaScript libraries:
  * jQuery 1.4.4
  * jQuery UI 1.8.6
 
-Requirements from server side:
+Requirements for PHP server:
  * PHP >= 5.2
+ * Magic quotes are disabled
+ 

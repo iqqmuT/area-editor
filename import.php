@@ -15,7 +15,8 @@ if (!strcmp($extension, "osm")) {
     $import = new OSMImport($file);
 }
 
-$output = $import->parse();
+$data = $import->parse();
+$output = json_encode($data);
 
 echo '<script type="text/javascript">';
 echo 'var data = ' . $output . ';';
@@ -47,7 +48,7 @@ class OSMImport {
 	$this->doc->load($this->filename);
 	$node = $this->doc->documentElement;
 	if (strcmp($node->tagName, "osm")) {
-	    // ERROR: this is not OSM XML file!
+	    // ERROR: this is not OSM XML file, the root element should be <osm>!
 	    return 1;
 	}
 	$nb = $node->childNodes->length;
@@ -68,10 +69,9 @@ class OSMImport {
 	$areas = $this->createAreas();
 
 	$data = array();
-	$data['pois'] = $pois;
 	$data['areas'] = $areas;
-	
-	return json_encode($data);
+	$data['pois'] = $pois;
+	return $data;
     }
     
     function parseNode($node) {
