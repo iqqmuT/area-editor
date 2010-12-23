@@ -1046,10 +1046,8 @@ function AreaManager() {
 
   // sets all areas clickable or not
   this.setClickable = function(value) {
-    for (var i in this.pois) {
-      if (this.pois[i].marker) {
-        this.pois[i].marker.setOptions({ clickable: value });
-      }
+    for (var i in this.areas) {
+      this.areas[i].polygon.setOptions({ clickable: value });
     }
   };
 
