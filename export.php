@@ -5,6 +5,7 @@
  * Requires at least PHP 5.2.
  */
 
+include("lib/util.php");
 include("lib/osm.php");
 include("lib/osmarender.php");
 
@@ -13,15 +14,17 @@ $format = $_POST['format'];
 $areas = json_decode($_POST['areas']); // area information is received as JSON
 $pois = json_decode($_POST['pois']); // POI information is received as JSON
 $bounds = parse_bounds($_POST['map-bounds']);
+$width = 700;
+$height = 700;
 
 $export = null;
 if (!strcmp($format, "osm")) {
     // export data in OSM format
-    $export = new OSMExport($pois, $areas, $bounds);
+    $export = new OSMExport($pois, $areas, $bounds, $width, $height);
 }
 elseif (!strcmp($format, "svg_osmarender")) {
     // export data in SVG format
-    $export = new OsmarenderSVGExport($pois, $areas, $bounds);
+    $export = new OsmarenderSVGExport($pois, $areas, $bounds, $width, $height);
 }
 
 /*
@@ -44,12 +47,14 @@ exit;
 // --------------
 
 class ExportBase {
-    public $pois, $areas, $bounds, $filetype;
+    public $pois, $areas, $bounds, $width, $height, $filetype;
     
-    public function __construct($pois, $areas, $bounds) {
+    public function __construct($pois, $areas, $bounds, $width, $height) {
         $this->pois = $pois;
 	$this->areas = $areas;
 	$this->bounds = $bounds;
+	$this->width = $width;
+	$this->height = $height;
     }
 
     function asFile() {
@@ -88,10 +93,8 @@ class OsmarenderSVGExport extends ExportBase {
     }
 
     function output() {
-        $svg = new OsmarenderSVG($this->pois, $this->areas, $this->bounds);
+        $svg = new OsmarenderSVG($this->pois, $this->areas, $this->bounds, $this->width, $this->height);
 	return $svg->output();
-	//$dom = $svg->generateDOM();
-	//return $svg->saveXML();
     }
 
     function genFilename() {
@@ -99,16 +102,5 @@ class OsmarenderSVGExport extends ExportBase {
     }
 }
 
-// util functions
-// parses string "((-37.43997405227057, -126.5625), (37.43997405227057, 126.5625))"
-function parse_bounds($bounds) {
-    $parts = explode(',', $bounds);
-    for ($i = 0; $i < count($parts); $i++) {
-        $parts[$i] = trim($parts[$i], " ()");
-    }
-    $bounds_arr = array(array($parts[0], $parts[1]),
-                        array($parts[2], $parts[3]));
-    return $bounds_arr;
-}
 
 ?>

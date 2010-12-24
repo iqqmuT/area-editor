@@ -11,19 +11,29 @@ class OsmarenderSVG {
     public $dir = "osm-to-png";
     public $osmosis;
     
-    public function __construct($pois, $areas, $bounds) {
+    public function __construct($pois, $areas, $bounds, $width, $height) {
         $this->pois = $pois;
 	$this->areas = $areas;
 	$this->bounds = $bounds;
+	$this->width = $width;
+	$this->height = $height;
 	$this->osmosis = $this->dir . "/osmosis-0.35/bin/osmosis";
     } 
     
-    public function output() {
+    public function write_file() {
         // create a merged file, that has our data and osm data combined
 	$osm_file = $this->writeOSM();
         $merged_file = $this->mergeWithMap($osm_file);
 	//$chopped_file = $this->cropMap($merged_file);
 	$svg_file = $this->convertToSVG($merged_file);
+	$data = file_get_contents($svg_file);
+	return $svg_file;
+	unlink($svg_file);
+	return $data;
+    }
+    
+    public function output() {
+	$svg_file = $this->write_file();
 	// this might be a bad idea if svg file is huge
 	$data = file_get_contents($svg_file);
 	unlink($svg_file);
@@ -114,6 +124,51 @@ class OsmarenderSVG {
 	fclose($fh_out);
 	rename($tmpfile, $file_in);
     }
+
+    // modify width and height attribute of svg tag (stupidish way)
+    private function resize($file_in, $width, $height) {
+        $fh_in = fopen($file_in, "r");
+	$tmpfile = $this->tempnam();
+	$fh_out = fopen($tmpfile, "w");
+	$contents = "";
+	$changed = false;
+	while (!feof($fh_in)) {
+	    $contents = fread($fh_in, 8192);
+	    if (!$changed) {
+	        // modify width and height attributes with regexp
+		// first, get current aspect ratio
+                preg_match("/ width=\"([\d.]+)px\"/", $contents, $match);
+                $current_width = floatval($match[1]);
+                preg_match("/ height=\"([\d.]+)px\"/", $contents, $match);
+                $current_height = floatval($match[1]);
+		$aspect_ratio = $current_width / $current_height;
+
+                // preserve aspect ratio		
+		if ($aspect_ratio > 1) {
+		    $height = $width / $aspect_ratio;
+		}
+		else {
+		    $width = $height * $aspect_ratio;
+		}
+		
+		$pattern = "/ width=\"([\d.]+)px\"/";
+                $replacement = ' width="' . $width . 'px"';
+                $new_contents = preg_replace($pattern, $replacement, $contents);
+		$contents = $new_contents;
+
+		$pattern = "/ height=\"([\d.]+)px\"/";
+                $replacement = ' height="' . $height . 'px"';
+                $new_contents = preg_replace($pattern, $replacement, $contents);
+		$contents = $new_contents;
+		
+		$changed = true;
+	    }
+	    fwrite($fh_out, $contents);
+	}
+	fclose($fh_in);
+	fclose($fh_out);
+	rename($tmpfile, $file_in);
+    }
     
     private function cropMap($file_in) {
 	// crop the map with given bounds
@@ -154,6 +209,7 @@ class OsmarenderSVG {
 	    unlink($file_out);
 	    die('Export error when converting osm to svg:<br>' . $cmd . '<br>' . $output);
 	}
+	$this->resize($file_out, $this->width, $this->height);
 	return $file_out;
     }
     

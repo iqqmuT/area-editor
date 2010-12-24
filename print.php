@@ -3,9 +3,23 @@
  * Prints static printable map
  */
 
+include("lib/util.php");
+include("lib/osm.php");
+include("lib/osmarender.php");
+include("lib/filecache.php");
+
 $areas = json_decode($_POST['areas']); // area information is received as JSON
 $pois = json_decode($_POST['pois']); // POI information is received as JSON
-$map = new DynMap($pois, $areas);
+$format = $_POST['format'];
+
+$map = null;
+if (!strcmp($format, "dyn")) {
+    $map = new DynMap($pois, $areas);
+}
+elseif (!strcmp($format, "svg_osmarender")) {
+    $map = new SVGOsmarenderMap($pois, $areas);
+}
+
 /*
 if (!strcmp($_POST['map-type'], 'OSM')) {
     $map = new OSMMap($pois, $areas);
@@ -22,9 +36,13 @@ else {
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link type="text/css" href="css/printable.css" rel="stylesheet" />
-    <title>Online area editor - print</title>
+    <style type="text/css" media="print">
+      @page land { size: landscape; }
+    </style>
+    <title><?php print_title(); ?></title>
   </head>
   <body>
+    <?php print_header(); ?>
     <?php print $map->generate(); ?>
     <?php print $map->show_poi_details($pois); ?>
   </body>
@@ -32,22 +50,71 @@ else {
 
 <?php
 
+// returns string of area info, if there is only one area
+function get_area_info() {
+    global $areas;
+    if (count($areas) == 1) {
+        $area = $areas[0];
+	return $area->number . ":" . $area->name;
+    }
+    return false;
+}
+
+function print_title() {
+    $title = "Online area editor - print";
+    $area_info = get_area_info();
+    if ($area_info) {
+        $title .= "#" . htmlentities($area_info);
+    }
+    print $title;
+}
+
+function print_header() {
+    $area_info = get_area_info();
+    if ($area_info) {
+        print "<h1>" . htmlentities($area_info) . "</h1>";
+    }
+}
+
 class MapBase {
     public $pois, $areas, $width, $height, $output, $center, $zoom, $bounds;
     
     public function __construct($pois, $areas) {
         $this->pois = $pois;
 	$this->areas = $areas;
-	$this->width = 700;
-	$this->height = 700;
+	$this->width = 1400;
+	$this->height = 830;
 	$this->output = "";
         $this->center = $_POST['map-center'];
         $this->zoom = $_POST['map-zoom'];
-	$this->bounds = $_POST['map-bounds'];
+	$this->bounds = parse_bounds($_POST['map-bounds']);
     }
     
     public function parseGoogleLatLng($str) {
         return "new google.maps.LatLng" . $str;
+    }
+
+    public function show_poi_details($pois) {
+	$output = "";
+	if (count($pois)) {
+	    $i = 1;
+	    $output .= '<ul class="poi-list">';
+	    $area_info = get_area_info();
+	    if ($area_info) {
+	        $output .= '<b>' . htmlentities($area_info) . '</b>';
+	    }
+	    foreach ($pois as $poi) {
+		$label = $i;
+		$i = $i + 1;
+		$li_class = ($i % 2 == 0) ? "odd" : "even";
+	        $output .= '<li class="' . $li_class . '"><span class="label">';
+	        $output .= $label . ":</span> ";
+	        $output .= str_replace("\n", "<br/>", $poi->notes);
+	        $output .= "</li>";
+           }
+	   $output .= '</ul>';
+        }
+        return $output;
     }
 }
 
@@ -65,25 +132,6 @@ class DynMap extends MapBase {
 	'var areas_data = ' . $_POST['areas'] . ';' . "\n" .
 	'google.maps.event.addDomListener(window, "load", function() { initialize(center, zoom, map_type); } );</script>';
 	print $this->output;
-    }
-    
-    public function show_poi_details($pois) {
-	$output = "";
-	if (count($pois)) {
-	    $i = 1;
-	    $output .= '<ul class="poi-list">';
-	    foreach ($pois as $poi) {
-		$label = $i;
-		$i = $i + 1;
-		$li_class = ($i % 2 == 0) ? "odd" : "even";
-	        $output .= '<li class="' . $li_class . '"><span class="label">';
-	        $output .= $label . ":</span> ";
-	        $output .= str_replace("\n", "<br/>", $poi->notes);
-	        $output .= "</li>";
-           }
-	   $output .= '</ul>';
-        }
-        return $output;
     }
 }
 
@@ -192,6 +240,21 @@ class GoogleMap extends MapBase {
 	$lng = round($latLng[1], 6);
 	return $lat . "," . $lng;
     }
+}
+
+class SVGOsmarenderMap extends MapBase {
+    public function generate() {
+	$cache = new FileCache();
+        $svg = new OsmarenderSVG($this->pois, $this->areas, $this->bounds, $this->width, $this->height);
+	$svg_file = $svg->write_file();
+	$cache_name = basename($svg_file) . ".svg";
+	$cache->add($svg_file, $cache_name);
+        $svg_file = $cache->get($cache_name);
+        $html = '<object data="' . $svg_file . '" type="image/svg+xml"> <param name="pluginurl" value="http://www.adobe.com/svg/viewer/install/" /></object>';
+	print $html;
+    }
+    
+    
 }
 
 ?>

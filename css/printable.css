@@ -5,8 +5,9 @@ body {
 
 .map {
   border: 1px solid #909090;
-  width: 700px;
-  height: 700px;
+  width: 1400px;
+  height: 830px;
+  page: land;
 }
 
 .poi-list {
