@@ -1,0 +1,369 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<meta name="generator" content="Bluefish 1.0.7">
+	<meta name="author" content="Arno Teigseth Private">
+	<META NAME="CREATED" CONTENT="20101226;14292300">
+	<META NAME="CHANGEDBY" CONTENT="Arno Teigseth">
+	<META NAME="CHANGED" CONTENT="20101226;18403700">
+	<META NAME="CHANGEDBY" CONTENT="Arno Teigseth">
+	<META NAME="CHANGEDBY" CONTENT="Arno Teigseth">
+	<META NAME="CHANGEDBY" CONTENT="Arno Teigseth">
+	<STYLE TYPE="text/css">
+	<!--
+		H2.cjk { font-family: "WenQuanYi Zen Hei" }
+		H2.ctl { font-family: "Lohit Hindi" }
+		H3.cjk { font-family: "WenQuanYi Zen Hei" }
+		H3.ctl { font-family: "Lohit Hindi" }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="es-ES" DIR="LTR">
+<H1>TOE Online Editor | Guía del usuario</H1>
+<P STYLE="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.03in; padding-left: 0in; padding-right: 0in">
+<A HREF="../en/userguide.html">English</A> Español <A HREF="../no/userguide.html">Norsk</A></P>
+<OL>
+	<OL>
+		<LI VALUE=1><H2 CLASS="western">Description</H2>
+	</OL>
+</OL>
+<DIV ID="Frame1" DIR="LTR" STYLE="float: right; width: 1.99in; height: 3.41in; border: none; padding: 0in; background: #ffffff">
+	<P STYLE="margin-top: 0.08in; margin-bottom: 0.08in"><IMG SRC="../img/multipleAreas.png" NAME="graphics1" ALIGN=RIGHT WIDTH=100% BORDER=0><BR CLEAR=RIGHT><FONT SIZE=3><I>Ilustración
+	1: Múltiples áreas</I></FONT></P>
+</DIV>
+<P STYLE="margin-left: 0.98in; margin-bottom: 0in">El <B>TOE</B> es un editor en línea para <B>POIes</B> (del ingles "points of interest", puntos de interés) agrupados
+por <B>areas</B><SPAN STYLE="font-weight: normal">.</SPAN></P>
+<P STYLE="margin-left: 0.98in; margin-bottom: 0in">Está diseñado para poder
+ordenar por ejemplo visitas de ventas, amigos u otras cosas. Hay una función conveniente que
+<B>automáticamente enumerae</B> las visitas que hay dentro de un área, en el momento de imprimirlo.</P>
+<P STYLE="margin-left: 0.98in; margin-bottom: 0in">No hay ninguna función que permite
+guardar los datos en servidores en línea. La ÚNICA MANERA DE GUARDAR LOS DATOS es descargándolos como datos OSM o SVG.
+Si opta por descargar (<A href="#export">exportar</A>) los datos en el formato OSM, luego puedes
+cargarlos (<A HREF="#import">importarlos</A>) para seguirlos trabajando.</P>
+<P STYLE="margin-left: 0.98in; margin-bottom: 0in">El nombre TOE es un acrónimo de “<B>TOE Online Editor</B>”, pero si no te gustan los acrónimos recursivos, puedes crear to propio "bacronym".
+</P>
+<OL>
+	<OL START=2>
+		<LI><H2 CLASS="western">POI</H2>
+		<OL TYPE=A>
+			<LI><H3 CLASS="western">Añadir POIes</H3>
+		</OL>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.98in">Haz click en el menu de la esquina superior derecha hasta seleccionar 
+<IMG SRC="../img/poiselected.png" NAME="graphics15" ALIGN=BOTTOM WIDTH=141 HEIGHT=49 BORDER=0>
+POI<SPAN STYLE="font-weight: normal">(</SPAN><B>bold</B><SPAN STYLE="font-weight: normal">).</SPAN></P>
+<P STYLE="margin-left: 0.98in"><SPAN STYLE="font-weight: normal">Luego
+mantén la tecla </SPAN><B>SHIFT </B><SPAN STYLE="font-weight: normal">en tu teclado y </SPAN><B>haz click para añadir</B> <SPAN STYLE="font-weight: normal">un
+POI (punto de interés). Aparecerá una burbuja que te deja </SPAN><B>escribir anotaciones</B> <SPAN STYLE="font-weight: normal">.
+<IMG SRC="../img/addedArno.png" NAME="graphics16" ALIGN=BOTTOM WIDTH=397 HEIGHT=308 BORDER=0>
+El botón </SPAN><B>Save</B> <SPAN STYLE="font-weight: normal">es para guardar los cambios.</SPAN></P>
+<OL>
+	<OL START=2>
+		<OL TYPE=A START=2>
+			<LI><H3 CLASS="western">Mover los POIes</H3>
+		</OL>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.98in">To move a POI, grab it, drag it to its
+new location and release it. X marks the spot. 
+<IMG SRC="../img/movePOI.png" NAME="graphics21" ALIGN=BOTTOM WIDTH=83 HEIGHT=100 BORDER=0></P>
+<P STYLE="margin-left: 0.98in"><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<OL>
+	<OL START=2>
+		<OL TYPE=A START=3>
+			<LI><H3 CLASS="western">Deleting POIs</H3>
+		</OL>
+	</OL>
+</OL>
+<P STYLE="margin-left: 1.58in">To delete a POI, <SPAN STYLE="font-weight: normal">press
+the </SPAN><B>SHIFT </B><SPAN STYLE="font-weight: normal">key on your
+keyboard and</SPAN> <B>click the POI to delete it</B><SPAN STYLE="font-weight: normal">.
+A warning will appear </SPAN>
+<IMG SRC="../img/suretodeletePOI.png" NAME="graphics17" ALIGN=BOTTOM WIDTH=499 HEIGHT=174 BORDER=0>
+<SPAN STYLE="font-weight: normal">and if you're sure you want to
+delete the POI, click </SPAN><B>OK</B><SPAN STYLE="font-weight: normal">.</SPAN></P>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<OL>
+	<OL START=2>
+		<LI><H2 CLASS="western">Areas</H2>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.79in; margin-bottom: 0in">The <B>areas</B>
+have the function of grouping POIs. The <B>POIs are not assigned to
+</B><SPAN STYLE="font-weight: normal">any</SPAN> area, so if you move
+the area limits, POIs that fall outside the area are NOT included in
+the area print. Another effect of this is that you can have multiple
+areas covering the same POIs. See <I>illustration 1</I>.</P>
+<OL>
+	<OL TYPE=A>
+		<OL TYPE=A>
+			<LI><H3 CLASS="western">Creating areas</H3>
+		</OL>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.79in">To create an area, click on the mode
+selector in the upper right corner until the <B>Area</B> entry is
+selected <B>(bold):</B> 
+<IMG SRC="../img/poiselected.png" NAME="graphics2" ALIGN=BOTTOM WIDTH=141 HEIGHT=49 BORDER=0></P>
+<P STYLE="margin-left: 0.79in">Then press the <B>SHIFT </B><SPAN STYLE="font-weight: normal">key
+on your keyboard and</SPAN> <B>click to add</B> an area corner node.
+Keep <B>SHIFT</B> down and click to add more nodes: 
+<IMG SRC="../img/area1.png" NAME="graphics3" ALIGN=BOTTOM WIDTH=154 HEIGHT=132 BORDER=0></P>
+<P STYLE="margin-left: 0.79in">After a few clicks you'll see the area
+forming: 
+<IMG SRC="../img/area2.png" NAME="graphics4" ALIGN=BOTTOM WIDTH=122 HEIGHT=92 BORDER=0>
+The <B>new nodes</B> will be placed as new corner nodes <B>breaking
+up the nearest area limit</B>. In the example below, the right (east)
+imit was the nearest to the new point to the right.</P>
+<P STYLE="margin-left: 0.79in">If you were a bit too eager and added
+some point out in the wild, 
+<IMG SRC="../img/areanodeDelete.png" NAME="graphics5" ALIGN=BOTTOM WIDTH=346 HEIGHT=90 BORDER=0>
+<B>delete it by keeping SHIFT down and click </B><SPAN STYLE="font-weight: normal">the
+unwanted node</SPAN>. It will be deleted immediately, returning you
+to the nice triangle shown above.</P>
+<P STYLE="margin-left: 0.79in"><BR><BR>
+</P>
+<P STYLE="margin-left: 0.79in">To <B>set a name/number</B> for the
+area, click inside the selected area to pop-up the info bubble. 
+<IMG SRC="../img/area-setname-print-delete.png" NAME="graphics6" ALIGN=BOTTOM WIDTH=362 HEIGHT=401 BORDER=0>
+Here you can set the name and number for the area. None of these are
+actually required, but might help you organize your POIs. The <B>Save</B>
+button is supposed to be self-explanatory.</P>
+<OL>
+	<OL TYPE=A>
+		<OL TYPE=A START=2>
+			<LI><H3 CLASS="western">Modifying areas</H3>
+		</OL>
+	</OL>
+</OL>
+<OL>
+	<OL TYPE=A>
+		<OL>
+			<LI><H3 CLASS="western">Moving areas</H3>
+		</OL>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.79in">To <B>move</B> an entire area, grab
+inside the selected area and drag it around. To <B>move one of the
+limits</B>, grab one of the red, round corner points and drag them
+around.</P>
+<OL>
+	<OL TYPE=A>
+		<OL START=2>
+			<LI><H3 CLASS="western"><A NAME="snap"></A><SPAN ID="Frame2" DIR="LTR" STYLE="float: right; width: 3.22in; height: 3.78in; border: none; padding: 0in; background: #ffffff">
+				<P STYLE="margin-top: 0.08in; margin-bottom: 0.08in"><IMG SRC="../img/newarea.png" NAME="graphics10" ALIGN=RIGHT WIDTH=100% BORDER=0><BR CLEAR=RIGHT><FONT SIZE=3><I>Illustration
+				1: Double borders problem</I></FONT></P>
+			</SPAN>Snapping area edges 
+			</H3>
+		</OL>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.79in">To ease the manipulation of adjacent
+areas, TOE has an corner snapping feature. The problem is illustrated
+in <I>Illustration 2</I>: Without corner snapping you'd have to move
+the area-separating limits twice, once for each area. It gets worse
+when you have more than two areas. 
+</P>
+<P STYLE="margin-left: 0.79in"><B>To snap together</B> two areas,
+<B>first sketch-draw</B> the new area (approximately like you want
+it). 
+</P>
+<P STYLE="margin-left: 0.79in"><B>Then drag</B> one of the corner
+nodes towards the corner of the other area. It will <B>snap to the
+other area's corner</B> when you're close enough. 
+<IMG SRC="../img/areanode-snap.png" NAME="graphics12" ALIGN=BOTTOM WIDTH=228 HEIGHT=176 BORDER=0></P>
+<P STYLE="margin-left: 0.79in">After the corners have snapped
+together, it's easier to rearrange the area limits: When you move one
+corner node, 
+<IMG SRC="../img/snap-effect1.png" NAME="graphics11" ALIGN=BOTTOM WIDTH=196 HEIGHT=187 BORDER=0>
+<B>both (all)</B> areas are affected:<IMG SRC="../img/snap-effect2.png" NAME="graphics13" ALIGN=BOTTOM WIDTH=185 HEIGHT=194 BORDER=0></P>
+<OL>
+	<OL TYPE=A>
+		<OL START=3>
+			<LI><H3 CLASS="western">Deleting areas</H3>
+		</OL>
+	</OL>
+</OL>
+<P><BR><BR>
+</P>
+<P STYLE="margin-left: 0.79in">To <B>delete an entire area</B>, click
+inside the selected area and click <B>Delete</B>. A warning dialog
+will appear, 
+<IMG SRC="../img/area-delete.png" NAME="graphics7" ALIGN=BOTTOM WIDTH=437 HEIGHT=412 BORDER=0>
+click OK if you're sure.</P>
+<P><BR><BR>
+</P>
+<OL>
+	<OL TYPE=A>
+		<OL START=2>
+			<LI><H3 CLASS="western">Splitting areas</H3>
+		</OL>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.79in">Splitting areas isn't supported with
+its own function. To <B>split an area</B>, just <B>resize it 
+<IMG SRC="../img/resize-area.png" NAME="graphics14" ALIGN=BOTTOM WIDTH=296 HEIGHT=237 BORDER=0></B>
+to a smaller size, click outside to deselect it and <B>draw a new
+area beside</B> it. <B><A HREF="#snap">Snap</A> the edges</B>
+together, and you're left with a split area.</P>
+<OL>
+	<OL TYPE=A>
+		<OL START=2>
+			<LI><H3 CLASS="western"><IMG SRC="../img/printview.png" NAME="graphics9" ALIGN=RIGHT WIDTH=715 HEIGHT=856 BORDER=0>Printing
+			areas</H3>
+		</OL>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.79in">To <B>print an area</B> with the POIs
+inside it, click inside the selected area and click Print. You get to
+choose between “Google <B>live</B> map” printing or a <B>static</B>
+SVG image.</P>
+<OL>
+	<OL TYPE=A>
+		<OL>
+			<LI><H3 CLASS="western"><IMG SRC="../img/print-select-googleAPI.png" NAME="graphics8" ALIGN=LEFT WIDTH=307 HEIGHT=161 BORDER=0><BR CLEAR=LEFT>Live
+			map print</H3>
+		</OL>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.79in">If you select Google Maps API, a new
+page with the map and visits will be opened. The area limits will be
+outlined on the map, and the POIs will be numbered automatically.
+Below the image the POIs are listed in numerical order, with their
+comments on the right. It's a <B>live</B> map print because you <B>can
+zoom and drag the image</B> around before printing.</P>
+<P STYLE="margin-left: 0.79in">To <B>create a PDF</B> you can print
+it to a PDF printer (like <A HREF="http://download.cnet.com/PrimoPDF/3000-18497_4-10264577.html?part=dl-10264577&amp;subj=dl&amp;tag=button" TARGET="_blank">Primo
+PDF</A>).</P>
+<P STYLE="margin-left: 0.79in">To <B>save</B> it<FONT COLOR="#ff0000"><SPAN STYLE="background: transparent">
+&lt;TODO this isn't possible for the moment? Images save but Google
+API session is lost it seems?&gt;</SPAN></FONT> <I>But you will </I><I><SPAN STYLE="font-weight: normal">not</SPAN></I>
+<I>be able to edit it.</I> 
+</P>
+<P STYLE="margin-left: 0.79in">To <B>save the data and be able to
+edit</B> it later on, see <A HREF="#export">Exporting</A> data below.</P>
+<P STYLE="margin-left: 0.79in"><BR><BR>
+</P>
+<P STYLE="margin-left: 0.79in"><BR><BR>
+</P>
+<P STYLE="margin-left: 0.79in"><BR><BR>
+</P>
+<OL>
+	<OL TYPE=A>
+		<OL>
+			<LI><H3 CLASS="western">Static map print</H3>
+		</OL>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.79in"><FONT COLOR="#ff0000">&lt;TODO&gt;
+This function is not 100% ready yet; caveat emptor.</FONT></P>
+<P STYLE="margin-left: 0.79in">If you select SVG, it will just with a
+<B>static image </B><SPAN STYLE="font-weight: normal">(</SPAN>zoom/drag
+around is not possible online). The benefit here is that you can <B>open
+the SVG</B> file with a file editor, for example <A HREF="http://inkscape.org/download/?lang=en" TARGET="_blank">inkscape</A>,
+to manually touch-up the map (move/rotate/resize street names,
+labels, delete things, change colors … generally change everything
+you want).</P>
+<P STYLE="margin-left: 0.79in">To <B>create a PDF</B> you can print
+it to a PDF printer (like <A HREF="http://download.cnet.com/PrimoPDF/3000-18497_4-10264577.html?part=dl-10264577&amp;subj=dl&amp;tag=button" TARGET="_blank">Primo
+PDF</A>).</P>
+<P STYLE="margin-left: 0.79in">To <B>save</B> it, just press <B>Save
+page </B><SPAN STYLE="font-weight: normal">in your</SPAN> <SPAN STYLE="font-weight: normal">internet</SPAN>
+<B>browser</B>. Since all things are static <B>(unchangable),</B> it
+won't be a problem to open it later. <I><SPAN STYLE="font-weight: normal">But
+you will not be able to edit it. </SPAN></I>
+</P>
+<P STYLE="margin-left: 0.79in">To <B>save the data and be able to
+edit</B> it later on, see <A HREF="#export">Exporting</A> data below.</P>
+<OL>
+	<OL START=4>
+		<a name="export"></a><LI><H2 CLASS="western">Exporting data</H2>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.79in">When you feel you've done enough and
+want to continue later, you need to export the AREA and POI data.
+Nothing gets stored on the server, so you'll have to export the data
+and save it on your computer. All the data is combined in <B>one
+single file</B>.</P>
+<P STYLE="margin-left: 0.79in">To <B>export</B> the data, click the
+<B>Menu</B> on the right, 
+<IMG SRC="../img/menu.png" NAME="graphics18" ALIGN=BOTTOM WIDTH=147 HEIGHT=172 BORDER=0>
+and choose <B>Save file</B><SPAN STYLE="font-weight: normal">. You'll
+be presented with a download dialog; save the file somewhere to be
+able to load the data later.</SPAN></P>
+<OL>
+	<OL START=5>
+		<a name="import"></a><LI><H2 CLASS="western">Importing data</H2>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.79in">When you want to keep working on data
+that was previously exported, choose <B>Menu</B> on the right, 
+<IMG SRC="../img/menu.png" NAME="graphics19" ALIGN=BOTTOM WIDTH=147 HEIGHT=172 BORDER=0>
+and choose <B>Open file</B>. Find the .osm file you want to load, and
+click Open. Note that <B>you can import several</B> different .osm
+files if you like, but <I><B>make sure they don't overlap</B></I>.
+<I>Y</I><I><SPAN STYLE="font-weight: normal">ou should expect </SPAN></I><I><B>strange
+behaviour</B></I> <SPAN STYLE="font-weight: normal">i</SPAN>f you
+load the <B>same file</B> twice, or load files with <B>overlapping</B>
+data.</P>
+<OL>
+	<OL START=6>
+		<LI><H2 CLASS="western">Technical/legal details</H2>
+	</OL>
+</OL>
+<P STYLE="margin-left: 0.79in">The project is developed as open
+source. If you'd like to have a look at the source code, put up your
+own server or help out on coding, translating or helping in other
+ways, have a look at the project page on
+<A HREF="https://github.com/iqqmuT/area-editor" TARGET="_blank">https://github.com/iqqmuT/area-editor</A>
+</P>
+<P STYLE="margin-left: 0.79in"><B>NOTE that the license for using
+this software is GPL3</B>, so it is ILLEGAL TO HOST THIS PROJECT OR
+DERIVATIVES WITHOUT ALSO PROVIDING A DOWNLOAD LINK FOR THE RUNNING
+CODE. Open source is not the same as “I do what I want”, if <B>you
+improve the project</B>, you're LEGALLY BOUND TO SHARE YOUR
+IMPROVEMENTS.</P>
+<P STYLE="margin-left: 0.79in">Patents: If any patents that override
+the license apply to this project's code in the jurisdiction where
+the tool server is installed, you are personally responsible for
+paying the respective royalties. If you don't want to pay, you're not
+allowed to use the tool. If any applicable law prohibits this kind of
+disclaimers, then the use of this tool is prohibited in your country.
+Sorry. If you any time run into this problem, please contact the
+developers so we can try and find a way around the patent. Or be
+elected into the government and remove software patents altogether.</P>
+<P STYLE="margin-left: 0.79in">The data are exported in OSM
+(<A HREF="http://openstreetmap.org/" TARGET="_blank">openstreetmap</A>)
+data format but are NOT INTENDED to be submitted to the openstreetmap
+servers. This way the data can also be edited offline, with tools
+like <A HREF="https://josm.openstreetmap.de/" TARGET="_blank">josm</A>
+or others. The data are your personal POIs, and while it is
+technically possible to store them on the openstreetmap servers, they
+do not have the correct tags to be useful on those servers. You would
+probably be banned from the openstreetmap servers if you started
+saving personal stuff on their public servers.</P>
+<P STYLE="margin-left: 0.79in">All external links on this page open
+in a new window or tab.</P>
+<P STYLE="margin-left: 0.79in">There are test servers running on
+<A HREF="http://arno.homelinux.org/toe/">http://arno.homelinux.org/toe/</A>
+and <A HREF="http://territories.tumppi.com/">http://territories.tumppi.com/</A>
+but beware that they are running development versions of this
+project. Things could go wrong and you end up with an empty file when
+you save the day's work. <A HREF="http://edp.org/monkey.htm" TITLE="That is, 'Always make backups!'" TARGET="_blank">Always
+mount a scratch monkey</A> and find yourself a stable server for
+production use.</P>
+<P STYLE="margin-left: 0.79in"><BR><BR>
+</P>
+<P>Last modified by Arno the <SDFIELD TYPE=DOCINFO SUBTYPE=CHANGE FORMAT=DATE SDNUM="1033;1033;MM/DD/YY">12/26/10</SDFIELD>
+on <SDFIELD TYPE=DOCINFO SUBTYPE=CHANGE FORMAT=TIME SDNUM="1033;1033;HH:MM:SS AM/PM">06:40:37 PM</SDFIELD></P>
+</BODY>
+</HTML>
