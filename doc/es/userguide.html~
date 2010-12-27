@@ -67,8 +67,7 @@ El botón </SPAN><B>Save</B> <SPAN STYLE="font-weight: normal">es para guardar l
 		</OL>
 	</OL>
 </OL>
-<P STYLE="margin-left: 0.98in">To move a POI, grab it, drag it to its
-new location and release it. X marks the spot. 
+<P STYLE="margin-left: 0.98in">Para mover un POI, agárralo, arrastralo a su nueva ubicación y suéltalo. El X indica dónde caerá. 
 <IMG SRC="../img/movePOI.png" NAME="graphics21" ALIGN=BOTTOM WIDTH=83 HEIGHT=100 BORDER=0></P>
 <P STYLE="margin-left: 0.98in"><BR><BR>
 </P>
@@ -77,17 +76,16 @@ new location and release it. X marks the spot.
 <OL>
 	<OL START=2>
 		<OL TYPE=A START=3>
-			<LI><H3 CLASS="western">Deleting POIs</H3>
+			<LI><H3 CLASS="western">Borrar POIes</H3>
 		</OL>
 	</OL>
 </OL>
-<P STYLE="margin-left: 1.58in">To delete a POI, <SPAN STYLE="font-weight: normal">press
-the </SPAN><B>SHIFT </B><SPAN STYLE="font-weight: normal">key on your
-keyboard and</SPAN> <B>click the POI to delete it</B><SPAN STYLE="font-weight: normal">.
-A warning will appear </SPAN>
+<P STYLE="margin-left: 1.58in">Para borrar un POI, <SPAN STYLE="font-weight: normal">mantén la tecla </SPAN><B>SHIFT </B><SPAN STYLE="font-weight: normal">
+en tu teclado y</SPAN> <B>haz click en el POI que quiere borrar</B><SPAN STYLE="font-weight: normal">.
+Aparecerá una advertencia </SPAN>
 <IMG SRC="../img/suretodeletePOI.png" NAME="graphics17" ALIGN=BOTTOM WIDTH=499 HEIGHT=174 BORDER=0>
-<SPAN STYLE="font-weight: normal">and if you're sure you want to
-delete the POI, click </SPAN><B>OK</B><SPAN STYLE="font-weight: normal">.</SPAN></P>
+<SPAN STYLE="font-weight: normal">, y si estás seguro que lo 
+quieres borrar, haz click en </SPAN><B>OK</B><SPAN STYLE="font-weight: normal">.</SPAN></P>
 <P><BR><BR>
 </P>
 <P><BR><BR>
