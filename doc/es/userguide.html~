@@ -26,7 +26,7 @@
 <A HREF="../en/userguide.html">English</A> Español <A HREF="../no/userguide.html">Norsk</A></P>
 <OL>
 	<OL>
-		<LI VALUE=1><H2 CLASS="western">Description</H2>
+		<LI VALUE=1><H2 CLASS="western">Descripción</H2>
 	</OL>
 </OL>
 <DIV ID="Frame1" DIR="LTR" STYLE="float: right; width: 1.99in; height: 3.41in; border: none; padding: 0in; background: #ffffff">
@@ -95,10 +95,10 @@ quieres borrar, haz click en </SPAN><B>OK</B><SPAN STYLE="font-weight: normal">.
 		<LI><H2 CLASS="western">Areas</H2>
 	</OL>
 </OL>
-<P STYLE="margin-left: 0.79in; margin-bottom: 0in">The <B>areas</B>
-have the function of grouping POIs. The <B>POIs are not assigned to
-</B><SPAN STYLE="font-weight: normal">any</SPAN> area, so if you move
-the area limits, POIs that fall outside the area are NOT included in
+<P STYLE="margin-left: 0.79in; margin-bottom: 0in">Los <B>áreas</B>
+tienen la función de agrupar a los POIes. Los <B>POIes no están asignados a
+</B><SPAN STYLE="font-weight: normal">los áreas</SPAN>, así que si mueves los límites
+de los áreas, entonces los POIes que quedan fuera del área that fall outside the area are NOT included in
 the area print. Another effect of this is that you can have multiple
 areas covering the same POIs. See <I>illustration 1</I>.</P>
 <OL>
