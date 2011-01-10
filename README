@@ -1,6 +1,6 @@
-area-editor is an online tool to create and edit areas using Google Maps API.
+TOE is an online tool to create and edit areas using Google Maps API.
 
-area-editor uses following JavaScript libraries:
+TOE uses following JavaScript libraries:
  * Google Maps JavaScript API V3
  * jQuery 1.4.4
  * jQuery UI 1.8.6
@@ -8,4 +8,5 @@ area-editor uses following JavaScript libraries:
 Requirements for PHP server:
  * PHP >= 5.2
  * Magic quotes are disabled
- 
+
+TOE is published under GPLv3 license [http://www.gnu.org/licenses/gpl-3.0.html].
