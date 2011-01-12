@@ -85,17 +85,16 @@ function dump(arr,level) {
 
 
 function initialize() {
-
   osm_map_type = new google.maps.ImageMapType({
     getTileUrl: function(coord, zoom) {
-		return "http://tile.openstreetmap.org/" +
-		zoom + "/" + coord.x + "/" + coord.y + ".png";
-	},
-	tileSize: new google.maps.Size(256, 256),
-	isPng: true,
-	alt: "OpenStreetMap layer",
-	name: "OSM",
-	maxZoom: 19
+      return "http://tile.openstreetmap.org/" +
+      zoom + "/" + coord.x + "/" + coord.y + ".png";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    isPng: true,
+    alt: "OpenStreetMap layer",
+    name: "OSM",
+    maxZoom: 19
   });
 
   var latlng = new google.maps.LatLng(0, 0);
@@ -149,6 +148,19 @@ function initialize() {
   initializeDialogs(true);
 }
 
+function unsavedChanges() {
+  return (pois.changed || areas.changed);
+}
+
+// show a confirmation dialog if user wants to leave the page without saving the changes
+function closeWindow() {
+  if (unsavedChanges())
+    return "You will lose unsaved changes if you leave the page. Click 'Save file...' from menu to save the changes.";
+  else return null;
+}
+
+window.onbeforeunload = closeWindow;
+
 function initializeDialogs(autoOpen) {  
   // initialize file dialogs
   $("#file_open_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-folder-open" style="float:left; margin-right: 5px;"></span>Open file',
@@ -180,6 +192,9 @@ function exportFile() {
   $("#areas_json").val(areas.toJSON());
   $("#export_map_bounds").val(map.getBounds().toString());
   $("#file_save_dialog").dialog('close');
+  // disable changed flags from areas and pois
+  areas.changed = false;
+  pois.changed = false;
   return true;
 }
 
@@ -189,12 +204,12 @@ function MenuControl() {
   var $div = $('<div></div>');
   $div.css({ 'cursor': 'pointer',
             'margin': '5px',
-	    'width': '95px',
+            'width': '95px',
             'font-family': 'Arial,sans-serif',
             'font-size': '12px',
-	    'text-align': 'center',
-	    'background-color': 'white',
-	    'border': '2px solid black'
+            'text-align': 'center',
+            'background-color': 'white',
+            'border': '2px solid black'
   });
   var $file_ui = $('<div id="file_button" style="padding-left: 30px" title="Click to open / close menu"><span style="float:left">Menu</span><span id="file_button_icon" class="ui-icon ui-icon-triangle-1-s" style="float: left;"></span><div style="clear:both"></div></div>');
   $div.append($file_ui);
@@ -553,6 +568,7 @@ function fitBounds() {
 }
 
 function PoiManager() {
+  this.changed = false;
   this.pois = [];
   this.new_id = 1;
   
@@ -562,6 +578,7 @@ function PoiManager() {
       poi.id = this.get_new_id();
     }
     this.pois.push(poi);
+    this.changed = true;
   };
 
   this.remove = function(poi) {
@@ -571,6 +588,7 @@ function PoiManager() {
         poi.marker.setMap(null);
         this.pois.splice(i, 1);
 	delete poi;
+	this.changed = true;
         return true;
       }
     }
@@ -596,6 +614,7 @@ function PoiManager() {
     this.add(poi);
     poi.show();
     poi.showInfoWindow();
+    this.changed = true;
   };
 
   this.get_new_id = function() {
@@ -630,6 +649,7 @@ function PoiManager() {
     console.log("poi_id: " + id);
     console.log(event);
     event.stopPropagation();
+    this.changed = true;
     return false; // return false so we don't submit the form
   };
   
@@ -931,6 +951,7 @@ function Boundary(latLng) {
 }
 
 function AreaManager() {
+  this.changed = false;
   this.active_area;
   this.areas = [];
   this.new_id = 1;
@@ -941,6 +962,7 @@ function AreaManager() {
       area.id = this.get_new_id();
     }
     this.areas.push(area);
+    this.changed = true;
   };
   
   // remove given area
@@ -951,6 +973,7 @@ function AreaManager() {
           area.remove();
           this.areas.splice(i, 1);
 	  info_window.close(); // shut info window, because user might have used that to delete the area
+          this.changed = true;
           return true;
 	}
       }
@@ -995,6 +1018,7 @@ function AreaManager() {
     console.log("area_id: " + id);
     console.log(event);
     event.stopPropagation();
+    this.changed = true;
     return false;
   };
   
