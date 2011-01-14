@@ -14,15 +14,22 @@ body {
   margin: 0px;
   padding: 0px;
   page-break-before: always;
+  border:1px solid;
+  width:100%;
+  border-collapse:collapse;
 }
 
-.poi-list li {
+.poi-list th {
+  width:50%;
+}
+
+.poi-list tr td {
   margin: 2px;
   padding: 1px;
-  list-style: none;
+  border: 1px solid;
 }
 
-.poi-list li.even {
+.poi-list tr:nth-child(even) {
   background-color: #eee;
 }
 

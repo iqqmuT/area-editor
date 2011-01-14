@@ -115,21 +115,21 @@ class MapBase {
 	$output = "";
 	if (count($pois)) {
 	    $i = 1;
-	    $output .= '<ul class="poi-list">';
+	    $output .= '<table class="poi-list"><tr><th>';
 	    $area_info = get_area_info();
 	    if ($area_info) {
 	        $output .= '<b>' . htmlentities($area_info) . '</b>';
 	    }
+       $output .= ':::Notes</th><th>Observations</th></tr>';	    
 	    foreach ($pois as $poi) {
 		$label = $i;
 		$i = $i + 1;
-		$li_class = ($i % 2 == 0) ? "odd" : "even";
-	        $output .= '<li class="' . $li_class . '"><span class="label">';
-	        $output .= $label . ":</span> ";
+	        $output .= '<tr><td>';
+	        $output .= $label . ":";
 	        $output .= str_replace("\n", "<br/>", $poi->notes);
-	        $output .= "</li>";
+	        $output .= "</td><td>&nbsp;<br>&nbsp;</td></tr>"; // Q: What the ? A: This makes sure the rows are at least 2 lines high, so that we can hand-write a note on the printed-out paper :)
            }
-	   $output .= '</ul>';
+	   $output .= '</table>';
         }
         return $output;
     }
