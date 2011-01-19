@@ -1,4 +1,26 @@
 <!DOCTYPE html>
+<?php
+/*
+ * Copyright 2011 Arno Teigseth, Tuomas Jaakola
+ * 
+ * This file is part of TOE.
+ *
+ * TOE is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TOE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TOE.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * index.php
+ */
+?>
 <html lang="en-US">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
@@ -14,7 +36,7 @@
       // initialize the whole thing by calling initialize()
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
-    <title>Online area editor</title>
+    <title>TOE</title>
   </head>
   <body>
     <div id="map_canvas" style="width:100%; height:100%"></div>
@@ -54,11 +76,11 @@
     </div>
     <div id="help_dialog" style="display:none">
       <p>
-        This is the online area editor.
+        This is TOE (abbreviation for TOE Online Editor).
       </p>
       <h2>Files</h2>
       <p>
-        There is no database support in the online area editor. However,
+        There is no database support in TOE. However,
 	you can import and export data using files.
       </p>
       <h2>How to edit</h2>
@@ -74,7 +96,7 @@
 	it, and clicking an activated area you can edit its data.
 	Clicking POIs you can edit their data.
       </p>
-<p>You can get more help reading the <a href="doc/en/userguide.html" target="_blank">User's guide</a></p>
+      <p>You can get more help by reading the <a href="doc/en/userguide.html" target="_blank">User's guide</a></p>
       <p>
         This software is open source. The source code is available on <a href="https://github.com/iqqmuT/area-editor">github</a>.
       </p>
