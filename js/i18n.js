@@ -1,4 +1,3 @@
-<?php
 /*
  * Copyright 2011 Arno Teigseth, Tuomas Jaakola
  * 
@@ -17,18 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with TOE.  If not, see <http://www.gnu.org/licenses/>.
  *
- * util funcs
+ * Localization JavaScript file of TOE.
+ * 
  */
 
-// parses string "((-37.43997405227057, -126.5625), (37.43997405227057, 126.5625))"
-function parse_bounds($bounds) {
-    $parts = explode(',', $bounds);
-    for ($i = 0; $i < count($parts); $i++) {
-        $parts[$i] = trim($parts[$i], " ()");
-    }
-    $bounds_arr = array(array($parts[0], $parts[1]),
-                        array($parts[2], $parts[3]));
-    return $bounds_arr;
+var lang = 'en';          // selected language (English by default)
+var localizations = null; // array of all strings used in TOE JS
+
+function setLanguage(language, json_data) {
+  lang = language;
+  localizations = json_data;
 }
 
-?>
+function tr(key, param) {
+  if (localizations[key] == undefined) return key;
+  
+  // if there is '%s' in the string, replace it with given param
+  var str = localizations[key];
+  return str.replace("%s", param);
+}

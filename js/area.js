@@ -155,7 +155,8 @@ function unsavedChanges() {
 // show a confirmation dialog if user wants to leave the page without saving the changes
 function closeWindow() {
   if (unsavedChanges())
-    return "You will lose unsaved changes if you leave the page. Click 'Save file...' from menu to save the changes.";
+    return tr('unsaved_changes');
+    //return "You will lose unsaved changes if you leave the page. Click 'Save file...' from menu to save the changes.";
   else return null;
 }
 
@@ -163,29 +164,34 @@ window.onbeforeunload = closeWindow;
 
 function initializeDialogs(autoOpen) {  
   // initialize file dialogs
-  $("#file_open_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-folder-open" style="float:left; margin-right: 5px;"></span>Open file',
+  $("#file_open_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-folder-open" style="float:left; margin-right: 5px;"></span>' + tr('Open file'),
                                   'width': '300px',
 				  'autoOpen': autoOpen,
 			          'resizable': false });
-  $("#file_save_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-arrowthickstop-1-s" style="float:left; margin-right: 5px;"></span>Save file',
+  $("#file_save_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-arrowthickstop-1-s" style="float:left; margin-right: 5px;"></span>' + tr('Save file'),
                                   'width': '300px',
 				  'autoOpen': false,
 			          'resizable': false });
-  $("#help_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-help" style="float:left; margin-right: 5px;"></span>Help',
+  $("#help_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-help" style="float:left; margin-right: 5px;"></span>' + tr('Help'),
                                   'width': '500px',
 				  'autoOpen': false,
 			          'resizable': false });
-  $("#print_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-print" style="float:left; margin-right: 5px;"></span>Print',
+  $("#print_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-print" style="float:left; margin-right: 5px;"></span>' + tr('Print'),
                                   'width': '300px',
+				  'autoOpen': false,
+			          'resizable': false });
+  $("#settings_dialog").dialog({ 'title': '<span class="ui-icon ui-icon-wrench" style="float:left; margin-right: 5px;"></span>' + tr('Settings'),
+                                  'width': '400px',
 				  'autoOpen': false,
 			          'resizable': false });
   $(".button").button();
   
   $("#export_form").submit(exportFile);
   $("#print_form").submit(openPrintablePage);
+  $("#settings_form").submit(saveSettings);
 }
 
-  // in export form submit, send values as JSON to server
+// in export form submit, send values as JSON to server
 function exportFile() {
   console.log("exporting...");
   $("#pois_json").val(pois.toJSON());
@@ -196,6 +202,25 @@ function exportFile() {
   areas.changed = false;
   pois.changed = false;
   return true;
+}
+
+// save settings from the dialog
+function saveSettings() {
+  console.log("save settings");
+  // save settings to cookie with ajax, get response as json
+  var settings = $("#settings_form").serialize();
+  $.get('settings.php?', settings, function(data) {
+    console.log('response: ', data);
+    if (data.changed) {
+      if (data.redirect_url) {
+        // setting changes require reload!
+        window.location = data.redirect_url;
+      }     
+    }
+    $("#settings_dialog").dialog('close');
+  }, 'json');
+    
+  return false;
 }
 
 // control for importing / exporting files
@@ -211,18 +236,20 @@ function MenuControl() {
             'background-color': 'white',
             'border': '2px solid black'
   });
-  var $file_ui = $('<div id="file_button" style="padding-left: 30px" title="Click to open / close menu"><span style="float:left">Menu</span><span id="file_button_icon" class="ui-icon ui-icon-triangle-1-s" style="float: left;"></span><div style="clear:both"></div></div>');
+  var $file_ui = $('<div id="file_button" style="padding-left: 30px" title="' +  tr("Click to open / close menu") + '"><span style="float:left">' + tr("Menu") + '</span><span id="file_button_icon" class="ui-icon ui-icon-triangle-1-s" style="float: left;"></span><div style="clear:both"></div></div>');
   $div.append($file_ui);
   $menu_div = $('<div id="file_menu"></div>');
   $menu_div.css({ 'display': 'none' });
   $div.append($menu_div);
-  var $open_file_ui = $('<div id="open_file_button" class="file_menu_item" title="Import data from file">Open file...</div>');
+  var $open_file_ui = $('<div id="open_file_button" class="file_menu_item" title="' + tr("Import data from file") + '">' + tr("Open file") + '...</div>');
   $menu_div.append($open_file_ui);
-  var $save_file_ui = $('<div id="save_file_button" class="file_menu_item" title="Export data into file">Save file...</div>');
+  var $save_file_ui = $('<div id="save_file_button" class="file_menu_item" title="' + tr("Export data into file") + '">' + tr("Save file")+ '...</div>');
   $menu_div.append($save_file_ui);
-  var $print_ui = $('<div id="print_button" class="file_menu_item">Print</div>');
+  var $print_ui = $('<div id="print_button" class="file_menu_item">' + tr("Print") + '</div>');
   $menu_div.append($print_ui);
-  var $help_ui = $('<div id="help_button" class="file_menu_item">Help</div>');
+  var $settings_ui = $('<div id="settings_button" class="file_menu_item" title="' + tr("Change settings") + '">' + tr("Settings") + '</div>');
+  $menu_div.append($settings_ui);
+  var $help_ui = $('<div id="help_button" class="file_menu_item">' + tr("Help") + '</div>');
   $menu_div.append($help_ui);
   
   $file_ui.click(function() {
@@ -234,6 +261,9 @@ function MenuControl() {
       $("#file_menu").slideDown();
       $("#file_button_icon").removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-n');
     }
+  });
+  $settings_ui.click(function() {
+    $("#settings_dialog").dialog('open');
   });
   $open_file_ui.click(function() {
     $("#file_open_dialog").dialog('open');
@@ -268,7 +298,7 @@ function AreaControl($div, visible, editable) {
   var css_visible = { 'opacity': '1' };
   var css_invisible = { 'opacity': '0.1' };
 
-  var $ui = $('<div title="Click to edit layer">Area</div>');
+  var $ui = $('<div title="' + tr("Click to edit layer") + '">' + tr("Area") + '</div>');
   $ui.css({ 'cursor': 'pointer',
 	    'width': '95px',
             'font-family': 'Arial,sans-serif',
@@ -284,7 +314,7 @@ function AreaControl($div, visible, editable) {
   }
   $div.append($ui);
   
-  var $visible_ui = $('<div title="Click to toggle visiblity"><img src="images/stock-eye-20.png" alt="x" style="margin-top: 3px" /></div>');
+  var $visible_ui = $('<div title="' + tr("Click to toggle visibility") + '"><img src="images/stock-eye-20.png" alt="x" style="margin-top: 3px" /></div>');
   $visible_ui.css({ 'float': 'left',
                     'padding-left': '4px',
 		    'padding-right': '4px' });
@@ -344,7 +374,7 @@ function PoiControl($div, visible, editable) {
   var css_visible = { 'opacity': '1' };
   var css_invisible = { 'opacity': '0.1' };
 
-  var $ui = $('<div title="Click to edit layer">POI</div>');
+  var $ui = $('<div title="' + tr("Click to edit layer") + '">' + tr("POI") + '</div>');
   $ui.css({ 'cursor': 'pointer',
 	    'width': '95px',
             'font-family': 'Arial,sans-serif',
@@ -360,7 +390,7 @@ function PoiControl($div, visible, editable) {
   }
   $div.append($ui);
   
-  var $visible_ui = $('<div title="Click to toggle visibility"><img src="images/stock-eye-20.png" alt="x" style="margin-top: 3px" /></div>');
+  var $visible_ui = $('<div title="' + tr("Click to toggle visibility") + '"><img src="images/stock-eye-20.png" alt="x" style="margin-top: 3px" /></div>');
   $visible_ui.css({ 'float': 'left',
                     'padding-left': '4px',
 		    'padding-right': '4px' });
@@ -714,7 +744,7 @@ function Poi(id, address, name, notes, latLng) {
         position: latLng,
         map: map,
         draggable: true,
-        title: 'Click to see details'
+        title: tr('Click to see details')
       });
 
   // marker drag functionality
@@ -731,7 +761,7 @@ function Poi(id, address, name, notes, latLng) {
   google.maps.event.addListener(poi.marker, 'click', function(event) {
     if (poi_control.editable) {
       if (shift_is_down) {
-        if (confirm("Are you sure you want to delete this POI?")) {
+        if (confirm(tr("poi_removal_confirm"))) {
 	  console.log('remove this POI');
 	  pois.remove(poi);
 	}
@@ -767,8 +797,8 @@ function Poi(id, address, name, notes, latLng) {
       '<table>' +
 //      '<tr><td>Address:</td><td><input type="text" id="poi_address" value="' + poi.address + '" class="field" /></td></tr>' +
 //      '<tr><td>Name:</td><td><input type="text" id="poi_name" value="' + poi.name + '" class="field" /></td></tr>' +
-      '<tr><td style="vertical-align: top">Notes:</td><td><textarea id="poi_notes" class="area">' + poi.notes + '</textarea></td></tr>' +
-      '<tr><td></td><td><input type="submit" id="poi_submit" value="Save" onclick="return pois.saveInfo(event)"/></td></tr>' +
+      '<tr><td style="vertical-align: top">' + tr('Notes') + ':</td><td><textarea id="poi_notes" class="area">' + poi.notes + '</textarea></td></tr>' +
+      '<tr><td></td><td><input type="submit" id="poi_submit" value="' + tr("Save") + '" onclick="return pois.saveInfo(event)"/></td></tr>' +
       '</table></form></div>';
     info_window.setOptions({
       content: contentString,
@@ -969,7 +999,7 @@ function AreaManager() {
   this.remove = function(area) {
     for (var i = 0; i < this.areas.length; i++) {
       if (this.areas[i] == area) {
-        if (confirm('Are you sure you want to delete the selected area?')) {
+        if (confirm(tr('area_removal_confirm'))) {
           area.remove();
           this.areas.splice(i, 1);
 	  info_window.close(); // shut info window, because user might have used that to delete the area
@@ -1224,12 +1254,12 @@ function Area(id, number, name, path) {
       '<table>' +
       '<tr><td></td><td>' +
       '<div class="area-functions">' +
-      '<a href="#" onclick="return openPrintDialog();">Print</a> | <a href="#" onclick="return areas.remove(areas.active_area)">Delete</a>' +
+      '<a href="#" onclick="return openPrintDialog();">' + tr("Print") + '</a> | <a href="#" onclick="return areas.remove(areas.active_area)">' + tr("Delete") + '</a>' +
       '</div>' +
       '</td></tr>' +
-      '<tr><td>Number:</td><td><input type="text" id="area_number" value="' + area.number + '" class="field" /></td></tr>' +
-      '<tr><td>Name:</td><td><input type="text" id="area_name" value="' + area.name + '" class="field" /></td></tr>' +
-      '<tr><td></td><td><input type="submit" id="area_submit" value="Save" onclick="return areas.saveInfo(event)"/>' +
+      '<tr><td>' + tr("Number") + ':</td><td><input type="text" id="area_number" value="' + area.number + '" class="field" /></td></tr>' +
+      '<tr><td>' + tr("Name") + ':</td><td><input type="text" id="area_name" value="' + area.name + '" class="field" /></td></tr>' +
+      '<tr><td></td><td><input type="submit" id="area_submit" value="' + tr("Save") + '" onclick="return areas.saveInfo(event)"/>' +
       '</td></tr>' +
       '</table></form></div>';
     var bounds = area.polygon.getBounds();
@@ -1293,7 +1323,7 @@ function Area(id, number, name, path) {
       draggable: true,
       icon: image,
       shape: shape,
-      title: 'Drag to edit, shift-click to remove',
+      title: tr('Drag to edit, shift-click to remove'),
       raiseOnDrag: false
     });
     // marker drag functionality

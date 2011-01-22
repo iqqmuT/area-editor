@@ -17,18 +17,37 @@
  * You should have received a copy of the GNU General Public License
  * along with TOE.  If not, see <http://www.gnu.org/licenses/>.
  *
- * util funcs
+ * settings.php
+ *
+ * Returns JSON object.
  */
 
-// parses string "((-37.43997405227057, -126.5625), (37.43997405227057, 126.5625))"
-function parse_bounds($bounds) {
-    $parts = explode(',', $bounds);
-    for ($i = 0; $i < count($parts); $i++) {
-        $parts[$i] = trim($parts[$i], " ()");
-    }
-    $bounds_arr = array(array($parts[0], $parts[1]),
-                        array($parts[2], $parts[3]));
-    return $bounds_arr;
+$data = array();
+
+$data['changed'] = false;
+
+$old_lang = $_GET['language_old'];
+$new_lang = $_GET['language_new'];
+if (strcmp($old_lang, $new_lang)) {
+    // language setting changed
+    $data['changed'] = true;
+    $data['redirect_url'] = "?lang=" . $new_lang;
+}
+// save language setting even though it was not changed
+save_setting("lang", $new_lang);
+
+// print response as JSON object
+print json_encode($data);
+
+// functions
+// ---------
+
+// save setting to a cookie
+function save_setting($key, $value) {
+    // set cookie epxire time to be expired on 2 year 
+    $expire = time() + (60 * 60 * 24 * 365 * 2);
+    setcookie($key, $value, $expire);
 }
 
 ?>
+

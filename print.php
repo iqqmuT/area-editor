@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with TOE.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Prints static printable map
+ * Print page.
  */
 
+include("lib/common.php");
 include("lib/util.php");
 include("lib/osm.php");
 include("lib/osmarender.php");
@@ -78,7 +79,7 @@ function get_area_info() {
 }
 
 function print_title() {
-    $title = "Online area editor - print";
+    $title = "TOE - print";
     $area_info = get_area_info();
     if ($area_info) {
         $title .= "#" . htmlentities($area_info);
@@ -270,8 +271,6 @@ class SVGOsmarenderMap extends MapBase {
         $html = '<object data="' . $svg_file . '" type="image/svg+xml"> <param name="pluginurl" value="http://www.adobe.com/svg/viewer/install/" /></object>';
 	print $html;
     }
-    
-    
 }
 
 ?>

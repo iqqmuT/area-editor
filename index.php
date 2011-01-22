@@ -20,8 +20,10 @@
  *
  * index.php
  */
+
+include("lib/common.php");
 ?>
-<html lang="en-US">
+<html lang="<? print $lang; ?>">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -31,8 +33,12 @@
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
+    <script type="text/javascript" src="js/i18n.js"></script>
     <script type="text/javascript" src="js/area.js"></script>
     <script type="text/javascript">
+      // set localization
+      var translations = <? print $localization->read_lang_file($lang); ?>;
+      setLanguage('<? print $lang; ?>', translations);
       // initialize the whole thing by calling initialize()
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
@@ -43,20 +49,20 @@
     <!-- dialogs -->
     <div id="file_open_dialog" style="display:none">
       <form action="import.php" method="post" enctype="multipart/form-data" target="upload_target" id="import_form">
-        Supported file formats: .osm<br />
+        <? print tr("Supported file formats"); ?>: .osm<br />
 	<input type="file" name="import_file" id="import_file" /><br /><br />
-	<input type="submit" id="open_button" name="" value="Open" class="button" />
+	<input type="submit" id="open_button" name="" value="<? print tr('Open'); ?>" class="button" />
       </form>
     </div>
     <div id="file_save_dialog" style="display:none">
       <form action="export.php" method="post" id="export_form">
 	<input type="hidden" name="map-bounds" value="" id="export_map_bounds" />
-	Choose format:<br />
+	<? print tr("Choose format"); ?>:<br />
 	<input type="radio" name="format" value="osm" checked="" id="export_format_osm"> <label for="export_format_osm">OSM (Openstreetmap)</label><br />
 	<input type="radio" name="format" value="svg_osmarender" id="export_format_svg_osmarender"> <label for="export_format_svg_osmarender">SVG (Osmarender)</label><br /><br />
 	<textarea id="pois_json" name="pois" style="display:none"></textarea>
 	<textarea id="areas_json" name="areas" style="display:none"></textarea>
-	<input type="submit" name="" value="Save" id="save_button" class="button" />
+	<input type="submit" name="" value="<? print tr('Save') ?>" id="save_button" class="button" />
       </form>
     </div>
     <div id="print_dialog" style="display:none">
@@ -68,38 +74,25 @@
 	<textarea id="print_areas_json" name="areas" style="display:none"></textarea>
 	<textarea id="print_pois_json" name="pois" style="display:none"></textarea>
 	
-	Map format:<br />
+	<? print tr("Map format"); ?>:<br />
 	<input type="radio" name="format" value="dyn" checked="" id="print_format_dyn"> <label for="print_format_dyn">Google Maps API</label><br />
 	<input type="radio" name="format" value="svg_osmarender" id="print_format_svg_osmarender"> <label for="print_format_svg_osmarender">SVG (Osmarender)</label><br /><br />
-	<input type="submit" name="" value="Print" id="print_button" class="button" />
+	<input type="submit" name="" value="<? print tr('Print'); ?>" id="print_button" class="button" />
       </form>
     </div>
     <div id="help_dialog" style="display:none">
-      <p>
-        This is TOE (abbreviation for TOE Online Editor).
-      </p>
-      <h2>Files</h2>
-      <p>
-        There is no database support in TOE. However,
-	you can import and export data using files.
-      </p>
-      <h2>How to edit</h2>
-      <p>
-	<img src="images/help_control1.png" width="107" height="40" alt="control" style="float: right"/>
-	From the right side you can select which layer you are editing.
-	You can edit only one layer at a time. By clicking the eye icon
-	you can hide or show the layer on the map.
-      </p>
-      <p>
-        Clicking the map with shift key down you can add / remove POIs or
-	boundaries of areas. Clicking the area you can activate
-	it, and clicking an activated area you can edit its data.
-	Clicking POIs you can edit their data.
-      </p>
-      <p>You can get more help by reading the <a href="doc/en/userguide.html" target="_blank">User's guide</a></p>
-      <p>
-        This software is open source. The source code is available on <a href="https://github.com/iqqmuT/area-editor">github</a>.
-      </p>
+      <? print tr('help_dialog'); ?>
+    </div>
+    <div id="settings_dialog" style="display:none">
+      <form action="settings.php" method="post" id="settings_form">
+        <input type="hidden" name="language_old" value="<? print $lang; ?>" />
+        <? print tr("Language"); ?>:
+        <select name="language_new">
+          <? print $localization->print_language_options(); ?>
+        </select><br /><br />
+        <? print tr("setting_changes_note"); ?><br /><br />
+        <input type="submit" name="" value="<? print tr('Save'); ?>" id="save_settings_button" class="button" />
+      </form>
     </div>
     <!-- hidden iframe for ajax file upload -->
     <iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px solid #fff; display: none"></iframe>
