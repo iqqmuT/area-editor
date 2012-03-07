@@ -31,16 +31,17 @@ include("lib/common.php");
     <link type="text/css" href="css/ui-darkness/jquery-ui-1.8.6.custom.css" rel="stylesheet" />
     <link type="text/css" href="css/area.css" rel="stylesheet" />
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
     <script type="text/javascript" src="js/i18n.js"></script>
-    <script type="text/javascript" src="js/area.js"></script>
+    <!--<script type="text/javascript" src="js/area.js"></script>-->
+    <script type="text/javascript" src="js/toe.js"></script>
     <script type="text/javascript">
       // set localization
       var translations = <? print $localization->read_lang_file($lang); ?>;
       setLanguage('<? print $lang; ?>', translations);
       // initialize the whole thing by calling initialize()
-      google.maps.event.addDomListener(window, 'load', initialize);
+      google.maps.event.addDomListener(window, 'load', toe.init);
     </script>
     <title>TOE</title>
   </head>
@@ -50,34 +51,34 @@ include("lib/common.php");
     <div id="file_open_dialog" style="display:none">
       <form action="import.php" method="post" enctype="multipart/form-data" target="upload_target" id="import_form">
         <? print tr("Supported file formats"); ?>: .osm<br />
-	<input type="file" name="import_file" id="import_file" /><br /><br />
-	<input type="submit" id="open_button" name="" value="<? print tr('Open'); ?>" class="button" />
+        <input type="file" name="import_file" id="import_file" /><br /><br />
+        <input type="submit" id="open_button" name="" value="<? print tr('Open'); ?>" class="button" />
       </form>
     </div>
     <div id="file_save_dialog" style="display:none">
       <form action="export.php" method="post" id="export_form">
-	<input type="hidden" name="map-bounds" value="" id="export_map_bounds" />
-	<? print tr("Choose format"); ?>:<br />
-	<input type="radio" name="format" value="osm" checked="" id="export_format_osm"> <label for="export_format_osm">OSM (Openstreetmap)</label><br />
-	<input type="radio" name="format" value="svg_osmarender" id="export_format_svg_osmarender"> <label for="export_format_svg_osmarender">SVG (Osmarender)</label><br /><br />
-	<textarea id="pois_json" name="pois" style="display:none"></textarea>
-	<textarea id="areas_json" name="areas" style="display:none"></textarea>
-	<input type="submit" name="" value="<? print tr('Save') ?>" id="save_button" class="button" />
+        <input type="hidden" name="map-bounds" value="" id="export_map_bounds" />
+        <? print tr("Choose format"); ?>:<br />
+        <input type="radio" name="format" value="osm" checked="" id="export_format_osm"> <label for="export_format_osm">OSM (Openstreetmap)</label><br />
+        <input type="radio" name="format" value="svg_osmarender" id="export_format_svg_osmarender"> <label for="export_format_svg_osmarender">SVG (Osmarender)</label><br /><br />
+        <textarea id="pois_json" name="pois" style="display:none"></textarea>
+        <textarea id="areas_json" name="areas" style="display:none"></textarea>
+        <input type="submit" name="" value="<? print tr('Save') ?>" id="save_button" class="button" />
       </form>
     </div>
     <div id="print_dialog" style="display:none">
       <form action="print.php" method="post" id="print_form" target="print_window">
         <input type="hidden" name="map-type" value="" id="print_map_type" />
-	<input type="hidden" name="map-center" value="" id="print_map_center" />
-	<input type="hidden" name="map-zoom" value="" id="print_map_zoom" />
-	<input type="hidden" name="map-bounds" value="" id="print_map_bounds" />
-	<textarea id="print_areas_json" name="areas" style="display:none"></textarea>
-	<textarea id="print_pois_json" name="pois" style="display:none"></textarea>
-	
-	<? print tr("Map format"); ?>:<br />
-	<input type="radio" name="format" value="dyn" checked="" id="print_format_dyn"> <label for="print_format_dyn">Google Maps API</label><br />
-	<input type="radio" name="format" value="svg_osmarender" id="print_format_svg_osmarender"> <label for="print_format_svg_osmarender">SVG (Osmarender)</label><br /><br />
-	<input type="submit" name="" value="<? print tr('Print'); ?>" id="print_button" class="button" />
+        <input type="hidden" name="map-center" value="" id="print_map_center" />
+        <input type="hidden" name="map-zoom" value="" id="print_map_zoom" />
+        <input type="hidden" name="map-bounds" value="" id="print_map_bounds" />
+        <textarea id="print_areas_json" name="areas" style="display:none"></textarea>
+        <textarea id="print_pois_json" name="pois" style="display:none"></textarea>
+
+        <? print tr("Map format"); ?>:<br />
+        <input type="radio" name="format" value="dyn" checked="" id="print_format_dyn"> <label for="print_format_dyn">Google Maps API</label><br />
+        <input type="radio" name="format" value="svg_osmarender" id="print_format_svg_osmarender"> <label for="print_format_svg_osmarender">SVG (Osmarender)</label><br /><br />
+        <input type="submit" name="" value="<? print tr('Print'); ?>" id="print_button" class="button" />
       </form>
     </div>
     <div id="help_dialog" style="display:none">
