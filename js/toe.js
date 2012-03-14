@@ -39,9 +39,9 @@ var toe = new function() {
     console.error = console.error || function(){};
     console.info = console.info || function(){};
 
-    var center = new google.maps.LatLng(0, 0);
+    var center = new google.maps.LatLng(61.483617, 21.7962775);
     var mapOptions = {
-      zoom: 3,
+      zoom: 16,
       center: center,
       mapTypeId: 'OSM',
       mapTypeControlOptions: {
@@ -71,7 +71,7 @@ var toe = new function() {
     map.setMapTypeId('OSM');
 
     var $mode_div = toe.control.Mode.create();
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push($mode_div[0]);
+    map.controls[google.maps.ControlPosition.RIGHT].push($mode_div[0]);
     
     // create the div to hold our custom controls
     var $control_div = $("<div></div>");
@@ -86,8 +86,8 @@ var toe = new function() {
     map.controls[google.maps.ControlPosition.RIGHT].push($menu_div[0]);
 
     // add click listeners to the map
-    google.maps.event.addListener(map, 'click', function(event) { toe.handler.mapClick(event); });
-    google.maps.event.addListener(map, 'dblclick', function(event) { toe.handler.mapDoubleClick(event); });
+    google.maps.event.addListener(map, 'click', function(event) { toe.handler.mapClicked(event); });
+    google.maps.event.addListener(map, 'dblclick', function(event) { toe.handler.mapDoubleClicked(event); });
 
     // dummy overlay, we will use this for converting 
     overlay = new google.maps.OverlayView();
@@ -137,7 +137,7 @@ var toe = new function() {
 
   this.control = new function() {
     this.Mode = new function() {
-      var obj = this;
+      var self = this;
       this.NORMAL = 0;
       this.AREA = 1;
 
@@ -159,7 +159,7 @@ var toe = new function() {
         });
         $normal = createMode($normal_icon);
         $normal.on('click', function() {
-          obj.change(obj.NORMAL);
+          self.change(self.NORMAL);
         });
         $main_div.append($normal);
 
@@ -176,7 +176,8 @@ var toe = new function() {
         });
         $area = createMode($area_icon);
         $area.on('click', function() {
-          obj.change(obj.AREA);
+          self.change(self.AREA);
+          toe.Areas.enable();
         });
         $main_div.append($area);
 
@@ -185,7 +186,7 @@ var toe = new function() {
       };
 
       this.change = function(selection) {
-        obj.selected = selection;
+        self.selected = selection;
       };
 
       var createMode = function(icon) {
@@ -228,7 +229,7 @@ var toe = new function() {
       this.editable = true;
       var $ui;
       var $visible_ui;
-      var obj = this;
+      var self = this;
 
       var css_editable = {
         'background-color': 'rgb(240, 240, 240)',
@@ -269,11 +270,11 @@ var toe = new function() {
         $ui.append($visible_ui);
 
         $ui.click(function() {
-          obj.toggle_editable();
+          self.toggle_editable();
           poi_control.toggle_editable();
         });
         $visible_ui.click(function(event) {
-          obj.toggle_visible();
+          self.toggle_visible();
           event.stopPropagation();
         });
 
@@ -316,7 +317,7 @@ var toe = new function() {
       // POI control
       this.visible = true;
       this.editable = false;
-      var obj = this;
+      var self = this;
       var $ui;
       var $visible_ui;
 
@@ -357,11 +358,11 @@ var toe = new function() {
         $ui.prepend($visible_ui);
 
         $ui.click(function() {
-          obj.toggle_editable();
+          self.toggle_editable();
           area_control.toggle_editable();
         });
         $visible_ui.click(function(event) {
-          obj.toggle_visible();
+          self.toggle_visible();
           event.stopPropagation();
         });
         return $ui;
@@ -400,7 +401,7 @@ var toe = new function() {
 
     // control for importing / exporting files
     this.Menu = new function() {
-      var obj = this;
+      var self = this;
 
       this.create = function() {
         var $div = $('<div></div>');
@@ -515,6 +516,7 @@ var toe = new function() {
 
     this.SaveFile = new function() {
       var $div;
+      var self = this;
 
       this.init = function(autoOpen) {
         $div = $('#file_save_dialog');
@@ -522,12 +524,36 @@ var toe = new function() {
           'title': '<span class="ui-icon ui-icon-arrowthickstop-1-s" style="float:left; margin-right: 5px;"></span>' + tr('Save file'),
           'width': '300px',
           'autoOpen': false,
-          'resizable': false
+          'resizable': false,
+          'close': function() {
+            toe.helper.SelectionBox.hide();
+          }
         });
+        $('#export_form').submit(exportFile);
       };
 
-      this.open = function() {  $div.dialog('open');  };
-      this.close = function() { $div.dialog('close'); };
+      this.open = function() {
+        $div.dialog('open');
+        toe.helper.SelectionBox.show();
+      };
+      this.close = function() {
+        $div.dialog('close');
+      };
+
+      // in export form submit, send values as JSON to server
+      var exportFile = function() {
+        console.log("exporting...");
+        //$("#pois_json").val(pois.toJSON());
+        $("#areas_json").val(toe.Areas.toJSON());
+        $("#pois_json").val('[]');
+        $("#export_map_bounds").val(map.getBounds().toString());
+        self.close();
+        // disable changed flags from areas and pois
+        //areas.changed = false;
+        //pois.changed = false;
+        return true;
+      };
+
     };
 
     this.Help = new function() {
@@ -548,7 +574,7 @@ var toe = new function() {
 
     this.Settings = new function() {
       var $div;
-      var $obj = this;
+      var $self = this;
 
       this.init = function(autoOpen) {
         $div = $("#settings_dialog");
@@ -573,7 +599,7 @@ var toe = new function() {
               window.location = data.redirect_url;
             }     
           }
-          obj.close();
+          self.close();
         }, 'json');
         return false;
       };
@@ -584,19 +610,6 @@ var toe = new function() {
   };
 
   this.file = new function() {
-    // in export form submit, send values as JSON to server
-    this.exportFile = function() {
-      console.log("exporting...");
-      $("#pois_json").val(pois.toJSON());
-      $("#areas_json").val(areas.toJSON());
-      $("#export_map_bounds").val(map.getBounds().toString());
-      $("#file_save_dialog").dialog('close');
-      // disable changed flags from areas and pois
-      areas.changed = false;
-      pois.changed = false;
-      return true;
-    };
-
     this.importFile = function(data) {
       console.log("we are importing now!", data);
       var areas_imported = areas.importJSON(data.areas);
@@ -611,7 +624,6 @@ var toe = new function() {
         // we imported nothing, invalid or empty data file
       }
     };
-
   };
 
   this.print = new function() {
@@ -651,8 +663,8 @@ var toe = new function() {
   };
 
   this.handler = new function() {
-    this.mapClick = function(event) {
-      console.log("CLICK!");
+    this.mapClicked = function(event) {
+      // this function will be overridden
       /*
     if (area_control.editable) {
       // event when areas are editable
@@ -682,21 +694,53 @@ var toe = new function() {
     }*/
     };
 
-    this.mapDoubleClick = function(event) {
-      console.log("DOUBLE CLICK OMG");
-      console.log(event);
-      event.stop(); // stop propagating further
+    this.mapDoubleClicked = function(event) {
+      // this function will be replaced
     };
   };
 
   // Areas
   // -----
-  this.areas = new function() {
+  this.Areas = new function() {
+    var self = this;
     this.changed = false;
     this.active_area;
     this.areas = [];
     this.new_id = 1;
-  
+
+    // areas mode activated
+    this.enable = function(event) {
+      // hijack event listeners here
+      toe.handler.mapClicked = self.mapClicked;
+      toe.handler.mapDoubleClicked = self.mapDoubleClicked;
+    };
+
+    // areas mode disabled
+    this.disable = function() {
+    };
+
+    this.mapClicked = function(event) {
+      console.log("AREAS:MAPCLICKED", event);
+      //self.deactivate();
+    };
+
+    this.mapDoubleClicked = function(event) {
+      console.log("AREAS:MAP DBL CLICKED", event);
+
+      if (self.active_area) {
+        console.log("ADD TO AREA ", self.active_area);
+        self.active_area.addNewBorder(event);
+      } else {
+        // create a new area
+        console.log("CREATE NEW AREA!");
+        var area = new toe.Area(self.get_new_id(), '', '', [ event.latLng ]);
+        self.add(area);
+        area.show();
+        area.activate();
+      }
+
+    };
+
     this.add = function(area) {
       if (this.find_by_id(area.id)) {
         console.log("id " + area.id + " is reserved, generating a new id for area");
@@ -828,7 +872,161 @@ var toe = new function() {
         this.areas[i].polygon.setOptions({ clickable: value });
       }
     };
-  };
+
+    // Areas.BoundaryManager
+    // ---------------------
+    this.BoundaryManager = new function() {
+      var self = this;
+      this.boundaries_arr = [];
+
+      // returns boundary by given latLng, or null
+      this.find = function(latLng) {
+        for (var i = 0; i < this.boundaries_arr.length; i++) {
+          if (this.boundaries_arr[i].latLng.equals(latLng))
+            return this.boundaries_arr[i];
+        }
+        return null;
+      };
+
+      this.add = function(latLng, area) {
+        // see if this is already exists in boundaries array
+        console.log("BoundaryManager.add(", latLng, area, ")");
+        var boundary = this.find(latLng);
+        if (!boundary) {
+          // create a new boundary
+          boundary = new toe.Areas.Boundary(latLng);
+          this.boundaries_arr.push(boundary);
+        }
+        // link given area to boundary
+        boundary.linkTo(area);
+      };
+
+      // if area given, remove only given area from boundary
+      // else remove whole boundary (remove boundaries that don't belong
+      // to any area anyway)
+      this.remove = function(latLng, area) {
+        console.log("BoundaryManager.remove(", latLng, area, ")");
+        var boundary = this.find(latLng);
+        if (boundary) {
+          boundary.unlink(area);
+          if (boundary.empty()) {
+            console.log("boundary is EMPTY!");
+            // we no longer need this boundary, last link to area was gone
+            for (var i = 0; i < this.boundaries_arr.length; i++) {
+              if (this.boundaries_arr[i] == boundary) {
+                this.boundaries_arr.splice(i, 1); // remove this from array
+                delete boundary;
+                return;
+              }
+            }
+          }
+        }
+      };
+
+      // returns true if merged two boundaries having same position
+      // or false if no merging happened
+      this.mergeBoundary = function(boundary) {
+        for (var i = 0; i < this.boundaries_arr.length; i++) {
+          var other_boundary = this.boundaries_arr[i];
+          if (boundary == other_boundary) continue;
+          if (boundary.latLng.equals(other_boundary.latLng)) {
+            for (var j = 0; j < other_boundary.areas.length; j++) {
+              // copy areas from other boundary
+              boundary.areas.push(other_boundary.areas[j]);
+            }
+            delete other_boundary; // remove other boundary
+            this.boundaries_arr.splice(i, 1);
+            return true; // merged 
+          }
+        }
+        return false; // not merged
+      };
+    }; // BoundaryManager
+
+    // Areas.Boundary
+    // --------------
+    this.Boundary = function(latLng) {
+      this.latLng = latLng;
+      this.areas = []; // array of areas into which this belongs
+
+      // move boundary to given latLng
+      // if area is not given, move this boundary for all areas it
+      // is assigned to
+      this.move = function(latLng, area) {
+        for (var i in this.areas) {
+          if (!area || (area && this.areas[i] == area)) {
+            var path = this.areas[i].polygon.getPath();
+            for (var j = 0; j < path.getLength(); j++) {
+              if (path.getAt(j).equals(this.latLng)) {
+                path.setAt(j, latLng); // update polygon path
+                this.areas[i].changed = true;
+                break; // go to next area
+              }
+            }
+          }
+        } // for
+        this.latLng = latLng; //  update our information at last
+      };
+
+      // add this boundary to a area
+      this.linkTo = function(area) {
+        // see if this boundary is already linked to given area
+        var i = 0;
+        for (i = 0; i < this.areas.length; i++) {
+          if (this.areas[i] == area)
+            break;
+        }
+        if (i == this.areas.length) {
+          // given area was new for this boundary
+          this.areas.push(area);
+        }
+      };
+
+      // if area is not given, remove this boundary from all areas
+      // it is assigned to
+      this.unlink = function(area) {
+        console.log("boundary.remove(", area, ")");
+        var new_areas = [];
+        for (var i in this.areas) {
+          if (!area || (area && this.areas[i] == area)) {
+            var path = this.areas[i].polygon.getPath();
+            for (var j = 0; j < path.getLength(); j++) {
+              if (path.getAt(j).equals(this.latLng)) {
+                path.removeAt(j); // update polygon path
+                this.areas[i].changed = true;
+                break; // go to next area
+              }
+            }
+          }
+          else {
+            // preserve this area
+            new_areas.push(this.areas[i]);
+          }
+        } // for
+        // replace areas, now given area should be missing
+        // (or all areas)
+        this.areas = new_areas;
+      };
+  
+      // returns true if this boundary no longer is used
+      this.empty = function() {
+        return (this.areas.length == 0);
+      };
+
+      this.findNearBoundary = function(range) {
+        var point = overlay.getProjection().fromLatLngToContainerPixel(this.latLng);
+        for (var i = 0; i < toe.Areas.BoundaryManager.boundaries_arr.length; i++) {
+          var boundary = toe.Areas.BoundaryManager.boundaries_arr[i];
+          if (boundary == this) continue; // skip over this
+          var boundary_point = overlay.getProjection().fromLatLngToContainerPixel(boundary.latLng);
+          if (pointDistance(point, boundary_point) <= range) {
+            return boundary;
+          }
+        }
+        return null;
+      };
+    }; // Boundary
+  }; // Areas
 
   // AREA
   // ----
@@ -864,7 +1062,7 @@ var toe = new function() {
     // use boundaries array
     for (var i = 0; i < path.length; i++) {
       var latLng = path[i];
-      boundaries.add(latLng, area);
+      toe.Areas.BoundaryManager.add(latLng, area);
     }
 
     // method functions 
@@ -903,12 +1101,13 @@ var toe = new function() {
     this.activate = function() {
       console.log("area.activate");
       // deactivate the previous active
-      areas.deactivate();
+      toe.Areas.deactivate();
       area.edit_mode = true;
-      areas.active_area = this;
+      toe.Areas.active_area = this;
 
       area.polygon.setOptions(activated_options);
-      if (area_control.editable) {
+      //if (area_control.editable) {
+      if (true) {
         // show markers yo
         var path = area.polygon.getPath();
         for (var i = 0; i < path.length; i++) {
@@ -922,7 +1121,7 @@ var toe = new function() {
     this.deactivate = function() {
       console.log("area.deactivate");
       area.edit_mode = false;
-      areas.active_area = null;
+      toe.Areas.active_area = null;
 
       area.polygon.setOptions(deactivated_options);
       removeMarkers();
@@ -940,7 +1139,7 @@ var toe = new function() {
       area.polygon.getPath().insertAt(idx, latLng);
 
       // see if this is already exists in boundaries array
-      boundaries.add(event.latLng, area);
+      toe.Areas.BoundaryManager.add(event.latLng, area);
       showBorderMarker(event.latLng);
     };
 
@@ -1035,15 +1234,17 @@ var toe = new function() {
         raiseOnDrag: false
       });
       // marker drag functionality
-      var boundary = boundaries.find(latLng);
+      var boundary = toe.Areas.BoundaryManager.find(latLng);
       if (!boundary) console.log("FATAL ERROR: no boundary found for this marker!");
       google.maps.event.addListener(marker, 'drag', function(event) {
         if (boundary) {
-          if (shift_is_down) {
+          //if (shift_is_down) {
+          if (false) {
             // if user is dragging marker with shift key down,
             // move only marker belonging to this area
             boundary.move(event.latLng, area);
           } else {
+              /*
             // normally drag marker for all areas linked here
             boundary.move(event.latLng);
             // snap to another boundary within 5 px range
@@ -1052,14 +1253,27 @@ var toe = new function() {
               boundary.move(boundary_near.latLng);
               marker.setPosition(boundary_near.latLng);
               //console.log("NEAR: ", boundary_near);
-            }
+            }*/
           }
         } 
       });
       google.maps.event.addListener(marker, 'dragend', function(event) {
         if (boundary) {
+
+            boundary.move(event.latLng);
+            // snap to another boundary within 5 px range
+            var boundary_near = boundary.findNearBoundary(5);
+            if (boundary_near) { 
+              boundary.move(boundary_near.latLng);
+              marker.setPosition(boundary_near.latLng);
+              //console.log("NEAR: ", boundary_near);
+            }
+
+
+
+
           // try to merge this boundary if it snapped with other boundary
-          if (boundaries.mergeBoundary(boundary) === true) {
+          if (toe.Areas.BoundaryManager.mergeBoundary(boundary) === true) {
             // dragging ended so that we merged it with another
             // let's see if we have now two markers in the same place, if so, remove other
             removeDuplicateMarkers();
@@ -1068,16 +1282,17 @@ var toe = new function() {
       });
 
       // marker delete functionality
-      google.maps.event.addListener(marker, 'click', function(event) {
-        if (boundary && shift_is_down) {
-          boundaries.remove(boundary.latLng, area);
+      google.maps.event.addListener(marker, 'dblclick', function(event) {
+        //if (boundary && shift_is_down) {
+        if (boundary) {
+          toe.Areas.BoundaryManager.remove(boundary.latLng, area);
           marker.setMap(null);
           //if (area.polygon.path.getLength == 0) {
           //console.log("we should destroy the area now!");
           //}
           // normally shift + click on link opens a new window in firefox
           // we don't want that
-          event.preventDefault(); 
+          //event.preventDefault(); 
         }
       });
       area.border_markers.push(marker);
@@ -1114,6 +1329,29 @@ var toe = new function() {
 
     // add click listener to polygon
     google.maps.event.addListener(this.polygon, 'click', this.clicked);
+  };
+
+  this.helper = new function() {
+    this.SelectionBox = new function() {
+
+      var box = new google.maps.Rectangle({
+        editable: true
+      });
+
+      this.show = function() {
+        var bounds = map.getBounds();
+        box.setMap(map);
+        box.setBounds(bounds);
+      };
+
+      this.hide = function() {
+        box.setMap(null);
+      };
+
+      this.getBounds = function() {
+        box.getBounds();
+      };
+    };
   };
 
 
@@ -1188,3 +1426,68 @@ var toe = new function() {
   };
 
 };
+
+// extensions to Google Maps API v3
+// --------------------------------
+
+// latLng.toJSON()
+// returns latLng as JSON array
+if (!google.maps.LatLng.prototype.toJSON) {
+  google.maps.LatLng.prototype.toJSON = function() {
+    return "[" + this.lat() + "," + this.lng() + "]";
+  }
+}
+
+// Poygon getBounds extension - google-maps-extensions
+// http://code.google.com/p/google-maps-extensions/source/browse/google.maps.Polygon.getBounds.js
+if (!google.maps.Polygon.prototype.getBounds) {
+  google.maps.Polygon.prototype.getBounds = function() {
+    var bounds = new google.maps.LatLngBounds();
+    var paths = this.getPaths();
+    var path;
+    
+    for (var p = 0; p < paths.getLength(); p++) {
+      path = paths.getAt(p);
+      for (var i = 0; i < path.getLength(); i++) {
+        bounds.extend(path.getAt(i));
+      }
+    }
+
+    return bounds;
+  }
+}
+
+// Polygon containsLatLng - method to determine if a latLng is within a polygon
+google.maps.Polygon.prototype.containsLatLng = function(latLng) {
+  // Exclude points outside of bounds as there is no way they are in the poly
+  var bounds = this.getBounds();
+
+  if(bounds != null && !bounds.contains(latLng)) {
+    return false;
+  }
+
+  // Raycast point in polygon method
+  var inPoly = false;
+
+  var numPaths = this.getPaths().getLength();
+  for(var p = 0; p < numPaths; p++) {
+    var path = this.getPaths().getAt(p);
+    var numPoints = path.getLength();
+    var j = numPoints-1;
+
+    for(var i=0; i < numPoints; i++) { 
+      var vertex1 = path.getAt(i);
+      var vertex2 = path.getAt(j);
+
+      if (vertex1.lng() < latLng.lng() && vertex2.lng() >= latLng.lng() || vertex2.lng() < latLng.lng() && vertex1.lng() >= latLng.lng())  {
+        if (vertex1.lat() + (latLng.lng() - vertex1.lng()) / (vertex2.lng() - vertex1.lng()) * (vertex2.lat() - vertex1.lat()) < latLng.lat()) {
+          inPoly = !inPoly;
+        }
+      }
+
+      j = i;
+    }
+  }
+
+  return inPoly;
+}

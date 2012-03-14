@@ -17,19 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with TOE.  If not, see <http://www.gnu.org/licenses/>.
  *
- * common.php
+ * Exporting POI and area data.
+ * Requires at least PHP 5.2.
  */
 
-include("lib/i18n.php");
-
-// global vars
-$localization = new Localization();
-$lang = $localization->lang;
-
-// for convenience, translate function
-function tr($str) {
-    global $localization;
-    return $localization->tr($str);
-}
+include("config.php");
+include("util.php");
 
 ?>

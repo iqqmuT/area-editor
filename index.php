@@ -56,10 +56,12 @@ include("lib/common.php");
       </form>
     </div>
     <div id="file_save_dialog" style="display:none">
-      <form action="export.php" method="post" id="export_form">
-        <input type="hidden" name="map-bounds" value="" id="export_map_bounds" />
+      <!--<form action="export.php" method="post" id="export_form">-->
+      <form action="export/" method="post" id="export_form">
+        <input type="hidden" name="bbox" value="" id="export_map_bounds" />
         <? print tr("Choose format"); ?>:<br />
         <input type="radio" name="format" value="osm" checked="" id="export_format_osm"> <label for="export_format_osm">OSM (Openstreetmap)</label><br />
+        <input type="radio" name="format" value="pdf" id="export_format_pdf"> <label for="export_format_pdf">PDF</label><br />
         <input type="radio" name="format" value="svg_osmarender" id="export_format_svg_osmarender"> <label for="export_format_svg_osmarender">SVG (Osmarender)</label><br /><br />
         <textarea id="pois_json" name="pois" style="display:none"></textarea>
         <textarea id="areas_json" name="areas" style="display:none"></textarea>
