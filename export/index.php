@@ -73,7 +73,7 @@ if ($export) {
     } else {
         // export failed
         header('HTTP/1.0 500 Internal Server Error', true, 500);
-        echo $export->getError();
+        echo str_replace("\n", "<br>", $export->getError());
     }
 }
 exit;
@@ -191,10 +191,14 @@ class MapnikPDFExport extends MapnikExport {
             // proc_close in order to avoid a deadlock
             $return_value = proc_close($process);
 
-            if ($return_value == 0 && file_exists($output)) {
-                $this->output_file = $output;
-                return true;
+            if ($return_value == 0) {
+                if (file_exists($output)) {
+                  $this->output_file = $output;
+                  return true;
+                }
+                $this->error .= " ERROR: file " . $output . " does not exist!";
             }
+            $this->error = $output . "\n" . $this->error;
             $this->error = "(" . $return_value . ") " . $this->error;
         }
         return false;
@@ -203,7 +207,8 @@ class MapnikPDFExport extends MapnikExport {
     function getCommand() {
         global $cfg;
         $cmd = $cfg['mapnik_bin'];
-        $cmd .= ' -b ' . $this->bounds . '';
+        $bounds = $_POST['bbox'];
+        $cmd .= ' -b "' . $bounds . '"';
         return $cmd;
     }
 

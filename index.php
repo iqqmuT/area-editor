@@ -41,7 +41,7 @@ include("lib/common.php");
       var translations = <? print $localization->read_lang_file($lang); ?>;
       setLanguage('<? print $lang; ?>', translations);
       // initialize the whole thing by calling initialize()
-      google.maps.event.addDomListener(window, 'load', toe.init);
+      google.maps.event.addDomListener(window, 'load', function() { toe.init(); });
     </script>
     <title>TOE</title>
   </head>
