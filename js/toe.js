@@ -26,6 +26,10 @@
 
 var toe = {
 
+  options: {
+    single_click_timeout: 400 // timeout in ms
+  },
+
   init: function() {
     if (!window.console) console = {};
     console.log = console.log || function(){};
@@ -89,10 +93,10 @@ var toe = {
     overlay.setMap(this.map);
 
     // initialize info window, there is just one window here
-    info_window = new google.maps.InfoWindow({});
+    this.info_window = new google.maps.InfoWindow({});
 
     // initialize file dialog, and open the file-open dialog in initialize
-    this.dialog.init(true);
+    this.dialog.init(false);
 
     // on window close, check if it's ok
     window.onbeforeunload = this.destroy;
@@ -127,10 +131,42 @@ var toe = {
   }
 };
 
+toe.importData = function(data) {
+  console.log("we are importing now!", data);
+  var areas_imported = toe.AreaManager.importJSON(data.areas);
+  //var pois_imported = toe.PoiManager.importJSON(data.pois);
+  var pois_imported;
+  console.log("areas imported: " + areas_imported);
+  //console.log("POIs imported: " + pois_imported);
+  if (pois_imported || areas_imported) {
+    toe.dialog.OpenFile.close(); // we can close the dialog now
+    toe.fitBounds();
+  }
+  else {
+    // we imported nothing, invalid or empty data file
+  }
+};
 
-  // Controls
-  // --------
+// gets bounds of all stuff we have on the map and zoom the map there
+toe.fitBounds = function() {
+  var bounds = new google.maps.LatLngBounds();
+  if (toe.AreaManager.areas.length) {
+    bounds.union(toe.AreaManager.getBounds());
+  }
+  /*
+  console.log(bounds);
+  if (toe.PoiManager.pois.length) {
+    bounds.union(toe.PoiManager.getBounds());
+  }*/
+  //console.log(bounds, pois.getBounds());
+  if (!bounds.isEmpty()) {
+    toe.map.fitBounds(bounds);
+  }
+}
 
+// ------------------------------------------------------------
+// Controls
+// ------------------------------------------------------------
 toe.control = {
 
   Mode: new function() {
@@ -651,6 +687,8 @@ toe.handler = {
 // ------------------------------------------------------------
 toe.AreaManager = new function() {
   var self = this;
+  var click_timeout = null;
+  
   this.changed = false;
   this.active_area;
   this.areas = [];
@@ -669,12 +707,15 @@ toe.AreaManager = new function() {
 
   this.mapClicked = function(event) {
     console.log("AREAS:MAPCLICKED", event);
-    //self.deactivate();
+    
+    click_timeout = setTimeout(function() {
+      self.deactivate();
+    }, toe.options.single_click_timeout);
   };
 
   this.mapDoubleClicked = function(event) {
     console.log("AREAS:MAP DBL CLICKED", event);
-
+    clearTimeout(click_timeout);
     if (self.active_area) {
       console.log("ADD TO AREA ", self.active_area);
       self.active_area.addNewBorder(event);
@@ -698,6 +739,18 @@ toe.AreaManager = new function() {
     this.changed = true;
   };
 
+  // removes all areas
+  this.removeAll = function() {
+    var tmp_areas = [];
+    var i;
+    for (i = 0; i < this.areas.length; i++) {
+      tmp_areas.push(this.areas[i]);
+    }
+    for (i = 0; i < tmp_areas.length; i++) {
+      this.remove(tmp_areas[i]);
+    }
+  };
+
   // remove given area
   this.remove = function(area) {
     for (var i = 0; i < this.areas.length; i++) {
@@ -705,7 +758,7 @@ toe.AreaManager = new function() {
         if (confirm(tr('area_removal_confirm'))) {
           area.remove();
           this.areas.splice(i, 1);
-          info_window.close(); // shut info window, because user might have used that to delete the area
+          toe.info_window.close(); // shut info window, because user might have used that to delete the area
           this.changed = true;
           return true;
         }
@@ -739,14 +792,14 @@ toe.AreaManager = new function() {
   // this function is called when user clicks Save on AreaInfoWindow
   this.saveInfo = function(event) {
     var id = $("#area_id").val();
-    var area = areas.find_by_id(id);
+    var area = this.find_by_id(id);
     if (area) {
       var number = $("#area_number").val();
       var name = $("#area_name").val();
       area.number = number;
       area.name = name;
       area.changed = true;
-      info_window.close();
+      toe.info_window.close();
     }
     console.log("area_id: " + id);
     console.log(event);
@@ -793,15 +846,13 @@ toe.AreaManager = new function() {
           path.push(new google.maps.LatLng(lat, lng));
       }
       // XXX the area-missing-number&name bug is here
-      this.add(new Area(area.id, area.number, area.name, path));
+      this.add(new toe.Area(area.id, area.number, area.name, path));
       c++;
     }
-    if (area_control.visible) {
+    if (toe.control.Area.visible) {
       this.show();
     }
 
-    // XXX arnos hack
-    console.log(dump(data));
     return c;
   };
 
@@ -990,6 +1041,7 @@ toe.Area = function(id, number, name, path) {
   this.changed = false;
   this.border_markers = [];
   this.changed = false;
+  this.click_timeout = null;
 
   var area = this;
 
@@ -1018,7 +1070,8 @@ toe.Area = function(id, number, name, path) {
   }
 
   // add click listener to polygon
-  google.maps.event.addListener(this.polygon, 'click', this.clicked);
+  google.maps.event.addListener(this.polygon, 'click', function(event) { area.clicked(event) });
+  google.maps.event.addListener(this.polygon, 'dblclick', function(event) { area.doubleClicked(event) });
 };
 
 // method functions 
@@ -1031,26 +1084,31 @@ toe.Area.prototype.hide = function() {
 };
 
 toe.Area.prototype.clicked = function(event) {
-  console.log("area " + area.name + " clicked.", event);
-  if (area_control.editable) {
-    if (shift_is_down && areas.active_area) {
-      // shift is down, user wants to modify a area
-      areas.active_area.addNewBorder(event);            
-    }
-    else {
-      // shift is normally up
-      if (!area.edit_mode) {
-        area.activate();
+  console.log("area " + this.name + " clicked.", event);
+  if (toe.control.Area.editable) {
+    var self = this;
+    this.click_timeout = setTimeout(function() {
+      if (!self.edit_mode) {
+        self.activate();
       } else {
-        area.showInfoWindow();
-        //area.deactivate();
+        self.showInfoWindow();
       }
-    }
+    }, toe.options.single_click_timeout);
   }
-  else if (poi_control.editable) {
+  else if (toe.control.Poi.editable) {
     if (shift_is_down) {
       console.log("CREATE NEW POI");
       pois.create(event.latLng);
+    }
+  }
+};
+
+toe.Area.prototype.doubleClicked = function(event) {
+  console.log("area " + this.name + " clicked.", event);
+  clearTimeout(this.click_timeout);
+  if (toe.control.Area.editable) {
+    if (toe.AreaManager.active_area) {
+      toe.AreaManager.active_area.addNewBorder(event);
     }
   }
 };
@@ -1081,7 +1139,7 @@ toe.Area.prototype.deactivate = function() {
   toe.AreaManager.active_area = null;
 
   this.polygon.setOptions(this.deactivated_options);
-  removeMarkers();
+  this._removeMarkers();
 };
 
 // when user clicks the map with shift key,
@@ -1102,39 +1160,53 @@ toe.Area.prototype.addNewBorder = function(event) {
 
 // remove this area and all belonging to it
 toe.Area.prototype.remove = function() {
-  area.polygon.setMap(null);
-  removeMarkers();
-  var path = area.polygon.getPath();
+  this.polygon.setMap(null);
+  this._removeMarkers();
+  var path = this.polygon.getPath();
   for (var i = 0; i < path.getLength(); i++) {
     var latLng = path.getAt(i);
-    boundaries.remove(latLng, area);
+    toe.BoundaryManager.remove(latLng, this);
   }
 };
 
 // shows a balloon of area info
 toe.Area.prototype.showInfoWindow = function() {
-  var contentString = '<div class="infowindow"><form action="" method="post">' +
-    '<input type="hidden" id="area_id" value="' + escape(area.id) + '" />' +
+  var contentString = '<div class="infowindow" id="area_infowindow"><form action="" method="post" id="area_form">' +
+    '<input type="hidden" id="area_id" value="' + escape(this.id) + '" />' +
     '<table>' +
     '<tr><td></td><td>' +
     '<div class="area-functions">' +
-    '<a href="#" onclick="return openPrintDialog();">' + tr("Print") + '</a> | <a href="#" onclick="return areas.remove(areas.active_area)">' + tr("Delete") + '</a>' +
+    //'<a href="javascript:" id="area_print">' + tr("Print") + '</a> | <a href="javascript:" id="area_delete">' + tr("Delete") + '</a>' +
+    //'<a href="javascript:" id="area_delete">' + tr("Delete") + '</a>' +
     '</div>' +
     '</td></tr>' +
-    '<tr><td>' + tr("Number") + ':</td><td><input type="text" id="area_number" value="' + area.number + '" class="field" /></td></tr>' +
-    '<tr><td>' + tr("Name") + ':</td><td><input type="text" id="area_name" value="' + area.name + '" class="field" /></td></tr>' +
-    '<tr><td></td><td><input type="submit" id="area_submit" value="' + tr("Save") + '" onclick="return areas.saveInfo(event)"/>' +
+    '<tr><td>' + tr("Number") + ':</td><td><input type="text" id="area_number" value="' + this.number + '" class="field first-focus" /></td></tr>' +
+    '<tr><td>' + tr("Name") + ':</td><td><input type="text" id="area_name" value="' + this.name + '" class="field" /></td></tr>' +
+    '<tr><td></td><td><input type="submit" id="area_submit" value="' + tr("Save") + '" onclick="return false;" />' +
+    '<button id="area_delete">' + tr("Delete") + '</button>' +
     '</td></tr>' +
     '</table></form></div>';
-  var bounds = area.polygon.getBounds();
-  info_window.setOptions({
+  var bounds = this.polygon.getBounds();
+  toe.info_window.setOptions({
     content: contentString,
     position: bounds.getCenter()
   });
-  info_window.open(map);
+  toe.info_window.open(toe.map);
+  var self = this;
   // move keyboard focus to the info window when it's ready
-  google.maps.event.addListener(info_window, 'domready', function() {
-    $("#area_number").focus();
+  google.maps.event.addListener(toe.info_window, 'domready', function() {
+    $('#area_infonumber').find(".first-focus").focus();
+    $('#area_submit').off('click').on('click', function(event) {
+      toe.AreaManager.saveInfo(event);
+      return false;
+    });
+    $('#area_print').off('click').on('click', function(event) {
+      console.log("print this?");
+    });
+    $('#area_delete').off('click').on('click', function(event) {
+      toe.AreaManager.remove(self);
+      return false;
+    });
   });
 };
 
@@ -1189,6 +1261,7 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
     title: tr('Drag to edit, shift-click to remove'),
     raiseOnDrag: false
   });
+  var self = this;
   // marker drag functionality
   var boundary = toe.BoundaryManager.find(latLng);
   if (!boundary) console.log("FATAL ERROR: no boundary found for this marker!");
@@ -1198,7 +1271,7 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
       if (false) {
         // if user is dragging marker with shift key down,
         // move only marker belonging to this area
-        boundary.move(event.latLng, area);
+        boundary.move(event.latLng, self);
       } else {
           /*
         // normally drag marker for all areas linked here
@@ -1232,7 +1305,7 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
       if (toe.BoundaryManager.mergeBoundary(boundary) === true) {
         // dragging ended so that we merged it with another
         // let's see if we have now two markers in the same place, if so, remove other
-        removeDuplicateMarkers();
+        self.removeDuplicateMarkers();
       }
      }
   });
@@ -1241,7 +1314,7 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
   google.maps.event.addListener(marker, 'dblclick', function(event) {
     //if (boundary && shift_is_down) {
     if (boundary) {
-      toe.BoundaryManager.remove(boundary.latLng, area);
+      toe.BoundaryManager.remove(boundary.latLng, self);
       marker.setMap(null);
       //if (area.polygon.path.getLength == 0) {
       //console.log("we should destroy the area now!");
@@ -1257,14 +1330,14 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
 
 // remove duplicate markers from this area
 toe.Area.prototype.removeDuplicateMarkers = function() {
-  for (var i = 0; i < area.border_markers.length; i++) {
-    for (var j = i + 1; j < area.border_markers.length; j++) {
-      var pos1 = area.border_markers[i].getPosition();
-      var pos2 = area.border_markers[j].getPosition();
+  for (var i = 0; i < this.border_markers.length; i++) {
+    for (var j = i + 1; j < this.border_markers.length; j++) {
+      var pos1 = this.border_markers[i].getPosition();
+      var pos2 = this.border_markers[j].getPosition();
       if (pos1.equals(pos2)) {
         console.log("removed duplicate marker");
-        area.border_markers[j].setMap(null);
-        area.border_markers.splice(j, 1);
+        this.border_markers[j].setMap(null);
+        this.border_markers.splice(j, 1);
         return true; // duplicate removed
       }
     }
@@ -1273,13 +1346,13 @@ toe.Area.prototype.removeDuplicateMarkers = function() {
 };
 
 // remove markers
-toe.Area.prototype.removeMarkers = function() {
-  if (area.border_markers) {
-    for (var i in area.border_markers) {
-      area.border_markers[i].setMap(null);
+toe.Area.prototype._removeMarkers = function() {
+  if (this.border_markers) {
+    for (var i in this.border_markers) {
+      this.border_markers[i].setMap(null);
     }
     // clear the array (and remove the markers from memory)
-    area.border_markers.length = 0;
+    this.border_markers.length = 0;
   }
 };
 

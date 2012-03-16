@@ -53,9 +53,13 @@ body {
   background-color: #eeeeee;
 }
 .area-functions {
-  float: right;
+  float: left;
   margin-right: 15px;
 }
 .area-functions a {
   color: blue;
+}
+
+#area_delete {
+  margin-left: 10px;
 }

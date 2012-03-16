@@ -111,18 +111,24 @@ class ExportBase {
 
 // OSM Exporter 
 class OSMExport extends ExportBase {
+    private $dom;
+
     function getFiletype() {
         return "text/xml";
     }
 
-    function output() {
+    function export() {
         $osm = new OSMGenerator($this->pois, $this->areas);
-        $dom = $osm->generateDOM();
-        return $dom->saveXML();
+        $this->dom = $osm->generateDOM();
+        return true;
+    }
+
+    function output() {
+        return $this->dom->saveXML();
     }
 
     function genFilename() {
-        return strftime("area_%Y-%m-%d_%H%M%S.osm");	// 'area_2010-10-28180603.osm'
+        return strftime("area_%Y-%m-%d_%H%M%S.osm"); // 'area_2010-10-28180603.osm'
     }
 }
 
@@ -138,7 +144,7 @@ class OsmarenderSVGExport extends ExportBase {
     }
 
     function genFilename() {
-        return strftime("area_%Y-%m-%d_%H%M%S.svg"); // 'area_2010-10-28180603.osm'
+        return strftime("area_%Y-%m-%d_%H%M%S.svg"); // 'area_2010-10-28180603.svg'
     }
 }
 

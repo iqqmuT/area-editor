@@ -23,5 +23,6 @@
 
 include("config.php");
 include("util.php");
+include("osm.php");
 
 ?>
