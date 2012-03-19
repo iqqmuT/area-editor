@@ -63,3 +63,56 @@ body {
 #area_delete {
   margin-left: 10px;
 }
+
+#help_link {
+  margin: 5px;
+  font-family: Arial,sans-serif;
+  font-size: 12px;
+  text-shadow: 0pt 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.mode-div {
+  float: left;
+  line-height: 0;
+}
+
+.mode {
+  direction: ltr;
+  overflow: hidden;
+  text-align: left;
+  position: relative;
+  color: rgb(0,0,0);
+  font-family: 'Arial,sans-serif';
+  font-size: 13px;
+  background: none repeat scroll 0% 0% rgb(255, 255, 255);
+  padding: 4px;
+  border-width: 1px 1px 1px 0pt; border-style: solid solid solid none; border-color: rgb(113, 123, 135) rgb(113, 123, 135) rgb(113, 123, 135) -moz-use-text-color;
+  box-shadow: 0pt 2px 4px rgba(0, 0, 0, 0.4);
+  font-weight: bold;
+}
+
+.mode-div:first-child .mode {
+  border: 1px solid rgb(113, 123, 135);
+}
+
+.mode:hover {
+  background: -moz-linear-gradient(center top, rgb(255,255,255), rgb(230,230,230)) repeat scroll 0% 0% transparent;
+}
+
+.mode-icon {
+  background-image: url('http://maps.gstatic.com/mapfiles/drawing.png');
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.mode-drag { background-position: 0px -80px; }
+.mode-drag.selected { background-position: 0px -144px; }
+
+.mode-area { background-position: 0px -64px; }
+.mode-area.selected { background-position: 0px -96px; }
+
+.mode-poi { background-position: 0px -176px; }
+.mode-poi.selected { background-position: 0px -112px; }

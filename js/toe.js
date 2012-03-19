@@ -45,11 +45,12 @@ var toe = {
       mapTypeControlOptions: {
         mapTypeIds: ['OSM', google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID,
           google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.TERRAIN ],
-        style: google.maps.MapTypeControlStyle.DEFAULT
+        //style: google.maps.MapTypeControlStyle.DEFAULT
+        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
       },
       disableDefaultUI: false,
-      scaleControl: true,
-      disableDoubleClickZoom: true
+      scaleControl: false,
+      disableDoubleClickZoom: true,
     };
     this.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
@@ -69,19 +70,25 @@ var toe = {
     this.map.setMapTypeId('OSM');
 
     var $mode_div = toe.control.Mode.html();
-    this.map.controls[google.maps.ControlPosition.RIGHT].push($mode_div[0]);
-    
+    this.map.controls[google.maps.ControlPosition.TOP_CENTER].push($mode_div[0]);
+
+    var $tools_div = toe.control.Tools.html();
+    this.map.controls[google.maps.ControlPosition.RIGHT].push($tools_div[0]);
+
+    var $help_div = $('<div id="help_link"><a href="javascript:toe.dialog.Help.open()" style="color: #000;">' + tr("Help") + '</a></div>');
+    this.map.controls[google.maps.ControlPosition.RIGHT].push($help_div[0]);
+
     // create the div to hold our custom controls
-    var $control_div = $("<div></div>");
-    $control_div.css({ 'margin': '5px',
-                       'border': '2px solid black' });
-    $control_div.append(this.control.Area.html());
-    $control_div.append(this.control.Poi.html());
-    this.map.controls[google.maps.ControlPosition.RIGHT].push($control_div[0]);
+    //var $control_div = $("<div></div>");
+    //$control_div.css({ 'margin': '5px',
+    //                   'border': '2px solid black' });
+    //$control_div.append(this.control.Area.html());
+    //$control_div.append(this.control.Poi.html());
+    //this.map.controls[google.maps.ControlPosition.RIGHT].push($control_div[0]);
 
     // our controls
-    $menu_div = this.control.Menu.html();
-    this.map.controls[google.maps.ControlPosition.RIGHT].push($menu_div[0]);
+    //$menu_div = this.control.Menu.html();
+    //this.map.controls[google.maps.ControlPosition.RIGHT].push($menu_div[0]);
 
     // add click listeners to the map
     google.maps.event.addListener(this.map, 'click', function(event) { toe.handler.mapClicked(event); });
@@ -178,42 +185,30 @@ toe.control = {
 
     this.html = function() {
       var $main_div = $("<div />");
-
-      var $normal_icon = $('<img src="http://maps.gstatic.com/mapfiles/drawing.png">');
-      $normal_icon.css({
-        'position': 'absolute',
-        'left': '0px',
-        'top': '-144px',
-        'border': '0px none',
-        'padding': '0px',
-        'margin': '0px',
-        'width': 'auto',
-        'height': 'auto'
+      $main_div.css({
+        'margin': '5px',
+        'index': '10px'
       });
-      $normal = createMode($normal_icon);
+
+      $normal = $('<div class="mode-div" id="mode_drag" title="' + tr("Stop drawing") + '"><div class="mode"><span style="display: inline-block;"><div class="mode-icon mode-drag selected"></div></span></div></div>');
       $normal.on('click', function() {
         self.change(self.NORMAL);
+        toe.AreaManager.disable();
+        toe.map.setOptions({ draggableCursor: '' });
+        $('.mode-area').removeClass('selected');
+        $('.mode-drag').addClass('selected');
       });
       $main_div.append($normal);
 
-      var $area_icon = $('<img src="http://maps.gstatic.com/mapfiles/drawing.png">');
-      $area_icon.css({
-        'position': 'absolute',
-        'left': '0px',
-        'top': '-64px',
-        'border': '0px none',
-        'padding': '0px',
-        'margin': '0px',
-        'width': 'auto',
-        'height': 'auto'
-      });
-      $area = createMode($area_icon);
+      $area = $('<div class="mode-div" id="mode_area" title="' + tr("Draw areas") + '"><div class="mode"><span style="display: inline-block;"><div class="mode-icon mode-area"></div></span></div></div>');
       $area.on('click', function() {
         self.change(self.AREA);
         toe.AreaManager.enable();
+        toe.map.setOptions({ draggableCursor: 'crosshair' });
+        $('.mode-drag').removeClass('selected');
+        $('.mode-area').addClass('selected');
       });
       $main_div.append($area);
-
 
       return $main_div;
     };
@@ -223,12 +218,68 @@ toe.control = {
     };
 
     var createMode = function(icon) {
+      var $div = $('<div class="mode-div" />');
+      var $innerdiv = $('<div class="mode"><span style="display: inline-block;"><div class="mode-icon mode-drag"></div></span></div>');
+      $div.append($innerdiv);
+      return $div;
+    };
+  },
+
+  Tools: new function() {
+    var self = this;
+    this.NORMAL = 0;
+    this.AREA = 1;
+
+    this.selected = this.NORMAL;
+
+    this.html = function() {
+      var $main_div = $("<div />");
+
+      var icon_css = {
+        'position': 'absolute',
+        'left': '0px',
+        'top': '0px',
+        'border': '0px none',
+        'padding': '0px',
+        'margin': '0px',
+        'width': 'auto',
+        'height': 'auto'
+      };
+      $open = createMode('<img src="images/document-open.png" />', icon_css, tr("Open file"), function() {
+        toe.dialog.OpenFile.open();
+      });
+      $main_div.append($open);
+      $save = createMode('<img src="images/document-save.png"/>', icon_css, tr("Save file"), function() {
+        toe.dialog.SaveFile.open();
+      });
+      $main_div.append($save);
+
+      $export = createMode('<img src="images/document-print.png"/>', icon_css, tr("Print"), function() {
+        toe.dialog.Print.open();
+      });
+      $main_div.append($export);
+
+      $settings = createMode('<img src="images/preferences-system.png"/>', icon_css, tr("Change settings"), function() {
+        toe.dialog.Settings.open();
+      });
+      $main_div.append($settings);
+
+      return $main_div;
+    };
+
+    this.change = function(selection) {
+      self.selected = selection;
+    };
+
+    var createMode = function(icon, css, title, onClick) {
       var $div = $("<div />");
       $div.css({
-        'float': 'left',
-        'line-height': '0'
+        //'float': 'left',
+        'line-height': '0',
+        'margin-top': '5px',
+        'margin-right': '5px'
       });
-      var $innerdiv = $('<div><span style="display: inline-block;"><div style="width: 16px; height: 16px; overflow: hidden; position: relative"></div></span></div>');
+      var $innerdiv = $('<div title="' + title + '"><span style="display: inline-block;"><div style="width: 16px; height: 16px; overflow: hidden; position: relative"></div></span></div>');
       $innerdiv.css({
         'direction': 'ltr',
         'overflow': 'hidden',
@@ -241,10 +292,14 @@ toe.control = {
         'padding': '4px',
         'border': '1px solid rgb(113, 123, 135)',
         'box-shadow': '0pt 2px 4px rgba(0, 0, 0, 0.4)',
-        'font-weight': 'bold'
+        'font-weight': 'bold',
+        'cursor': 'pointer'
       });
       $div.append($innerdiv);
-      $div.find('span').children('div').append(icon);
+      $icon_div = $(icon);
+      $icon_div.css(css);
+      $icon_div.on('click', onClick);
+      $div.find('span').children('div').append($icon_div);
       return $div;
     };
       //direction: ltr; overflow: hidden; text-align: left; position: relative;
@@ -703,6 +758,11 @@ toe.AreaManager = new function() {
 
   // areas mode disabled
   this.disable = function() {
+    if (this.active_area) {
+      this.deactivate();
+    }
+    toe.handler.mapClicked = function() { };
+    toe.handler.mapDoubleClicked = function() { };
   };
 
   this.mapClicked = function(event) {
@@ -1258,8 +1318,9 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
     draggable: true,
     icon: image,
     shape: shape,
-    title: tr('Drag to edit, shift-click to remove'),
-    raiseOnDrag: false
+    title: tr('Drag to edit, dbl click to remove'),
+    raiseOnDrag: false,
+    cursor: 'move'
   });
   var self = this;
   // marker drag functionality

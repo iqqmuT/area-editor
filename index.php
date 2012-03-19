@@ -29,13 +29,13 @@ include("lib/common.php");
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link type="text/css" href="css/ui-darkness/jquery-ui-1.8.6.custom.css" rel="stylesheet" />
-    <link type="text/css" href="css/area.css" rel="stylesheet" />
+    <link type="text/css" href="css/area.css?v=1.0" rel="stylesheet" />
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
     <script type="text/javascript" src="js/i18n.js"></script>
     <!--<script type="text/javascript" src="js/area.js"></script>-->
-    <script type="text/javascript" src="js/toe.js"></script>
+    <script type="text/javascript" src="js/toe.js?v=1.0"></script>
     <script type="text/javascript">
       // set localization
       var translations = <? print $localization->read_lang_file($lang); ?>;
