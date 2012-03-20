@@ -199,11 +199,12 @@ class MapnikPDFExport extends MapnikExport {
             $return_value = proc_close($process);
 
             if ($return_value == 0) {
+                $output = trim($output);
                 if (file_exists($output)) {
                   $this->output_file = $output;
                   return true;
                 }
-                $this->error .= " ERROR: file " . $output . " does not exist!";
+                $this->error .= " ERROR: file '" . $output . "' does not exist!";
             }
             $this->error = $output . "\n" . $this->error;
             $this->error = "(" . $return_value . ") " . $this->error;
