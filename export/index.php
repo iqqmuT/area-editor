@@ -38,7 +38,8 @@ $pois = array();
 if (isset($_POST['pois']))
     $pois = json_decode($_POST['pois']); // POI information is received as JSON
 //$bounds = parse_bounds($_POST['map-bounds']);
-$bounds = parse_bounds($_POST['bbox']);
+//$bounds = parse_bounds($_POST['bbox']);
+$bounds = array();
 $width = 700;
 $height = 700;
 

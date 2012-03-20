@@ -192,7 +192,7 @@ toe.control = {
 
       $normal = $('<div class="mode-div" id="mode_drag" title="' + tr("Stop drawing") + '"><div class="mode"><span style="display: inline-block;"><div class="mode-icon mode-drag selected"></div></span></div></div>');
       $normal.on('click', function() {
-        self.change(self.NORMAL);
+        self.selected = self.NORMAL;
         toe.AreaManager.disable();
         toe.map.setOptions({ draggableCursor: '' });
         $('.mode-area').removeClass('selected');
@@ -202,7 +202,7 @@ toe.control = {
 
       $area = $('<div class="mode-div" id="mode_area" title="' + tr("Draw areas") + '"><div class="mode"><span style="display: inline-block;"><div class="mode-icon mode-area"></div></span></div></div>');
       $area.on('click', function() {
-        self.change(self.AREA);
+        self.selected = self.AREA;
         toe.AreaManager.enable();
         toe.map.setOptions({ draggableCursor: 'crosshair' });
         $('.mode-drag').removeClass('selected');
@@ -563,6 +563,7 @@ toe.dialog = {
 
   Print: new function() {
     var $div;
+    var self = this;
 
     this.init = function() {
       $div = $('#print_dialog');
@@ -570,18 +571,32 @@ toe.dialog = {
         'title': '<span class="ui-icon ui-icon-print" style="float:left; margin-right: 5px;"></span>' + tr('Print'),
         'width': '300px',
         'autoOpen': false,
-        'resizable': false
+        'resizable': false,
+        'close': function() {
+          toe.helper.SelectionBox.hide();
+        }
       });
+      $('#print_form').submit(exportFile);
     };
 
     this.open = function() {
       $div.dialog('open');
+      toe.helper.SelectionBox.show();
       return false;
     };
 
     this.close = function() {
       $div.dialog('close');
       return false;
+    };
+
+    // in export form submit, send values as JSON to server
+    var exportFile = function() {
+      $("#print_areas_json").val(toe.AreaManager.toJSON());
+      $("#print_pois_json").val('[]');
+      $("#print_map_bounds").val(toe.helper.SelectionBox.getBounds().toString());
+      self.close();
+      return true;
     };
   },
 
@@ -611,17 +626,13 @@ toe.dialog = {
         'title': '<span class="ui-icon ui-icon-arrowthickstop-1-s" style="float:left; margin-right: 5px;"></span>' + tr('Save file'),
         'width': '300px',
         'autoOpen': false,
-        'resizable': false,
-        'close': function() {
-          toe.helper.SelectionBox.hide();
-        }
+        'resizable': false
       });
       $('#export_form').submit(exportFile);
     };
 
     this.open = function() {
       $div.dialog('open');
-      toe.helper.SelectionBox.show();
     };
     this.close = function() {
       $div.dialog('close');
@@ -633,7 +644,6 @@ toe.dialog = {
       //$("#pois_json").val(pois.toJSON());
       $("#areas_json").val(toe.AreaManager.toJSON());
       $("#pois_json").val('[]');
-      $("#export_map_bounds").val(toe.helper.SelectionBox.getBounds().toString());
       self.close();
       // disable changed flags from areas and pois
       toe.AreaManager.changed = false;
@@ -1145,7 +1155,7 @@ toe.Area.prototype.hide = function() {
 
 toe.Area.prototype.clicked = function(event) {
   console.log("area " + this.name + " clicked.", event);
-  if (toe.control.Area.editable) {
+  if (toe.control.Mode.selected == toe.control.Mode.AREA) {
     var self = this;
     this.click_timeout = setTimeout(function() {
       if (!self.edit_mode) {
@@ -1166,7 +1176,7 @@ toe.Area.prototype.clicked = function(event) {
 toe.Area.prototype.doubleClicked = function(event) {
   console.log("area " + this.name + " clicked.", event);
   clearTimeout(this.click_timeout);
-  if (toe.control.Area.editable) {
+  if (toe.control.Mode.selected == toe.control.Mode.AREA) {
     if (toe.AreaManager.active_area) {
       toe.AreaManager.active_area.addNewBorder(event);
     }

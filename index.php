@@ -56,30 +56,30 @@ include("lib/common.php");
       </form>
     </div>
     <div id="file_save_dialog" style="display:none">
-      <!--<form action="export.php" method="post" id="export_form">-->
       <form action="export/" method="post" id="export_form">
         <input type="hidden" name="bbox" value="" id="export_map_bounds" />
         <? print tr("Choose format"); ?>:<br />
-        <input type="radio" name="format" value="osm" checked="" id="export_format_osm"> <label for="export_format_osm">OSM (Openstreetmap)</label><br />
-        <input type="radio" name="format" value="pdf" id="export_format_pdf"> <label for="export_format_pdf">PDF</label><br />
-        <input type="radio" name="format" value="svg_osmarender" id="export_format_svg_osmarender"> <label for="export_format_svg_osmarender">SVG (Osmarender)</label><br /><br />
+        <input type="radio" name="format" value="osm" checked="" id="export_format_osm"> <label for="export_format_osm">OSM (Openstreetmap)</label><br /><br />
         <textarea id="pois_json" name="pois" style="display:none"></textarea>
         <textarea id="areas_json" name="areas" style="display:none"></textarea>
         <input type="submit" name="" value="<? print tr('Save') ?>" id="save_button" class="button" />
       </form>
     </div>
     <div id="print_dialog" style="display:none">
-      <form action="print.php" method="post" id="print_form" target="print_window">
+      <form action="export/" method="post" id="print_form">
         <input type="hidden" name="map-type" value="" id="print_map_type" />
         <input type="hidden" name="map-center" value="" id="print_map_center" />
         <input type="hidden" name="map-zoom" value="" id="print_map_zoom" />
-        <input type="hidden" name="map-bounds" value="" id="print_map_bounds" />
+        <input type="hidden" name="bbox" value="" id="print_map_bounds" />
         <textarea id="print_areas_json" name="areas" style="display:none"></textarea>
         <textarea id="print_pois_json" name="pois" style="display:none"></textarea>
 
         <? print tr("Map format"); ?>:<br />
+        <input type="radio" name="format" value="pdf" id="export_format_pdf" checked=""> <label for="export_format_pdf">PDF</label><br />
+        <!--<input type="radio" name="format" value="svg_mapnik" id="export_format_svg_mapnik"> <label for="export_format_svg_mapnik">SVG</label><br />
         <input type="radio" name="format" value="dyn" checked="" id="print_format_dyn"> <label for="print_format_dyn">Google Maps API</label><br />
-        <input type="radio" name="format" value="svg_osmarender" id="print_format_svg_osmarender"> <label for="print_format_svg_osmarender">SVG (Osmarender)</label><br /><br />
+        <input type="radio" name="format" value="svg_osmarender" id="print_format_svg_osmarender"> <label for="print_format_svg_osmarender">SVG (Osmarender)</label><br /><br />-->
+        <p><? print tr("Printable area"); ?></p>
         <input type="submit" name="" value="<? print tr('Print'); ?>" id="print_button" class="button" />
       </form>
     </div>

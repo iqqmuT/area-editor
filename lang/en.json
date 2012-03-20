@@ -30,5 +30,6 @@
   "area_removal_confirm": "Are you sure you want to delete the selected area?",
   "unsaved_changes": "You will lose unsaved changes if you leave the page. Click 'Save file...' from menu to save the changes.",
   "setting_changes_note": "Note: After changing settings you might need to reload this page. Please save your data before that.",
+  "Printable area": "Printable area is shown as a grey box on the map.",
   "help_dialog": "<p>TOE (abbreviation for TOE Online Editor).</p><h2>Files</h2><p>There is no database support in TOE. However, you can import and export data using files.</p><h2>How to edit</h2><p><img src=\"images/help_control1.png\" width=\"107\" height=\"40\" alt=\"control\" style=\"float: right\"/>From the right side you can select which layer you are editing. You can edit only one layer at a time. By clicking the eye icon you can hide or show the layer on the map.</p><p>Clicking the map with shift key down you can add / remove POIs or boundaries of areas. Clicking the area you can activate it, and clicking an activated area you can edit its data. Clicking POIs you can edit their data.</p><p>You can get more help by reading the <a href=\"doc/en/userguide.html\" target=\"_blank\">User's guide</a></p><p>This software is open source. The source code is available on <a href=\"https://github.com/iqqmuT/area-editor\">github</a>.</p>"
 }
