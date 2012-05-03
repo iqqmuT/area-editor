@@ -1,9 +1,13 @@
-TOE is an online tool to create and edit areas using Google Maps API.
+TOE is an online tool to create and edit areas.
+
+You can configure TOE to use one of these JavaScript map libraries:
+ * Google Maps JavaScript API V3
+ * OpenLayers
+ * Leaflet
 
 TOE uses following JavaScript libraries:
- * Google Maps JavaScript API V3
- * jQuery 1.4.4
- * jQuery UI 1.8.6
+ * jQuery
+ * jQuery UI
 
 Requirements for PHP server:
  * PHP >= 5.2

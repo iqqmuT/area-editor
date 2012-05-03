@@ -43,7 +43,7 @@ include("lib/common.php");
       <![endif]-->
       <script src="http://code.leafletjs.com/leaflet-0.3.1/leaflet.js"></script>
     <? } ?>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
     <script type="text/javascript" src="js/i18n.js"></script>
     <!--<script type="text/javascript" src="js/area.js"></script>-->
