@@ -19,8 +19,7 @@
  * Main JavaScript file of TOE.
  * 
  * Requirements:
- *  - Google Maps JavaScript API v3
- *  - jQuery 1.4.x
+ *  - jQuery >= 1.7.x
  * 
  */
 
@@ -30,83 +29,23 @@ var toe = {
     single_click_timeout: 400 // timeout in ms
   },
 
-  init: function() {
+  init: function(options) {
     if (!window.console) console = {};
     console.log = console.log || function(){};
     console.warn = console.warn || function(){};
     console.error = console.error || function(){};
     console.info = console.info || function(){};
 
-    var center = new google.maps.LatLng(61.483617, 21.7962775);
-    var mapOptions = {
-      zoom: 16,
-      center: center,
-      mapTypeId: 'OSM',
-      mapTypeControlOptions: {
-        mapTypeIds: ['OSM', google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID,
-          google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.TERRAIN ],
-        //style: google.maps.MapTypeControlStyle.DEFAULT
-        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-      },
-      disableDefaultUI: false,
-      scaleControl: false,
-      disableDoubleClickZoom: true,
-    };
-    this.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-
-    // set OpenStreetMap map type as default  
-    var osm_map_type = new google.maps.ImageMapType({
-      getTileUrl: function(coord, zoom) {
-        return "http://tile.openstreetmap.org/" +
-        zoom + "/" + coord.x + "/" + coord.y + ".png";
-      },
-      tileSize: new google.maps.Size(256, 256),
-      isPng: true,
-      alt: "OpenStreetMap layer",
-      name: "OSM",
-      maxZoom: 19
-    });
-    this.map.mapTypes.set('OSM', osm_map_type);
-    this.map.setMapTypeId('OSM');
-
-    var $mode_div = toe.control.Mode.html();
-    this.map.controls[google.maps.ControlPosition.TOP_CENTER].push($mode_div[0]);
-
-    var $tools_div = toe.control.Tools.html();
-    this.map.controls[google.maps.ControlPosition.RIGHT].push($tools_div[0]);
-
-    var $help_div = $('<div id="help_link"><a href="javascript:toe.dialog.Help.open()" style="color: #000;">' + tr("Help") + '</a></div>');
-    this.map.controls[google.maps.ControlPosition.RIGHT].push($help_div[0]);
-
-    // create the div to hold our custom controls
-    //var $control_div = $("<div></div>");
-    //$control_div.css({ 'margin': '5px',
-    //                   'border': '2px solid black' });
-    //$control_div.append(this.control.Area.html());
-    //$control_div.append(this.control.Poi.html());
-    //this.map.controls[google.maps.ControlPosition.RIGHT].push($control_div[0]);
-
-    // our controls
-    //$menu_div = this.control.Menu.html();
-    //this.map.controls[google.maps.ControlPosition.RIGHT].push($menu_div[0]);
-
-    // add click listeners to the map
-    google.maps.event.addListener(this.map, 'click', function(event) { toe.handler.mapClicked(event); });
-    google.maps.event.addListener(this.map, 'dblclick', function(event) { toe.handler.mapDoubleClicked(event); });
-
-    // dummy overlay, we will use this for converting 
-    overlay = new google.maps.OverlayView();
-    overlay.draw = function () {};
-    overlay.setMap(this.map);
-
-    // initialize info window, there is just one window here
-    this.info_window = new google.maps.InfoWindow({});
-
-    // initialize file dialog, and open the file-open dialog in initialize
-    this.dialog.init(false);
+    $.extend(this.options, options);
 
     // on window close, check if it's ok
     window.onbeforeunload = this.destroy;
+
+    // initialize map
+    this.map.init();
+
+    // initialize file dialog, and open the file-open dialog in initialize
+    this.dialog.init(false);
   },
 
   hasUnsavedChanges: function() {
@@ -122,8 +61,9 @@ var toe = {
   },
 
   // gets bounds of all stuff we have on the map and zoom the map there
+  /*
   zoom: function() {
-    var bounds = new google.maps.LatLngBounds();
+    var bounds = new toe.map.LatLngBounds();
     if (areas.areas.length) {
       bounds.union(areas.getBounds());
     }
@@ -135,7 +75,7 @@ var toe = {
     if (!bounds.isEmpty()) {
       this.map.fitBounds(bounds);
     }
-  }
+  }*/
 };
 
 toe.importData = function(data) {
@@ -147,29 +87,12 @@ toe.importData = function(data) {
   //console.log("POIs imported: " + pois_imported);
   if (pois_imported || areas_imported) {
     toe.dialog.OpenFile.close(); // we can close the dialog now
-    toe.fitBounds();
+    toe.map.fitBounds();
   }
   else {
     // we imported nothing, invalid or empty data file
   }
 };
-
-// gets bounds of all stuff we have on the map and zoom the map there
-toe.fitBounds = function() {
-  var bounds = new google.maps.LatLngBounds();
-  if (toe.AreaManager.areas.length) {
-    bounds.union(toe.AreaManager.getBounds());
-  }
-  /*
-  console.log(bounds);
-  if (toe.PoiManager.pois.length) {
-    bounds.union(toe.PoiManager.getBounds());
-  }*/
-  //console.log(bounds, pois.getBounds());
-  if (!bounds.isEmpty()) {
-    toe.map.fitBounds(bounds);
-  }
-}
 
 // ------------------------------------------------------------
 // Controls
@@ -194,7 +117,7 @@ toe.control = {
       $normal.on('click', function() {
         self.selected = self.NORMAL;
         toe.AreaManager.disable();
-        toe.map.setOptions({ draggableCursor: '' });
+        toe.map.map.setOptions({ draggableCursor: '' });
         $('.mode-area').removeClass('selected');
         $('.mode-drag').addClass('selected');
       });
@@ -204,7 +127,7 @@ toe.control = {
       $area.on('click', function() {
         self.selected = self.AREA;
         toe.AreaManager.enable();
-        toe.map.setOptions({ draggableCursor: 'crosshair' });
+        toe.map.map.setOptions({ draggableCursor: 'crosshair' });
         $('.mode-drag').removeClass('selected');
         $('.mode-area').addClass('selected');
       });
@@ -828,7 +751,7 @@ toe.AreaManager = new function() {
         if (confirm(tr('area_removal_confirm'))) {
           area.remove();
           this.areas.splice(i, 1);
-          toe.info_window.close(); // shut info window, because user might have used that to delete the area
+          toe.map.infoWindow.close(); // shut info window, because user might have used that to delete the area
           this.changed = true;
           return true;
         }
@@ -869,7 +792,7 @@ toe.AreaManager = new function() {
       area.number = number;
       area.name = name;
       area.changed = true;
-      toe.info_window.close();
+      toe.map.infoWindow.close();
     }
     console.log("area_id: " + id);
     console.log(event);
@@ -913,7 +836,7 @@ toe.AreaManager = new function() {
       for (var j in area.path) {
           lat = area.path[j][0];
           lng = area.path[j][1];
-          path.push(new google.maps.LatLng(lat, lng));
+          path.push(new toe.map.LatLng(lat, lng));
       }
       // XXX the area-missing-number&name bug is here
       this.add(new toe.Area(area.id, area.number, area.name, path));
@@ -928,7 +851,7 @@ toe.AreaManager = new function() {
 
   // returns bounds of all areas
   this.getBounds = function() {
-    var bounds = new google.maps.LatLngBounds();
+    var bounds = new toe.map.LatLngBounds();
     for (var i in this.areas) {
       bounds.union(this.areas[i].polygon.getBounds());
     }
@@ -1130,7 +1053,15 @@ toe.Area = function(id, number, name, path) {
     strokeWeight: 1
   };
 
-  this.polygon = new google.maps.Polygon({ paths: path });
+  this.polygon = new toe.map.Polygon({
+    paths: path,
+    clicked: function(event) {
+      area.clicked(event);
+    },
+    dblclicked: function(event) {
+      area.doubleClicked(event);
+    }
+  });
   this.polygon.setOptions(this.deactivated_options);
 
   // use boundaries array
@@ -1138,20 +1069,11 @@ toe.Area = function(id, number, name, path) {
     var latLng = path[i];
     toe.BoundaryManager.add(latLng, area);
   }
-
-  // add click listener to polygon
-  google.maps.event.addListener(this.polygon, 'click', function(event) { area.clicked(event) });
-  google.maps.event.addListener(this.polygon, 'dblclick', function(event) { area.doubleClicked(event) });
 };
 
 // method functions 
-toe.Area.prototype.show = function() {
-  this.polygon.setMap(toe.map);
-};
-
-toe.Area.prototype.hide = function() {
-  this.polygon.setMap(null);
-};
+toe.Area.prototype.show = function() { this.polygon.show(); };
+toe.Area.prototype.hide = function() { this.polygon.hide(); };
 
 toe.Area.prototype.clicked = function(event) {
   console.log("area " + this.name + " clicked.", event);
@@ -1257,26 +1179,25 @@ toe.Area.prototype.showInfoWindow = function() {
     '</td></tr>' +
     '</table></form></div>';
   var bounds = this.polygon.getBounds();
-  toe.info_window.setOptions({
-    content: contentString,
-    position: bounds.getCenter()
-  });
-  toe.info_window.open(toe.map);
+
   var self = this;
-  // move keyboard focus to the info window when it's ready
-  google.maps.event.addListener(toe.info_window, 'domready', function() {
-    $('#area_infonumber').find(".first-focus").focus();
-    $('#area_submit').off('click').on('click', function(event) {
-      toe.AreaManager.saveInfo(event);
-      return false;
-    });
-    $('#area_print').off('click').on('click', function(event) {
-      console.log("print this?");
-    });
-    $('#area_delete').off('click').on('click', function(event) {
-      toe.AreaManager.remove(self);
-      return false;
-    });
+  toe.map.infoWindow.show({
+    content: contentString,
+    position: bounds.getCenter(),
+    ready: function() {
+      $('.first-focus').focus();
+      $('#area_submit').off('click').on('click', function(event) {
+        toe.AreaManager.saveInfo(event);
+        return false;
+      });
+      $('#area_print').off('click').on('click', function(event) {
+        console.log("print this?");
+      });
+      $('#area_delete').off('click').on('click', function(event) {
+        toe.AreaManager.remove(self);
+        return false;
+      });
+    }
   });
 };
 
@@ -1313,30 +1234,19 @@ toe.Area.prototype.getPOIs = function() {
 
 toe.Area.prototype._showBorderMarker = function(latLng) {
   console.log("_showBorderMarker ", latLng);
-  //var image = 'beachflag.png';
-  var image = new google.maps.MarkerImage('images/red_dot.png',
-    new google.maps.Size(14, 14), // icon size
-    new google.maps.Point(0,0), // origin
-    new google.maps.Point(7, 7)); // anchor
-  var shape = {
-    coord: [1, 1, 1, 14, 14, 14, 14 , 1],
-    type: 'poly'
-  };
-  var marker = new google.maps.Marker({
-    position: latLng,
-    map: toe.map,
-    draggable: true,
-    icon: image,
-    shape: shape,
-    title: tr('Drag to edit, dbl click to remove'),
-    raiseOnDrag: false,
-    cursor: 'move'
-  });
+
   var self = this;
   // marker drag functionality
   var boundary = toe.BoundaryManager.find(latLng);
   if (!boundary) console.log("FATAL ERROR: no boundary found for this marker!");
-  google.maps.event.addListener(marker, 'drag', function(event) {
+
+  var marker = new toe.map.AreaBorderMarker({
+    position: latLng,
+    title: tr('Drag to edit, dbl click to remove')
+  });
+  this.border_markers.push(marker);
+
+  marker.setDrag(function(event) {
     if (boundary) {
       //if (shift_is_down) {
       if (false) {
@@ -1357,7 +1267,8 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
       }
     } 
   });
-  google.maps.event.addListener(marker, 'dragend', function(event) {
+
+  marker.setDragEnd(function(event) {
     if (boundary) {
 
         boundary.move(event.latLng);
@@ -1369,9 +1280,6 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
           //console.log("NEAR: ", boundary_near);
         }
 
-
-
-
       // try to merge this boundary if it snapped with other boundary
       if (toe.BoundaryManager.mergeBoundary(boundary) === true) {
         // dragging ended so that we merged it with another
@@ -1382,11 +1290,11 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
   });
 
   // marker delete functionality
-  google.maps.event.addListener(marker, 'dblclick', function(event) {
+  marker.setDoubleClick(function(event) {
     //if (boundary && shift_is_down) {
     if (boundary) {
       toe.BoundaryManager.remove(boundary.latLng, self);
-      marker.setMap(null);
+      marker.remove();
       //if (area.polygon.path.getLength == 0) {
       //console.log("we should destroy the area now!");
       //}
@@ -1395,8 +1303,7 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
       //event.preventDefault(); 
     }
   });
-  this.border_markers.push(marker);
-  //google.maps.event.addDomListener(marker, 'click', function(event) { console.log("YAY", event); event.preventDefault(); });
+
 };
 
 // remove duplicate markers from this area
@@ -1407,7 +1314,7 @@ toe.Area.prototype.removeDuplicateMarkers = function() {
       var pos2 = this.border_markers[j].getPosition();
       if (pos1.equals(pos2)) {
         console.log("removed duplicate marker");
-        this.border_markers[j].setMap(null);
+        this.border_markers[j].remove();
         this.border_markers.splice(j, 1);
         return true; // duplicate removed
       }
@@ -1420,7 +1327,7 @@ toe.Area.prototype.removeDuplicateMarkers = function() {
 toe.Area.prototype._removeMarkers = function() {
   if (this.border_markers) {
     for (var i in this.border_markers) {
-      this.border_markers[i].setMap(null);
+      this.border_markers[i].remove();
     }
     // clear the array (and remove the markers from memory)
     this.border_markers.length = 0;
@@ -1434,18 +1341,19 @@ toe.Area.prototype._removeMarkers = function() {
 toe.helper = {
   SelectionBox: new function() {
 
-    var box = new google.maps.Rectangle({
-      editable: true
-    });
-
+    var box = null;
     this.show = function() {
+      if (!box) {
+        box = new toe.map.Rectangle({
+          editable: true
+        });
+      }
       var bounds = toe.map.getBounds();
-      box.setMap(toe.map);
-      box.setBounds(bounds.resize(0.9));
+      box.show(bounds.resize(0.9));
     };
 
     this.hide = function() {
-      box.setMap(null);
+      box.hide();
     };
 
     this.getBounds = function() {
@@ -1528,89 +1436,3 @@ toe.util = {
   },
 
 };
-
-// ################################################################
-
-// extensions to Google Maps API v3
-// --------------------------------
-
-// latLng.toJSON()
-// returns latLng as JSON array
-if (!google.maps.LatLng.prototype.toJSON) {
-  google.maps.LatLng.prototype.toJSON = function() {
-    return "[" + this.lat() + "," + this.lng() + "]";
-  }
-}
-
-// Poygon getBounds extension - google-maps-extensions
-// http://code.google.com/p/google-maps-extensions/source/browse/google.maps.Polygon.getBounds.js
-if (!google.maps.Polygon.prototype.getBounds) {
-  google.maps.Polygon.prototype.getBounds = function() {
-    var bounds = new google.maps.LatLngBounds();
-    var paths = this.getPaths();
-    var path;
-    
-    for (var p = 0; p < paths.getLength(); p++) {
-      path = paths.getAt(p);
-      for (var i = 0; i < path.getLength(); i++) {
-        bounds.extend(path.getAt(i));
-      }
-    }
-
-    return bounds;
-  }
-}
-
-// Polygon containsLatLng - method to determine if a latLng is within a polygon
-google.maps.Polygon.prototype.containsLatLng = function(latLng) {
-  // Exclude points outside of bounds as there is no way they are in the poly
-  var bounds = this.getBounds();
-
-  if(bounds != null && !bounds.contains(latLng)) {
-    return false;
-  }
-
-  // Raycast point in polygon method
-  var inPoly = false;
-
-  var numPaths = this.getPaths().getLength();
-  for(var p = 0; p < numPaths; p++) {
-    var path = this.getPaths().getAt(p);
-    var numPoints = path.getLength();
-    var j = numPoints-1;
-
-    for(var i=0; i < numPoints; i++) { 
-      var vertex1 = path.getAt(i);
-      var vertex2 = path.getAt(j);
-
-      if (vertex1.lng() < latLng.lng() && vertex2.lng() >= latLng.lng() || vertex2.lng() < latLng.lng() && vertex1.lng() >= latLng.lng())  {
-        if (vertex1.lat() + (latLng.lng() - vertex1.lng()) / (vertex2.lng() - vertex1.lng()) * (vertex2.lat() - vertex1.lat()) < latLng.lat()) {
-          inPoly = !inPoly;
-        }
-      }
-
-      j = i;
-    }
-  }
-
-  return inPoly;
-}
-
-// Resizes LatLngBounds with given factor
-if (!google.maps.LatLngBounds.prototype.resize) {
-  google.maps.LatLngBounds.prototype.resize = function(factor) {
-    var ne = this.getNorthEast();
-    var sw = this.getSouthWest();
-    var ce = this.getCenter();
-
-    var lat = ce.lat() - (factor * (ce.lat() - ne.lat()));
-    var lng = ce.lng() - (factor * (ce.lng() - ne.lng()));
-    ne = new google.maps.LatLng(lat, lng);
-
-    lat = ce.lat() + (factor * (sw.lat() - ce.lat()));
-    lng = ce.lng() + (factor * (sw.lng() - ce.lng()));
-    sw = new google.maps.LatLng(lat, lng);
-
-    return new google.maps.LatLngBounds(sw, ne);
-  };
-}
