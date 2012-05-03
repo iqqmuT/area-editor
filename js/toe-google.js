@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Arno Teigseth, Tuomas Jaakola
+ * Copyright 2012 Arno Teigseth, Tuomas Jaakola
  * 
  * This file is part of TOE.
  *
@@ -17,10 +17,6 @@
  * along with TOE.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Google Maps integration file of TOE.
- * 
- * Requirements:
- *  - Google Maps JavaScript API v3
- *  - jQuery >= 1.7
  * 
  */
 
