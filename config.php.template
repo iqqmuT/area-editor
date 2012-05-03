@@ -1,0 +1,14 @@
+<?php
+
+$cfg = array();
+
+// --------------------------------------------------------------
+// Map JavaScript library
+// --------------------------------------------------------------
+$JS_MAP_GOOGLE      = 'google';
+$JS_MAP_OPEN_LAYERS = 'open_layers';
+$JS_MAP_LEAFLET     = 'leaflet';
+
+$cfg['js_map_library'] = $JS_MAP_GOOGLE;
+
+?>
