@@ -26,7 +26,8 @@
 var toe = {
 
   options: {
-    single_click_timeout: 400 // timeout in ms
+    single_click_timeout: 400, // timeout in ms
+    snap_boundaries: 5         // snap to other boundary within 5 px range
   },
 
   init: function(options) {
@@ -117,7 +118,7 @@ toe.control = {
       $normal.on('click', function() {
         self.selected = self.NORMAL;
         toe.AreaManager.disable();
-        toe.map.map.setOptions({ draggableCursor: '' });
+        toe.map.changeDragMode();
         $('.mode-area').removeClass('selected');
         $('.mode-drag').addClass('selected');
       });
@@ -127,7 +128,7 @@ toe.control = {
       $area.on('click', function() {
         self.selected = self.AREA;
         toe.AreaManager.enable();
-        toe.map.map.setOptions({ draggableCursor: 'crosshair' });
+        toe.map.changeAreaMode();
         $('.mode-drag').removeClass('selected');
         $('.mode-area').addClass('selected');
       });
@@ -700,7 +701,10 @@ toe.AreaManager = new function() {
 
   this.mapClicked = function(event) {
     console.log("AREAS:MAPCLICKED", event);
-    
+
+    if (click_timeout) {
+      clearTimeout(click_timeout);
+    }
     click_timeout = setTimeout(function() {
       self.deactivate();
     }, toe.options.single_click_timeout);
@@ -714,8 +718,8 @@ toe.AreaManager = new function() {
       self.active_area.addNewBorder(event);
     } else {
       // create a new area
-      console.log("CREATE NEW AREA!");
-      var area = new toe.Area(self.get_new_id(), '', '', [ event.latLng ]);
+      console.log("CREATE NEW AREA!", toe.map.getEventLatLng(event));
+      var area = new toe.Area(self.get_new_id(), '', '', [ toe.map.getEventLatLng(event) ]);
       self.add(area);
       area.show();
       area.activate();
@@ -952,6 +956,10 @@ toe.Boundary = function(latLng) {
 toe.Boundary.prototype.move = function(latLng, area) {
   for (var i in this.areas) {
     if (!area || (area && this.areas[i] == area)) {
+      if (this.areas[i].polygon.changePath(this.latLng, latLng)) {
+        this.areas[i].changed = true;
+      }
+      /*
       var path = this.areas[i].polygon.getPath();
       for (var j = 0; j < path.getLength(); j++) {
         if (path.getAt(j).equals(this.latLng)) {
@@ -959,7 +967,7 @@ toe.Boundary.prototype.move = function(latLng, area) {
           this.areas[i].changed = true;
           break; // go to next area
         }
-      }
+      }*/
     }
   } // for
   this.latLng = latLng; //  update our information at last
@@ -986,6 +994,10 @@ toe.Boundary.prototype.unlink = function(area) {
   var new_areas = [];
   for (var i in this.areas) {
     if (!area || (area && this.areas[i] == area)) {
+      if (this.areas[i].polygon.removeFromPath(this.latLng)) {
+        this.areas[i].changed = true;
+      }
+      /*
       var path = this.areas[i].polygon.getPath();
       for (var j = 0; j < path.getLength(); j++) {
         if (path.getAt(j).equals(this.latLng)) {
@@ -993,7 +1005,7 @@ toe.Boundary.prototype.unlink = function(area) {
           this.areas[i].changed = true;
           break; // go to next area
         }
-      }
+      }*/
     }
     else {
       // preserve this area
@@ -1011,11 +1023,14 @@ toe.Boundary.prototype.empty = function() {
 };
 
 toe.Boundary.prototype.findNearBoundary = function(range) {
-  var point = overlay.getProjection().fromLatLngToContainerPixel(this.latLng);
+  //var point = overlay.getProjection().fromLatLngToContainerPixel(this.latLng);
+  console.log("find near", this.latLng);
+  var point = this.latLng.toPoint();
   for (var i = 0; i < toe.BoundaryManager.boundaries_arr.length; i++) {
     var boundary = toe.BoundaryManager.boundaries_arr[i];
     if (boundary == this) continue; // skip over this
-    var boundary_point = overlay.getProjection().fromLatLngToContainerPixel(boundary.latLng);
+    //var boundary_point = overlay.getProjection().fromLatLngToContainerPixel(boundary.latLng);
+    var boundary_point = boundary.latLng.toPoint();
     if (toe.util.pointDistance(point, boundary_point) <= range) {
       return boundary;
     }
@@ -1046,11 +1061,11 @@ toe.Area = function(id, number, name, path) {
     fillOpacity: 0.35
   };
   this.deactivated_options = {
-    fillColor: "#000000",
-    fillOpacity: 0.1,
     strokeColor: "#000000",
     strokeOpacity: 0.8,
-    strokeWeight: 1
+    strokeWeight: 1,
+    fillColor: "#000000",
+    fillOpacity: 0.1
   };
 
   this.polygon = new toe.map.Polygon({
@@ -1062,7 +1077,7 @@ toe.Area = function(id, number, name, path) {
       area.doubleClicked(event);
     }
   });
-  this.polygon.setOptions(this.deactivated_options);
+  this.polygon.setColor(this.deactivated_options);
 
   // use boundaries array
   for (var i = 0; i < path.length; i++) {
@@ -1112,14 +1127,14 @@ toe.Area.prototype.activate = function() {
   this.edit_mode = true;
   toe.AreaManager.active_area = this;
 
-  this.polygon.setOptions(this.activated_options);
+  this.polygon.setColor(this.activated_options);
   //if (area_control.editable) {
   if (true) {
     // show markers yo
-    var path = this.polygon.getPath();
+    var path = this.polygon.getToePath();
     for (var i = 0; i < path.length; i++) {
-      var c = path.getAt(i);
-      console.log(c.lat(), c.lng());
+      var c = path[i];
+      console.log(c);
       this._showBorderMarker(c);
     }
   }
@@ -1130,34 +1145,34 @@ toe.Area.prototype.deactivate = function() {
   this.edit_mode = false;
   toe.AreaManager.active_area = null;
 
-  this.polygon.setOptions(this.deactivated_options);
+  this.polygon.setColor(this.deactivated_options);
   this._removeMarkers();
 };
 
 // when user clicks the map with shift key,
 // he adds a new boundary for this area
 toe.Area.prototype.addNewBorder = function(event) {
-  console.log("add new border: ", this.name, event);
-  var latLng = event.latLng;
+  var latLng = toe.map.getEventLatLng(event);
+  console.log("add new border: ", this.name, latLng);
 
   // edit polygon path
   // find the vertex
-  var idx = toe.util.getNearestVertex(this.polygon.getPath(), latLng)
-  this.polygon.getPath().insertAt(idx, latLng);
+  var idx = toe.util.getNearestVertex(this.polygon.getToePath(), latLng)
+  //this.polygon.getPath().insertAt(idx, latLng);
+  this.polygon.addToPath(idx, latLng);
 
   // see if this is already exists in boundaries array
-  toe.BoundaryManager.add(event.latLng, this);
-  this._showBorderMarker(event.latLng);
+  toe.BoundaryManager.add(latLng, this);
+  this._showBorderMarker(latLng);
 };
 
 // remove this area and all belonging to it
 toe.Area.prototype.remove = function() {
   this.polygon.setMap(null);
   this._removeMarkers();
-  var path = this.polygon.getPath();
-  for (var i = 0; i < path.getLength(); i++) {
-    var latLng = path.getAt(i);
-    toe.BoundaryManager.remove(latLng, this);
+  var path = this.polygon.getToePath();
+  for (var i = 0; i < path.length; i++) {
+    toe.BoundaryManager.remove(path[i], this);
   }
 };
 
@@ -1178,6 +1193,7 @@ toe.Area.prototype.showInfoWindow = function() {
     '<button id="area_delete">' + tr("Delete") + '</button>' +
     '</td></tr>' +
     '</table></form></div>';
+    //'<script type="text/javascript">console.log("haha");; $(document).ready(function() { console.log("ready"); });</script>';
   var bounds = this.polygon.getBounds();
 
   var self = this;
@@ -1185,6 +1201,7 @@ toe.Area.prototype.showInfoWindow = function() {
     content: contentString,
     position: bounds.getCenter(),
     ready: function() {
+      console.log('content updated');
       $('.first-focus').focus();
       $('#area_submit').off('click').on('click', function(event) {
         toe.AreaManager.saveInfo(event);
@@ -1252,7 +1269,8 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
       if (false) {
         // if user is dragging marker with shift key down,
         // move only marker belonging to this area
-        boundary.move(event.latLng, self);
+        var latLng = toe.map.getEventLatLng(event);
+        boundary.move(latLng, self);
       } else {
           /*
         // normally drag marker for all areas linked here
@@ -1270,15 +1288,18 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
 
   marker.setDragEnd(function(event) {
     if (boundary) {
+      var latLng = this.getToeLatLng();
+      boundary.move(latLng);
 
-        boundary.move(event.latLng);
+      if (toe.options.snap_boundaries > 0) {
         // snap to another boundary within 5 px range
-        var boundary_near = boundary.findNearBoundary(5);
+        var boundary_near = boundary.findNearBoundary(toe.options.snap_boundaries);
         if (boundary_near) { 
           boundary.move(boundary_near.latLng);
           marker.setPosition(boundary_near.latLng);
           //console.log("NEAR: ", boundary_near);
         }
+      }
 
       // try to merge this boundary if it snapped with other boundary
       if (toe.BoundaryManager.mergeBoundary(boundary) === true) {
@@ -1286,7 +1307,7 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
         // let's see if we have now two markers in the same place, if so, remove other
         self.removeDuplicateMarkers();
       }
-     }
+    }
   });
 
   // marker delete functionality
@@ -1396,10 +1417,10 @@ toe.util = {
   getNearestVertex: function(path, c) {
     var p1, p2;
     var smallestDistance;
-    for (var i = 0; i < path.getLength(); i++) {
-      p1 = path.getAt(i);
-      if (i == 0) p2 = path.getAt(path.getLength() - 1);
-      else p2 = path.getAt(i-1);
+    for (var i = 0; i < path.length; i++) {
+      p1 = path[i];
+      if (i == 0) p2 = path[path.length - 1];
+      else p2 = path[i-1];
 
       var distance = this.distanceFromVertex(p1, p2, c);
       //console.log("distance: ", distance);
@@ -1422,13 +1443,14 @@ toe.util = {
 
   // count distance in coordinates a2 = b2 + c2
   latLngDistance: function(a, b) {
-    var x = a.lng() - b.lng();
-    var y = a.lat() - b.lat();
+    var x = a.getLng() - b.getLng();
+    var y = a.getLat() - b.getLat();
     var d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
     return d;
   },
 
   pointDistance: function(a, b) {
+    // pythagorean theorem
     var x = a.x - b.x;
     var y = a.y - b.y;
     var d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));

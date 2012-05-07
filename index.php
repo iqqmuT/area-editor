@@ -30,13 +30,13 @@ include("lib/common.php");
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link type="text/css" href="css/ui-darkness/jquery-ui-1.8.6.custom.css" rel="stylesheet" />
     <link type="text/css" href="css/area.css?v=1.0" rel="stylesheet" />
-    <? if ($cfg['js_map_library'] == $JS_MAP_GOOGLE) { ?>
+    <? if ($maplib == $JS_MAP_GOOGLE) { ?>
       <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <? } ?>
-    <? if ($cfg['js_map_library'] == $JS_MAP_OPEN_LAYERS) { ?>
+    <? if ($maplib == $JS_MAP_OPEN_LAYERS) { ?>
       <script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript" />
     <? } ?>
-    <? if ($cfg['js_map_library'] == $JS_MAP_LEAFLET) { ?>
+    <? if ($maplib == $JS_MAP_LEAFLET) { ?>
       <link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.css" />
       <!--[if lte IE 8]>
         <link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.ie.css" />
@@ -48,13 +48,13 @@ include("lib/common.php");
     <script type="text/javascript" src="js/i18n.js"></script>
     <!--<script type="text/javascript" src="js/area.js"></script>-->
     <script type="text/javascript" src="js/toe.js?v=1.0"></script>
-    <script type="text/javascript" src="js/toe-<? print $cfg['js_map_library']; ?>.js?v=1.0"></script>
+    <script type="text/javascript" src="js/toe-<? print $maplib; ?>.js?v=1.0"></script>
     <script type="text/javascript">
       // set localization
       var translations = <? print $localization->read_lang_file($lang); ?>;
       setLanguage('<? print $lang; ?>', translations);
-      // initialize the whole thing by calling initialize()
-      google.maps.event.addDomListener(window, 'load', function() { toe.init({ }); });
+      // initialize
+      $(document).ready(function() { toe.init({}); });
     </script>
     <title>TOE</title>
   </head>

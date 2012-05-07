@@ -16,13 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with TOE.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Google Maps integration file of TOE.
+ * Leaflet integration file of TOE.
  * 
  */
 
 toe.map = {
 
   init: function() {
+    var mapOptions = {
+      doubleClickZoom: false,
+      touchZoom: true
+    };
+    this.map = new L.Map('map_canvas', mapOptions);
+    var cloudmade = new L.TileLayer('http://{s}.tile.cloudmade.com/f32e8bf95a994abf9d647adc983a33a5/997/256/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+      maxZoom: 18
+    });
+    //var london = new L.LatLng(51.505, -0.09); // geographical point (longitude and latitude)
+    var pori = new L.LatLng(61.483617, 21.7962775);
+    this.map.setView(pori, 13).addLayer(cloudmade);
+    
+    this.map.addControl(new L.Control.MapMode());
+    /*
+    console.log("rock rock");
+    
     var center = new google.maps.LatLng(61.483617, 21.7962775);
     var mapOptions = {
       zoom: 16,
@@ -38,7 +55,6 @@ toe.map = {
       scaleControl: false,
       disableDoubleClickZoom: true,
     };
-    this.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
     // set OpenStreetMap map type as default  
     var osm_map_type = new google.maps.ImageMapType({
@@ -81,20 +97,25 @@ toe.map = {
     google.maps.event.addListener(this.map, 'dblclick', function(event) { toe.handler.mapDoubleClicked(event); });
 
     // dummy overlay, we will use this for converting 
-    this.overlay = new google.maps.OverlayView();
-    this.overlay.draw = function () {};
-    this.overlay.setMap(this.map);
+    overlay = new google.maps.OverlayView();
+    overlay.draw = function () {};
+    overlay.setMap(this.map);
+    */
+
+    // add click listeners to the map
+    this.map.on('click', function(event) { toe.handler.mapClicked(event); });
+    this.map.on('dblclick', function(event) { toe.handler.mapDoubleClicked(event); });
 
     // initialize info window, there is just one window here
-    this.infoWindow = new toe.map.InfoWindow({});
+    this.infoWindow = new toe.map.InfoWindow();
   },
 
   changeDragMode: function() {
-    this.map.setOptions({ draggableCursor: '' });
+    this.map._container.style.cursor = '';
   },
 
   changeAreaMode: function() {
-    this.map.setOptions({ draggableCursor: 'crosshair' });
+    this.map._container.style.cursor = 'crosshair';
   },
 
   // gets bounds of all stuff we have on the map and zoom the map there
@@ -122,50 +143,45 @@ toe.map = {
    * Returns toe.map.LatLng from (click) event.
    */
   getEventLatLng: function(event) {
-    return this._toLatLng(event.latLng);
+    return this._toLatLng(event.latlng);
   },
 
-  // private functions
-
   /**
-   * Converts Google Maps LatLngBounds object to toe.map.LatLngBounds.
+   * Converts Leaflet LatLngBounds object to toe.map.LatLngBounds.
    * Private function.
    */
-  _toBounds: function(googleLatLngBounds) {
-    return new toe.map.LatLngBounds(googleLatLngBounds.getSouthWest(), googleLatLngBounds.getNorthEast());
+  _toBounds: function(leafletLatLngBounds) {
+    return new toe.map.LatLngBounds(leafletLatLngBounds.getSouthWest(), leafletLatLngBounds.getNorthEast());
   },
 
   /**
-   * Converts Google Maps LatLng object to toe.map.LatLng.
+   * Converts Leaflet LatLngBounds object to toe.map.LatLngBounds.
    * Private function.
    */
-  _toLatLng: function(googleLatLng) {
-    return new toe.map.LatLng(googleLatLng.lat(), googleLatLng.lng());
-  },
-
-  /**
-   * Converts Google Maps MVCArray of LatLngs to array of toe.map.LatLngs.
-   */
-  _toLatLngs: function(googleLatLngs) {
-    var latLngs = [];
-    for (var i = 0; i < googleLatLngs.getLength(); i++) {
-      latLngs.push(this._toLatLng(googleLatLngs.getAt(i)));
-    }
-    return latLngs;
+  _toLatLng: function(leafletLatLng) {
+    console.log(leafletLatLng);
+    return new toe.map.LatLng(leafletLatLng.lat, leafletLatLng.lng);
   }
+
 };
 
 /**
  * InfoWindow
  */
-toe.map.InfoWindow = function(options) {
-    this.base = google.maps.InfoWindow;
-    this.base(options);
+toe.map.InfoWindow = function() {
+    this.base = L.Popup;
+    this.base();
 };
 
-toe.map.InfoWindow.prototype = new google.maps.InfoWindow;
+toe.map.InfoWindow.prototype = new L.Popup;
 
 toe.map.InfoWindow.prototype.show = function(options) {
+  
+  this.setContent(options.content);
+  this.setLatLng(options.position);
+  toe.map.map.openPopup(this);
+  this.on('contentupdate', options.ready);
+/*  
   this.setOptions({
     content: options.content,
     position: options.position
@@ -176,16 +192,20 @@ toe.map.InfoWindow.prototype.show = function(options) {
   google.maps.event.addListener(this, 'domready', function() {
     options.ready();
   });
+  */
+  
 };
 
 /**
  * LatLng
  */
 toe.map.LatLng = function(lat, lng) {
-  this.base = google.maps.LatLng;
+  this.base = L.LatLng;
   this.base(lat, lng);
 };
-toe.map.LatLng.prototype = new google.maps.LatLng;
+// use hackish inheritance
+// http://www.spheredev.org/wiki/Prototypes_in_JavaScript
+toe.map.LatLng.prototype.__proto__ = L.LatLng.prototype;
 
 // returns latLng as JSON array
 toe.map.LatLng.prototype.toJSON = function() {
@@ -193,28 +213,28 @@ toe.map.LatLng.prototype.toJSON = function() {
 };
 
 toe.map.LatLng.prototype.getLat = function() {
-  return this.lat();
+  return this.lat;
 };
 
 toe.map.LatLng.prototype.getLng = function() {
-  return this.lng();
+  return this.lng;
 };
 
 /**
  * Converts LatLng to pixel point.
  */
 toe.map.LatLng.prototype.toPoint = function() {
-  return toe.map.overlay.getProjection().fromLatLngToContainerPixel(this);
+  return toe.map.map.latLngToLayerPoint(this);
 };
 
 /**
  * LatLngBounds
  */
 toe.map.LatLngBounds = function(sw, ne) {
-  this.base = google.maps.LatLngBounds;
+  this.base = L.LatLngBounds;
   this.base(sw, ne);
 };
-toe.map.LatLngBounds.prototype = new google.maps.LatLngBounds;
+toe.map.LatLngBounds.prototype = new L.LatLngBounds;
 
 // Resizes LatLngBounds with given factor
 toe.map.LatLngBounds.prototype.resize = function(factor) {
@@ -237,17 +257,17 @@ toe.map.LatLngBounds.prototype.resize = function(factor) {
  * Polygon
  */
 toe.map.Polygon = function(options) {
-  this.base = google.maps.Polygon;
-  this.base(options);
-
-  // add click listener to polygon
-  google.maps.event.addListener(this, 'click', options.clicked);
-  google.maps.event.addListener(this, 'dblclick', options.dblclicked);
+  this.base = L.Polygon;
+  this.base(options.paths);
+  //console.log("paths: ", options.paths);
+  this.on('click', options.clicked);
+  this.on('dblclick', options.dblclicked);
 };
-toe.map.Polygon.prototype = new google.maps.Polygon;
+toe.map.Polygon.prototype = new L.Polygon;
 
 toe.map.Polygon.prototype.show = function() {
-  this.setMap(toe.map.map);
+  console.log("show ", this);
+  toe.map.map.addLayer(this);
 };
 
 toe.map.Polygon.prototype.hide = function() {
@@ -255,24 +275,31 @@ toe.map.Polygon.prototype.hide = function() {
 };
 
 toe.map.Polygon.prototype.setColor = function(style) {
-  this.setOptions(style);
+  this.setStyle({
+    stroke: true,
+    color: style.strokeColor,
+    weight: style.strokeWeight,
+    opacity: style.strokeOpacity,
+    fillColor: style.fillColor,
+    fillOpacity: style.fillOpacity
+  });
 };
 
 /**
  * Add given latlng to path into given position in path.
  */
 toe.map.Polygon.prototype.addToPath = function(idx, latLng) {
-  this.getPath().insertAt(idx, latLng);
+  this.spliceLatLngs(idx, 0, latLng);
 };
 
 /**
  * Remove latlng from path.
  */
 toe.map.Polygon.prototype.removeFromPath = function(latLng) {
-  var path = this.getPath();
-  for (var i = 0; i < path.getLength(); i++) {
-    if (path.getAt(i).equals(latLng)) {
-      path.removeAt(i); // update polygon path
+  var path = this.getLatLngs();
+  for (var i = 0; i < path.length; i++) {
+    if (path[i].equals(latLng)) {
+      this.spliceLatLngs(i, 1); // update polygon path
       return true;
     }
   }
@@ -283,10 +310,10 @@ toe.map.Polygon.prototype.removeFromPath = function(latLng) {
  * Move latlng to another location in path.
  */
 toe.map.Polygon.prototype.changePath = function(oldLatLng, newLatLng) {
-  var path = this.getPath();
-  for (var i = 0; i < path.getLength(); i++) {
-    if (path.getAt(i).equals(oldLatLng)) {
-      path.setAt(i, newLatLng); // update polygon path
+  var path = this.getLatLngs();
+  for (var i = 0; i < path.length; i++) {
+    if (path[i].equals(oldLatLng)) {
+      this.spliceLatLngs(i, 1, newLatLng); // update polygon path
       return true;
     }
   }
@@ -296,7 +323,8 @@ toe.map.Polygon.prototype.changePath = function(oldLatLng, newLatLng) {
 // Poygon getBounds extension - google-maps-extensions
 // http://code.google.com/p/google-maps-extensions/source/browse/google.maps.Polygon.getBounds.js
 toe.map.Polygon.prototype.getBounds = function() {
-  var bounds = new google.maps.LatLngBounds();
+  return new L.LatLngBounds(this.getLatLngs());
+/*
   var paths = this.getPaths();
   var path;
 
@@ -306,7 +334,7 @@ toe.map.Polygon.prototype.getBounds = function() {
       bounds.extend(path.getAt(i));
     }
   }
-
+*/
   return bounds;
 };
 
@@ -345,21 +373,18 @@ toe.map.Polygon.prototype.containsLatLng = function(latLng) {
   return inPoly;
 };
 
-/**
- * Return read-only array of polygon path latlngs.
- */
 toe.map.Polygon.prototype.getToePath = function() {
-  return toe.map._toLatLngs(this.getPath());
+  return this.getLatLngs();
 };
 
 /**
  * Rectangle
  */
 toe.map.Rectangle = function(options) {
-  this.base = google.maps.Rectangle;
+  this.base = L.Polygon;
   this.base(options);
 };
-toe.map.Rectangle.prototype = new google.maps.Rectangle;
+toe.map.Rectangle.prototype.__proto__ = L.Polygon.prototype;
 
 toe.map.Rectangle.prototype.show = function(bounds) {
   this.setMap(toe.map.map);
@@ -369,44 +394,91 @@ toe.map.Rectangle.prototype.hide = function() {
   this.setMap(null);
 };
 
+
 /**
  * AreaBorderMarker
  */
-toe.map.AreaBorderMarker = function(options) {
-    options.map = toe.map.map;
-    options.draggable = true;
-    options.icon = new google.maps.MarkerImage('images/red_dot.png',
-      new google.maps.Size(14, 14), // icon size
-      new google.maps.Point(0,0),   // origin
-      new google.maps.Point(7, 7)); // anchor
-    options.shape = {
-      coord: [1, 1, 1, 14, 14, 14, 14, 1],
-      type: 'poly'
-    };
-    options.raiseOnDrag = false;
-    options.cursor = 'move';
 
-    this.base = google.maps.Marker;
-    this.base(options);
+toe.map.AreaBorderMarkerIcon = L.Icon.extend({
+  iconUrl: 'images/red_dot.png',
+  shadowUrl: null,
+  iconSize: new L.Point(14, 14),
+  iconAnchor: new L.Point(7, 7)
+});
+
+ 
+toe.map.AreaBorderMarker = function(options) {
+  var icon = new toe.map.AreaBorderMarkerIcon();
+
+  this.base = L.Marker;
+  this.base(options.position, {
+    icon: icon,
+    clickable: true,
+    draggable: true
+  });
+  toe.map.map.addLayer(this);
 };
 
-toe.map.AreaBorderMarker.prototype = new google.maps.Marker;
+toe.map.AreaBorderMarker.prototype = new L.Marker;
 
 toe.map.AreaBorderMarker.prototype.remove = function() {
-  this.setMap(null);
+  toe.map.map.removeLayer(this);
 };
 toe.map.AreaBorderMarker.prototype.setDrag = function(func) {
-  google.maps.event.addListener(this, 'drag', func);
+  this.on('drag', func);
 };
 
 toe.map.AreaBorderMarker.prototype.setDragEnd = function(func) {
-  google.maps.event.addListener(this, 'dragend', func);
+  this.on('dragend', func);
 };
 
 toe.map.AreaBorderMarker.prototype.setDoubleClick = function(func) {
-  google.maps.event.addListener(this, 'dblclick', func);
+  this.on('dblclick', func);
 };
 
 toe.map.AreaBorderMarker.prototype.getToeLatLng = function() {
-  return toe.map._toLatLng(this.getPosition());
+  return toe.map._toLatLng(this.getLatLng());
 };
+
+L.Control.MapMode = L.Class.extend({
+  onAdd: function (map) {
+    this._map = map;
+    /*
+    this._container = L.DomUtil.create('div', 'leaflet-control-zoom');
+
+    this._zoomInButton = this._createButton(
+      'Zoom in', 'leaflet-control-zoom-in', this._map.zoomIn, this._map);
+    this._zoomOutButton = this._createButton(
+      'Zoom out', 'leaflet-control-zoom-out', this._map.zoomOut, this._map);
+
+    this._container.appendChild(this._zoomInButton);
+    this._container.appendChild(this._zoomOutButton);
+*/
+    var $mode_div = toe.control.Mode.html();
+    //this.map.controls[google.maps.ControlPosition.TOP_CENTER].push($mode_div[0]);
+    this._container = $mode_div[0];
+  },
+
+  getContainer: function () {
+    return this._container;
+  },
+
+  getPosition: function () {
+    return L.Control.Position.TOP_RIGHT;
+  },
+/*
+  _createButton: function (title, className, fn, context) {
+    var link = document.createElement('a');
+    link.href = '#';
+    link.title = title;
+    link.className = className;
+
+    if (!L.Browser.touch) {
+      L.DomEvent.disableClickPropagation(link);
+    }
+    L.DomEvent.addListener(link, 'click', L.DomEvent.preventDefault);
+    L.DomEvent.addListener(link, 'click', fn, context);
+
+    return link;
+  }*/
+});

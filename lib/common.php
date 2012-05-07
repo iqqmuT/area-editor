@@ -26,6 +26,10 @@ include("config.php");
 // global vars
 $localization = new Localization();
 $lang = $localization->lang;
+$maplib = $cfg['js_map_library'];
+if (isset($_GET['maplib'])) {
+    $maplib = $_GET['maplib'];
+}
 
 // for convenience, translate function
 function tr($str) {
