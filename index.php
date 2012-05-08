@@ -41,7 +41,7 @@ include("lib/common.php");
       <!--[if lte IE 8]>
         <link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.ie.css" />
       <![endif]-->
-      <script src="http://code.leafletjs.com/leaflet-0.3.1/leaflet.js"></script>
+      <script type="text/javascript" src="js/leaflet.js"></script>
     <? } ?>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>

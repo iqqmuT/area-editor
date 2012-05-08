@@ -35,11 +35,11 @@ toe.map = {
     //var london = new L.LatLng(51.505, -0.09); // geographical point (longitude and latitude)
     var pori = new L.LatLng(61.483617, 21.7962775);
     this.map.setView(pori, 13).addLayer(cloudmade);
-    
+
     this.map.addControl(new L.Control.MapMode());
     /*
     console.log("rock rock");
-    
+
     var center = new google.maps.LatLng(61.483617, 21.7962775);
     var mapOptions = {
       zoom: 16,
@@ -176,11 +176,12 @@ toe.map.InfoWindow = function() {
 toe.map.InfoWindow.prototype = new L.Popup;
 
 toe.map.InfoWindow.prototype.show = function(options) {
-  
+  console.log('show wow');
+  //this.off('contentupdate').on('contentupdate', options.ready);
+  this.on('contentupdate', function() { console.log('CONTENT UPDATED'); });
   this.setContent(options.content);
   this.setLatLng(options.position);
   toe.map.map.openPopup(this);
-  this.on('contentupdate', options.ready);
 /*  
   this.setOptions({
     content: options.content,
@@ -399,16 +400,13 @@ toe.map.Rectangle.prototype.hide = function() {
  * AreaBorderMarker
  */
 
-toe.map.AreaBorderMarkerIcon = L.Icon.extend({
-  iconUrl: 'images/red_dot.png',
-  shadowUrl: null,
-  iconSize: new L.Point(14, 14),
-  iconAnchor: new L.Point(7, 7)
-});
-
- 
 toe.map.AreaBorderMarker = function(options) {
-  var icon = new toe.map.AreaBorderMarkerIcon();
+  var icon = new L.Icon({
+    iconUrl: 'images/red_dot.png',
+    shadowUrl: null,
+    iconSize: new L.Point(14, 14),
+    iconAnchor: new L.Point(7, 7)
+  });
 
   this.base = L.Marker;
   this.base(options.position, {
@@ -440,45 +438,13 @@ toe.map.AreaBorderMarker.prototype.getToeLatLng = function() {
   return toe.map._toLatLng(this.getLatLng());
 };
 
-L.Control.MapMode = L.Class.extend({
+L.Control.MapMode = L.Control.extend({
+  options: {
+    position: 'topright'
+  },
+
   onAdd: function (map) {
-    this._map = map;
-    /*
-    this._container = L.DomUtil.create('div', 'leaflet-control-zoom');
-
-    this._zoomInButton = this._createButton(
-      'Zoom in', 'leaflet-control-zoom-in', this._map.zoomIn, this._map);
-    this._zoomOutButton = this._createButton(
-      'Zoom out', 'leaflet-control-zoom-out', this._map.zoomOut, this._map);
-
-    this._container.appendChild(this._zoomInButton);
-    this._container.appendChild(this._zoomOutButton);
-*/
     var $mode_div = toe.control.Mode.html();
-    //this.map.controls[google.maps.ControlPosition.TOP_CENTER].push($mode_div[0]);
-    this._container = $mode_div[0];
-  },
-
-  getContainer: function () {
-    return this._container;
-  },
-
-  getPosition: function () {
-    return L.Control.Position.TOP_RIGHT;
-  },
-/*
-  _createButton: function (title, className, fn, context) {
-    var link = document.createElement('a');
-    link.href = '#';
-    link.title = title;
-    link.className = className;
-
-    if (!L.Browser.touch) {
-      L.DomEvent.disableClickPropagation(link);
-    }
-    L.DomEvent.addListener(link, 'click', L.DomEvent.preventDefault);
-    L.DomEvent.addListener(link, 'click', fn, context);
-
-    return link;
-  }*/
+    return $mode_div[0];
+  }
 });
