@@ -178,6 +178,10 @@ toe.map.InfoWindow.prototype.show = function(options) {
   });
 };
 
+toe.map.InfoWindow.prototype.hide = function() {
+  this.close();
+};
+
 /**
  * LatLng
  */

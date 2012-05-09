@@ -177,24 +177,14 @@ toe.map.InfoWindow.prototype = new L.Popup;
 
 toe.map.InfoWindow.prototype.show = function(options) {
   console.log('show wow');
-  //this.off('contentupdate').on('contentupdate', options.ready);
-  this.on('contentupdate', function() { console.log('CONTENT UPDATED'); });
+  this.on('contentupdate', options.ready);
   this.setContent(options.content);
   this.setLatLng(options.position);
   toe.map.map.openPopup(this);
-/*  
-  this.setOptions({
-    content: options.content,
-    position: options.position
-  });
-  this.open(toe.map.map);
+};
 
-  // callback when ready
-  google.maps.event.addListener(this, 'domready', function() {
-    options.ready();
-  });
-  */
-  
+toe.map.InfoWindow.prototype.hide = function() {
+  toe.map.map.removeLayer(this);
 };
 
 /**
@@ -267,12 +257,11 @@ toe.map.Polygon = function(options) {
 toe.map.Polygon.prototype = new L.Polygon;
 
 toe.map.Polygon.prototype.show = function() {
-  console.log("show ", this);
   toe.map.map.addLayer(this);
 };
 
 toe.map.Polygon.prototype.hide = function() {
-  this.setMap(null);
+  toe.map.map.removeLayer(this);
 };
 
 toe.map.Polygon.prototype.setColor = function(style) {

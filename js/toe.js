@@ -755,7 +755,7 @@ toe.AreaManager = new function() {
         if (confirm(tr('area_removal_confirm'))) {
           area.remove();
           this.areas.splice(i, 1);
-          toe.map.infoWindow.close(); // shut info window, because user might have used that to delete the area
+          toe.map.infoWindow.hide(); // shut info window, because user might have used that to delete the area
           this.changed = true;
           return true;
         }
@@ -796,7 +796,7 @@ toe.AreaManager = new function() {
       area.number = number;
       area.name = name;
       area.changed = true;
-      toe.map.infoWindow.close();
+      toe.map.infoWindow.hide();
     }
     console.log("area_id: " + id);
     console.log(event);
@@ -1168,12 +1168,13 @@ toe.Area.prototype.addNewBorder = function(event) {
 
 // remove this area and all belonging to it
 toe.Area.prototype.remove = function() {
-  this.polygon.setMap(null);
+  this.polygon.hide();
   this._removeMarkers();
   var path = this.polygon.getToePath();
   for (var i = 0; i < path.length; i++) {
     toe.BoundaryManager.remove(path[i], this);
   }
+  toe.AreaManager.active_area = null;
 };
 
 // shows a balloon of area info
@@ -1201,7 +1202,6 @@ toe.Area.prototype.showInfoWindow = function() {
     content: contentString,
     position: bounds.getCenter(),
     ready: function() {
-      console.log('content updated');
       $('.first-focus').focus();
       $('#area_submit').off('click').on('click', function(event) {
         toe.AreaManager.saveInfo(event);
