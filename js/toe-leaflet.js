@@ -37,6 +37,7 @@ toe.map = {
     this.map.setView(pori, 13).addLayer(cloudmade);
 
     this.map.addControl(new L.Control.MapMode());
+    this.map.addControl(new L.Control.Tools());
     /*
     console.log("rock rock");
 
@@ -176,7 +177,6 @@ toe.map.InfoWindow = function() {
 toe.map.InfoWindow.prototype = new L.Popup;
 
 toe.map.InfoWindow.prototype.show = function(options) {
-  console.log('show wow');
   this.on('contentupdate', options.ready);
   this.setContent(options.content);
   this.setLatLng(options.position);
@@ -433,7 +433,18 @@ L.Control.MapMode = L.Control.extend({
   },
 
   onAdd: function (map) {
-    var $mode_div = toe.control.Mode.html();
-    return $mode_div[0];
+    var div = toe.control.Mode.html();
+    return div[0];
+  }
+});
+
+L.Control.Tools = L.Control.extend({
+  options: {
+    position: 'topright'
+  },
+
+  onAdd: function (map) {
+    var div = toe.control.Tools.html();
+    return div[0];
   }
 });
