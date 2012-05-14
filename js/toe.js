@@ -752,13 +752,10 @@ toe.AreaManager = new function() {
   this.remove = function(area) {
     for (var i = 0; i < this.areas.length; i++) {
       if (this.areas[i] == area) {
-        if (confirm(tr('area_removal_confirm'))) {
-          area.remove();
-          this.areas.splice(i, 1);
-          toe.map.infoWindow.hide(); // shut info window, because user might have used that to delete the area
-          this.changed = true;
-          return true;
-        }
+        area.remove();
+        this.areas.splice(i, 1);
+        this.changed = true;
+        return true;
       }
     }
     return false;
@@ -1147,6 +1144,11 @@ toe.Area.prototype.deactivate = function() {
 
   this.polygon.setColor(this.deactivated_options);
   this._removeMarkers();
+
+  if (!this.isArea()) {
+    // this area is incomplete, remove as unneeded
+    toe.AreaManager.remove(this);
+  }
 };
 
 // when user clicks the map with shift key,
@@ -1211,7 +1213,12 @@ toe.Area.prototype.showInfoWindow = function() {
         console.log("print this?");
       });
       $('#area_delete').off('click').on('click', function(event) {
-        toe.AreaManager.remove(self);
+
+        if (confirm(tr('area_removal_confirm'))) {
+          if (toe.AreaManager.remove(self)) {
+            toe.map.infoWindow.hide(); // shut info window
+          }
+        }
         return false;
       });
     }
@@ -1342,6 +1349,13 @@ toe.Area.prototype.removeDuplicateMarkers = function() {
     }
   }
   return false; // no dups
+};
+
+/**
+ * Returns true if area has at least 3 points.
+ */
+toe.Area.prototype.isArea = function() {
+  return (this.polygon.getToePath.length > 2);
 };
 
 // remove markers
