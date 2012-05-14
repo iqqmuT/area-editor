@@ -27,7 +27,9 @@ var toe = {
 
   options: {
     single_click_timeout: 400, // timeout in ms
-    snap_boundaries: 5         // snap to other boundary within 5 px range
+    snap_boundaries: 5,        // snap to other boundary within 5 px range
+    cookie_name: 'toe',        // cookie name
+    cookie_expire_days: 30     // cookie expire in days
   },
 
   init: function(options) {
@@ -55,11 +57,41 @@ var toe = {
   },
 
   destroy: function() {
+    toe._saveBounds();
+
     // show a confirmation dialog if user wants to leave the page without saving the changes
     if (toe.hasUnsavedChanges())
       return tr('unsaved_changes');
     else return null;
   },
+
+  // loads view from cookie
+  _loadBounds: function() {
+    if (document.cookie.length > 0) {
+      var start = document.cookie.indexOf(this.options.cookie_name + '=');
+      if (start != -1) {
+        var end = document.cookie.indexOf(';', start);
+        if (end != -1) {
+          // found view from cookie
+          var cookieTxt = document.cookie.substring(start, end);
+          var bounds = toe.map.getLatLngBoundsByString(cookieTxt)
+          return bounds;
+        }
+      }
+    }
+    return false;
+  },
+
+  // save current view to cookie
+  _saveBounds: function() {
+    var expireDate = new Date();
+    expireDate.setDate(expireDate.getDate() + this.options.cookie_expire_days);
+
+    var cookieTxt = this.options.cookie_name + '=' + this.map.getBounds().toString();
+    cookieTxt += ';expires=' + expireDate.toGMTString();
+    //console.log("cookie:", cookieTxt);
+    document.cookie = cookieTxt;
+  }
 
   // gets bounds of all stuff we have on the map and zoom the map there
   /*

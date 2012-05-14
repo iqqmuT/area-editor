@@ -32,9 +32,15 @@ toe.map = {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
       maxZoom: 18
     });
+    var lastView = toe._loadBounds();
+    if (lastView !== false) {
+      this.map.fitBounds(lastView);
+    }
+
     //var london = new L.LatLng(51.505, -0.09); // geographical point (longitude and latitude)
-    var pori = new L.LatLng(61.483617, 21.7962775);
-    this.map.setView(pori, 13).addLayer(cloudmade);
+    //var pori = new L.LatLng(61.483617, 21.7962775);
+    //this.map.setView(pori, 13)
+    this.map.addLayer(cloudmade);
 
     this.map.addControl(new L.Control.MapMode());
     this.map.addControl(new L.Control.Tools());
@@ -119,19 +125,26 @@ toe.map = {
     this.map._container.style.cursor = 'crosshair';
   },
 
-  // gets bounds of all stuff we have on the map and zoom the map there
-  fitBounds: function() {
-    var bounds = new this.LatLngBounds();
-    if (toe.AreaManager.areas.length) {
-      bounds.union(toe.AreaManager.getBounds());
+  /**
+   * Fit map to given bounds, or if not given, gets bounds of all stuff we have on the map and zoom the map there
+   */
+  fitBounds: function(bounds) {
+    if (!bounds)
+    {
+      bounds = new this.LatLngBounds();
+      if (toe.AreaManager.areas.length) {
+        bounds.union(toe.AreaManager.getBounds());
+      }
+      /*
+      console.log(bounds);
+      if (toe.PoiManager.pois.length) {
+        bounds.union(toe.PoiManager.getBounds());
+      }*/
     }
-    /*
-    console.log(bounds);
-    if (toe.PoiManager.pois.length) {
-      bounds.union(toe.PoiManager.getBounds());
-    }*/
     //console.log(bounds, pois.getBounds());
+    //console.log(bounds.isEmpty());
     if (!bounds.isEmpty()) {
+      //console.log("fit bounds?", bounds, bounds.isEmpty());
       this.map.fitBounds(bounds);
     }
   },
@@ -160,7 +173,6 @@ toe.map = {
    * Private function.
    */
   _toLatLng: function(leafletLatLng) {
-    console.log(leafletLatLng);
     return new toe.map.LatLng(leafletLatLng.lat, leafletLatLng.lng);
   }
 
@@ -218,6 +230,11 @@ toe.map.LatLng.prototype.toPoint = function() {
   return toe.map.map.latLngToLayerPoint(this);
 };
 
+toe.map.LatLng.prototype.toString = function() {
+  return ('(' + this.lat + ', ' + this.lng + ')');
+};
+
+
 /**
  * LatLngBounds
  */
@@ -253,7 +270,23 @@ toe.map.LatLngBounds.prototype.union = function(other) {
 };
 
 toe.map.LatLngBounds.prototype.isEmpty = function() {
-  return (this.lat === undefined);
+  return (this.getNorthEast().lat === undefined);
+};
+
+toe.map.LatLngBounds.prototype.toString = function() {
+  var sw = toe.map._toLatLng(this.getSouthWest());
+  var ne = toe.map._toLatLng(this.getNorthEast());
+  return ('(' + sw.toString() + ', ' + ne.toString() + ')');
+};
+
+/**
+ * Creates LatLngBounds from string which is in format of LatLngBounds.toString()
+ */
+toe.map.getLatLngBoundsByString = function(str) {
+  var nums = str.match(/-?\d[\.\d]*/g);
+  var sw = new toe.map.LatLng(nums[0], nums[1]);
+  var ne = new toe.map.LatLng(nums[2], nums[3]);
+  return new toe.map.LatLngBounds(sw, ne);
 };
 
 /**

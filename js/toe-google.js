@@ -23,9 +23,14 @@
 toe.map = {
 
   init: function() {
-    var center = new google.maps.LatLng(61.483617, 21.7962775);
+    var center = new google.maps.LatLng(0, 0);
+    var lastView = toe._loadBounds();
+    if (lastView !== false) {
+      center = lastView.getCenter();
+    }
+
     var mapOptions = {
-      zoom: 16,
+      zoom: 1,
       center: center,
       mapTypeId: 'OSM',
       mapTypeControlOptions: {
@@ -39,6 +44,10 @@ toe.map = {
       disableDoubleClickZoom: true,
     };
     this.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
+    if (lastView !== false) {
+      this.map.fitBounds(lastView);
+    }
 
     // set OpenStreetMap map type as default  
     var osm_map_type = new google.maps.ImageMapType({
@@ -98,17 +107,19 @@ toe.map = {
   },
 
   // gets bounds of all stuff we have on the map and zoom the map there
-  fitBounds: function() {
-    var bounds = new this.LatLngBounds();
-    if (toe.AreaManager.areas.length) {
-      bounds.union(toe.AreaManager.getBounds());
+  fitBounds: function(bounds) {
+    if (!bounds) {
+      bounds = new this.LatLngBounds();
+      if (toe.AreaManager.areas.length) {
+        bounds.union(toe.AreaManager.getBounds());
+      }
+      /*
+      console.log(bounds);
+      if (toe.PoiManager.pois.length) {
+        bounds.union(toe.PoiManager.getBounds());
+      }*/
+      //console.log(bounds, pois.getBounds());
     }
-    /*
-    console.log(bounds);
-    if (toe.PoiManager.pois.length) {
-      bounds.union(toe.PoiManager.getBounds());
-    }*/
-    //console.log(bounds, pois.getBounds());
     if (!bounds.isEmpty()) {
       this.map.fitBounds(bounds);
     }
@@ -234,6 +245,16 @@ toe.map.LatLngBounds.prototype.resize = function(factor) {
   lng = ce.lng() + (factor * (sw.lng() - ce.lng()));
   sw = new toe.map.LatLng(lat, lng);
 
+  return new toe.map.LatLngBounds(sw, ne);
+};
+
+/**
+ * Creates LatLngBounds from string which is in format of LatLngBounds.toString()
+ */
+toe.map.getLatLngBoundsByString = function(str) {
+  var nums = str.match(/-?\d[\.\d]*/g);
+  var sw = new toe.map.LatLng(nums[0], nums[1]);
+  var ne = new toe.map.LatLng(nums[2], nums[3]);
   return new toe.map.LatLngBounds(sw, ne);
 };
 
