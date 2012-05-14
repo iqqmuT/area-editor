@@ -200,7 +200,7 @@ toe.map.LatLng.prototype.__proto__ = L.LatLng.prototype;
 
 // returns latLng as JSON array
 toe.map.LatLng.prototype.toJSON = function() {
-  return "[" + this.lat() + "," + this.lng() + "]";
+  return "[" + this.lat + "," + this.lng + "]";
 };
 
 toe.map.LatLng.prototype.getLat = function() {
@@ -233,15 +233,27 @@ toe.map.LatLngBounds.prototype.resize = function(factor) {
   var sw = this.getSouthWest();
   var ce = this.getCenter();
 
-  var lat = ce.lat() - (factor * (ce.lat() - ne.lat()));
-  var lng = ce.lng() - (factor * (ce.lng() - ne.lng()));
+  var lat = ce.lat - (factor * (ce.lat - ne.lat));
+  var lng = ce.lng - (factor * (ce.lng - ne.lng));
   ne = new toe.map.LatLng(lat, lng);
 
-  lat = ce.lat() + (factor * (sw.lat() - ce.lat()));
-  lng = ce.lng() + (factor * (sw.lng() - ce.lng()));
+  lat = ce.lat + (factor * (sw.lat - ce.lat));
+  lng = ce.lng + (factor * (sw.lng - ce.lng));
   sw = new toe.map.LatLng(lat, lng);
 
   return new toe.map.LatLngBounds(sw, ne);
+};
+
+/**
+ * Extends this bounds to contain the union of this and the given bounds.
+ **/
+toe.map.LatLngBounds.prototype.union = function(other) {
+  this.extend(other.getSouthWest());
+  this.extend(other.getNorthEast());
+};
+
+toe.map.LatLngBounds.prototype.isEmpty = function() {
+  return (this.lat === undefined);
 };
 
 /**
@@ -371,17 +383,18 @@ toe.map.Polygon.prototype.getToePath = function() {
  * Rectangle
  */
 toe.map.Rectangle = function(options) {
-  this.base = L.Polygon;
-  this.base(options);
+  this.base = L.Rectangle;
+  var bounds = toe.map.map.getBounds();
+  this.base(bounds);
 };
-toe.map.Rectangle.prototype.__proto__ = L.Polygon.prototype;
+toe.map.Rectangle.prototype.__proto__ = L.Rectangle.prototype;
 
 toe.map.Rectangle.prototype.show = function(bounds) {
-  this.setMap(toe.map.map);
+  toe.map.map.addLayer(this);
   this.setBounds(bounds);
 };
 toe.map.Rectangle.prototype.hide = function() {
-  this.setMap(null);
+  toe.map.map.removeLayer(this);
 };
 
 
@@ -411,6 +424,7 @@ toe.map.AreaBorderMarker.prototype = new L.Marker;
 toe.map.AreaBorderMarker.prototype.remove = function() {
   toe.map.map.removeLayer(this);
 };
+
 toe.map.AreaBorderMarker.prototype.setDrag = function(func) {
   this.on('drag', func);
 };
@@ -425,6 +439,10 @@ toe.map.AreaBorderMarker.prototype.setDoubleClick = function(func) {
 
 toe.map.AreaBorderMarker.prototype.getToeLatLng = function() {
   return toe.map._toLatLng(this.getLatLng());
+};
+
+toe.map.AreaBorderMarker.prototype.setToeLatLng = function(latLng) {
+  this.setLatLng(latLng);
 };
 
 L.Control.MapMode = L.Control.extend({

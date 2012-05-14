@@ -1225,12 +1225,12 @@ toe.Area.prototype.toJSON = function() {
   json += '"number":"' + toe.util.encodeJSON(this.number) + '",';
   json += '"name":"' + toe.util.encodeJSON(this.name) + '",';
   json += '"path":[';
-  var path = this.polygon.getPath();
-  for (var i = 0; i < path.getLength(); i++) {
+  var path = this.polygon.getToePath();
+  for (var i = 0; i < path.length; i++) {
     if (i > 0) {
       json += ",";
     }
-    json += path.getAt(i).toJSON();
+    json += path[i].toJSON();
   }
   json += ']';
   json += '}';
@@ -1296,7 +1296,7 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
         var boundary_near = boundary.findNearBoundary(toe.options.snap_boundaries);
         if (boundary_near) { 
           boundary.move(boundary_near.latLng);
-          marker.setPosition(boundary_near.latLng);
+          marker.setToeLatLng(boundary_near.latLng);
           //console.log("NEAR: ", boundary_near);
         }
       }
@@ -1331,8 +1331,8 @@ toe.Area.prototype._showBorderMarker = function(latLng) {
 toe.Area.prototype.removeDuplicateMarkers = function() {
   for (var i = 0; i < this.border_markers.length; i++) {
     for (var j = i + 1; j < this.border_markers.length; j++) {
-      var pos1 = this.border_markers[i].getPosition();
-      var pos2 = this.border_markers[j].getPosition();
+      var pos1 = this.border_markers[i].getToeLatLng();
+      var pos2 = this.border_markers[j].getToeLatLng();
       if (pos1.equals(pos2)) {
         console.log("removed duplicate marker");
         this.border_markers[j].remove();

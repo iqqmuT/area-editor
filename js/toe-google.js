@@ -414,3 +414,7 @@ toe.map.AreaBorderMarker.prototype.setDoubleClick = function(func) {
 toe.map.AreaBorderMarker.prototype.getToeLatLng = function() {
   return toe.map._toLatLng(this.getPosition());
 };
+
+toe.map.AreaBorderMarker.prototype.setToeLatLng = function(latLng) {
+  this.setPosition(latLng);
+};
