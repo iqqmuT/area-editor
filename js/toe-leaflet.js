@@ -25,7 +25,9 @@ toe.map = {
   init: function() {
     var mapOptions = {
       doubleClickZoom: false,
-      touchZoom: true
+      touchZoom: true,
+      center: new L.LatLng(0, 0),
+      zoom: 13
     };
     this.map = new L.Map('map_canvas', mapOptions);
     var cloudmade = new L.TileLayer('http://{s}.tile.cloudmade.com/f32e8bf95a994abf9d647adc983a33a5/997/256/{z}/{x}/{y}.png', {
@@ -37,77 +39,10 @@ toe.map = {
       this.map.fitBounds(lastView);
     }
 
-    //var london = new L.LatLng(51.505, -0.09); // geographical point (longitude and latitude)
-    //var pori = new L.LatLng(61.483617, 21.7962775);
-    //this.map.setView(pori, 13)
     this.map.addLayer(cloudmade);
 
     this.map.addControl(new L.Control.MapMode());
     this.map.addControl(new L.Control.Tools());
-    /*
-    console.log("rock rock");
-
-    var center = new google.maps.LatLng(61.483617, 21.7962775);
-    var mapOptions = {
-      zoom: 16,
-      center: center,
-      mapTypeId: 'OSM',
-      mapTypeControlOptions: {
-        mapTypeIds: ['OSM', google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID,
-          google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.TERRAIN ],
-        //style: google.maps.MapTypeControlStyle.DEFAULT
-        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-      },
-      disableDefaultUI: false,
-      scaleControl: false,
-      disableDoubleClickZoom: true,
-    };
-
-    // set OpenStreetMap map type as default  
-    var osm_map_type = new google.maps.ImageMapType({
-      getTileUrl: function(coord, zoom) {
-        return "http://tile.openstreetmap.org/" +
-        zoom + "/" + coord.x + "/" + coord.y + ".png";
-      },
-      tileSize: new google.maps.Size(256, 256),
-      isPng: true,
-      alt: "OpenStreetMap layer",
-      name: "OSM",
-      maxZoom: 19
-    });
-    this.map.mapTypes.set('OSM', osm_map_type);
-    this.map.setMapTypeId('OSM');
-
-    var $mode_div = toe.control.Mode.html();
-    this.map.controls[google.maps.ControlPosition.TOP_CENTER].push($mode_div[0]);
-
-    var $tools_div = toe.control.Tools.html();
-    this.map.controls[google.maps.ControlPosition.RIGHT].push($tools_div[0]);
-
-    var $help_div = $('<div id="help_link"><a href="javascript:toe.dialog.Help.open()" style="color: #000;">' + tr("Help") + '</a></div>');
-    this.map.controls[google.maps.ControlPosition.RIGHT].push($help_div[0]);
-
-    // create the div to hold our custom controls
-    //var $control_div = $("<div></div>");
-    //$control_div.css({ 'margin': '5px',
-    //                   'border': '2px solid black' });
-    //$control_div.append(this.control.Area.html());
-    //$control_div.append(this.control.Poi.html());
-    //toe.map.controls[google.maps.ControlPosition.RIGHT].push($control_div[0]);
-
-    // our controls
-    //$menu_div = this.control.Menu.html();
-    //toe.map.controls[google.maps.ControlPosition.RIGHT].push($menu_div[0]);
-
-    // add click listeners to the map
-    google.maps.event.addListener(this.map, 'click', function(event) { toe.handler.mapClicked(event); });
-    google.maps.event.addListener(this.map, 'dblclick', function(event) { toe.handler.mapDoubleClicked(event); });
-
-    // dummy overlay, we will use this for converting 
-    overlay = new google.maps.OverlayView();
-    overlay.draw = function () {};
-    overlay.setMap(this.map);
-    */
 
     // add click listeners to the map
     this.map.on('click', function(event) { toe.handler.mapClicked(event); });
@@ -129,8 +64,7 @@ toe.map = {
    * Fit map to given bounds, or if not given, gets bounds of all stuff we have on the map and zoom the map there
    */
   fitBounds: function(bounds) {
-    if (!bounds)
-    {
+    if (!bounds) {
       bounds = new this.LatLngBounds();
       if (toe.AreaManager.areas.length) {
         bounds.union(toe.AreaManager.getBounds());
@@ -355,22 +289,8 @@ toe.map.Polygon.prototype.changePath = function(oldLatLng, newLatLng) {
   return false; // given latLng not found
 };
 
-// Poygon getBounds extension - google-maps-extensions
-// http://code.google.com/p/google-maps-extensions/source/browse/google.maps.Polygon.getBounds.js
 toe.map.Polygon.prototype.getBounds = function() {
   return new L.LatLngBounds(this.getLatLngs());
-/*
-  var paths = this.getPaths();
-  var path;
-
-  for (var p = 0; p < paths.getLength(); p++) {
-    path = paths.getAt(p);
-    for (var i = 0; i < path.getLength(); i++) {
-      bounds.extend(path.getAt(i));
-    }
-  }
-*/
-  return bounds;
 };
 
 // Polygon containsLatLng - method to determine if a latLng is within a polygon

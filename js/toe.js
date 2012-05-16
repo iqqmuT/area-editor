@@ -1387,7 +1387,7 @@ toe.Area.prototype.removeDuplicateMarkers = function() {
  * Returns true if area has at least 3 points.
  */
 toe.Area.prototype.isArea = function() {
-  return (this.polygon.getToePath.length > 2);
+  return (this.polygon.getToePath().length > 2);
 };
 
 // remove markers
