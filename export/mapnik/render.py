@@ -3,36 +3,38 @@
 # run this from mapnik directory!
 
 import sys, os
-import mapnik
+import mapnik2
 import cairo
 import json
 import argparse
+import tempfile
 
-parser = argparse.ArgumentParser(description='Some mapnik renderer.')
+parser = argparse.ArgumentParser(description='Mapnik renderer.')
 parser.add_argument('-b', '--bbox', required=True)
 args = parser.parse_args()
 
-#sys.stdout.write(args.bbox)
+#sys.stdout.write("'" + str(args.bbox) + "'\n")
 
 stdin_data = sys.stdin.read()
 data = json.loads(stdin_data)
 areas = data['areas']
 pois = data['pois']
 
-#sys.stdout.write("luettu: '" + str(areas) + "'\n")
+#sys.stdout.write("areas: '" + str(areas) + "'\n")
+#sys.stdout.write("pois: '" + str(areas) + "'\n")
 #sys.exit(0)
 
 # Set up projections
 # spherical mercator (most common target map projection of osm data imported with osm2pgsql)
-merc = mapnik.Projection('+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over')
+merc = mapnik2.Projection('+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over')
 
 # long/lat in degrees, aka ESPG:4326 and "WGS 84" 
-longlat = mapnik.Projection('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+longlat = mapnik2.Projection('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
 # can also be constructed as:
 #longlat = mapnik.Projection('+init=epsg:4326')
 
 # ensure minimum mapnik version
-if not hasattr(mapnik,'mapnik_version') and not mapnik.mapnik_version() >= 600:
+if not hasattr(mapnik2,'mapnik_version') and not mapnik2.mapnik_version() >= 600:
     raise SystemExit('This script requires Mapnik >=0.6.0)')
 
 # Google bounds toString() gives following string:
@@ -58,33 +60,34 @@ class MapnikRenderer:
         except KeyError:
             mapfile = "osm.xml"
     
-        map_uri = "/tmp/pori-gfx2.pdf"
+        (tmp_file_handler, tmp_file) = tempfile.mkstemp()
+        map_uri = tmp_file
 
         #---------------------------------------------------
         #  Change this to the bounding box you want
         #
         # pori city centre
         bounds = googleBoundsToBox2d(args.bbox)
-        placex_ll = (21.7962775, 61.483617)
+        #placex_ll = (21.7962775, 61.483617)
         #---------------------------------------------------
 
 
-        self.m = mapnik.Map(imgx,imgy)
-        mapnik.load_map(self.m, mapfile)
+        self.m = mapnik2.Map(imgx,imgy)
+        mapnik2.load_map(self.m, mapfile)
 
         # ensure the target map projection is mercator
         self.m.srs = merc.params()
 
-        if hasattr(mapnik,'Box2d'):
-            bbox = mapnik.Box2d(*bounds)
+        if hasattr(mapnik2,'Box2d'):
+            bbox = mapnik2.Box2d(*bounds)
         else:
-            bbox = mapnik.Envelope(*bounds)
+            bbox = mapnik2.Envelope(*bounds)
 
         # Our bounds above are in long/lat, but our map
         # is in spherical mercator, so we need to transform
         # the bounding box to mercator to properly position
         # the Map when we call `zoom_to_box()`
-        self.transform = mapnik.ProjTransform(longlat,merc)
+        self.transform = mapnik2.ProjTransform(longlat,merc)
         merc_bbox = self.transform.forward(bbox)
     
         # Mapnik internally will fix the aspect ratio of the bounding box
@@ -99,7 +102,7 @@ class MapnikRenderer:
         # render the map to cairo surface
         surface = cairo.PDFSurface(map_uri, self.m.width, self.m.height)
         self.ctx = cairo.Context(surface)
-        mapnik.render(self.m, self.ctx)
+        mapnik2.render(self.m, self.ctx)
     
         # draw
         
@@ -155,7 +158,7 @@ class MapnikRenderer:
 
     # Google Maps uses LatLng, Mapnik uses LngLat!
     def _google_to_mapnik_coord(self, latlng):
-        coord = mapnik.Coord(latlng[1], latlng[0])
+        coord = mapnik2.Coord(latlng[1], latlng[0])
         return coord
 
     def _foo(self):
@@ -167,8 +170,8 @@ class MapnikRenderer:
 
 if __name__ == "__main__":
 
-    imgx = 500
-    imgy = 500
+    imgx = 933
+    imgy = 600
 
     r = MapnikRenderer(areas)
     r.render(imgx, imgy)

@@ -208,6 +208,7 @@ class MapnikPDFExport extends MapnikExport {
             }
             $this->error = $output . "\n" . $this->error;
             $this->error = "(" . $return_value . ") " . $this->error;
+            $this->error = $cmd . "\n" . $this->error;
         }
         return false;
     }

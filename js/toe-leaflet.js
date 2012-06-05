@@ -349,6 +349,10 @@ toe.map.Rectangle.prototype.show = function(bounds) {
 toe.map.Rectangle.prototype.hide = function() {
   toe.map.map.removeLayer(this);
 };
+toe.map.Rectangle.prototype.toString = function() {
+  console.log("toString", this.getBounds());
+  return toe.map._toBounds(this.getBounds()).toString()
+};
 
 
 /**

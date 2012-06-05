@@ -550,7 +550,7 @@ toe.dialog = {
     var exportFile = function() {
       $("#print_areas_json").val(toe.AreaManager.toJSON());
       $("#print_pois_json").val('[]');
-      $("#print_map_bounds").val(toe.helper.SelectionBox.getBounds().toString());
+      $("#print_map_bounds").val(toe.helper.SelectionBox.toString());
       self.close();
       return true;
     };
@@ -1425,6 +1425,10 @@ toe.helper = {
 
     this.getBounds = function() {
       return box.getBounds();
+    };
+
+    this.toString = function() {
+      return box.toString();
     };
   }
 };

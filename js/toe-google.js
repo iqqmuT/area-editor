@@ -393,6 +393,9 @@ toe.map.Rectangle.prototype.show = function(bounds) {
 toe.map.Rectangle.prototype.hide = function() {
   this.setMap(null);
 };
+toe.map.Rectangle.prototype.toString = function() {
+  return toe.map._toBounds(this.getBounds()).toString()
+};
 
 /**
  * AreaBorderMarker
