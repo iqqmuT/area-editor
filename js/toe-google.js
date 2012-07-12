@@ -70,21 +70,6 @@ toe.map = {
     var $tools_div = toe.control.Tools.html();
     this.map.controls[google.maps.ControlPosition.RIGHT].push($tools_div[0]);
 
-    var $help_div = $('<div id="help_link"><a href="javascript:toe.dialog.Help.open()" style="color: #000;">' + tr("Help") + '</a></div>');
-    this.map.controls[google.maps.ControlPosition.RIGHT].push($help_div[0]);
-
-    // create the div to hold our custom controls
-    //var $control_div = $("<div></div>");
-    //$control_div.css({ 'margin': '5px',
-    //                   'border': '2px solid black' });
-    //$control_div.append(this.control.Area.html());
-    //$control_div.append(this.control.Poi.html());
-    //toe.map.controls[google.maps.ControlPosition.RIGHT].push($control_div[0]);
-
-    // our controls
-    //$menu_div = this.control.Menu.html();
-    //toe.map.controls[google.maps.ControlPosition.RIGHT].push($menu_div[0]);
-
     // add click listeners to the map
     google.maps.event.addListener(this.map, 'click', function(event) { toe.handler.mapClicked(event); });
     google.maps.event.addListener(this.map, 'dblclick', function(event) { toe.handler.mapDoubleClicked(event); });

@@ -201,24 +201,44 @@ toe.control = {
         'width': 'auto',
         'height': 'auto'
       };
-      $open = createMode('<img src="images/document-open.png" />', icon_css, tr("Open file"), function() {
+      $open = createMode('<img src="images/tango/document-open.png" />', icon_css, tr("Open file"), function() {
         toe.dialog.OpenFile.open();
       });
       $main_div.append($open);
-      $save = createMode('<img src="images/document-save.png"/>', icon_css, tr("Save file"), function() {
+      $save = createMode('<img src="images/tango/document-save.png"/>', icon_css, tr("Save file"), function() {
         toe.dialog.SaveFile.open();
       });
       $main_div.append($save);
 
-      $export = createMode('<img src="images/document-print.png"/>', icon_css, tr("Print"), function() {
+      $export = createMode('<img src="images/tango/document-print.png"/>', icon_css, tr("Print"), function() {
         toe.dialog.Print.open();
       });
       $main_div.append($export);
 
-      $settings = createMode('<img src="images/preferences-system.png"/>', icon_css, tr("Change settings"), function() {
+      $settings = createMode('<img src="images/tango/preferences-system.png"/>', icon_css, tr("Change settings"), function() {
         toe.dialog.Settings.open();
       });
       $main_div.append($settings);
+
+      $clear = createMode('<img src="images/tango/edit-clear.png"/>', icon_css, tr("Clear drawings"), function() {
+        toe.dialog.Settings.open();
+      });
+      $main_div.append($clear);
+
+      $undo = createMode('<img src="images/tango/edit-undo.png"/>', icon_css, tr("Undo"), function() {
+        toe.dialog.Settings.open();
+      });
+      $main_div.append($undo);
+
+      $redo = createMode('<img src="images/tango/edit-redo.png"/>', icon_css, tr("Redo"), function() {
+        toe.dialog.Settings.open();
+      });
+      $main_div.append($redo);
+
+      $help = createMode('<img src="images/tango/help-browser.png"/>', icon_css, tr("Help"), function() {
+        toe.dialog.Help.open();
+      });
+      $main_div.append($help);
 
       return $main_div;
     };
