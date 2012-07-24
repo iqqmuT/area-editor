@@ -218,6 +218,7 @@ class MapnikPDFExport extends MapnikExport {
         $cmd = $cfg['mapnik_bin'];
         $bounds = $_POST['bbox'];
         $cmd .= ' -b "' . $bounds . '"';
+        $cmd .= ' -s ' . $cfg['mapnik_style'];
         return $cmd;
     }
 

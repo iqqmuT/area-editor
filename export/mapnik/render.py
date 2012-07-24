@@ -9,8 +9,12 @@ import json
 import argparse
 import tempfile
 
+STYLES_FILE="styles.json"
+DEFAULT_STYLE="default"
+
 parser = argparse.ArgumentParser(description='Mapnik renderer.')
 parser.add_argument('-b', '--bbox', required=True)
+parser.add_argument('-s', '--style', required=False, default=DEFAULT_STYLE)
 args = parser.parse_args()
 
 #sys.stdout.write("'" + str(args.bbox) + "'\n")
@@ -50,16 +54,17 @@ def googleBoundsToBox2d(google_bounds):
 
 class MapnikRenderer:
     def __init__(self, areas):
-        self.foo = "moroo"
         self.areas = areas
-        
-    def render(self, imgx, imgy):
+        self.style = None
+
+    def render(self, style_name):
+        self._parse_styles_file(style_name)
 
         try:
             mapfile = os.environ['MAPNIK_MAP_FILE']
         except KeyError:
             mapfile = "osm.xml"
-    
+
         (tmp_file_handler, tmp_file) = tempfile.mkstemp()
         map_uri = tmp_file
 
@@ -71,8 +76,8 @@ class MapnikRenderer:
         #placex_ll = (21.7962775, 61.483617)
         #---------------------------------------------------
 
-
-        self.m = mapnik2.Map(imgx,imgy)
+        self.m = mapnik2.Map(int((1 / self.style['zoom']) * self.style['map_size'][0]),
+                              int((1 / self.style['zoom']) * self.style['map_size'][1]))
         mapnik2.load_map(self.m, mapfile)
 
         # ensure the target map projection is mercator
@@ -89,7 +94,7 @@ class MapnikRenderer:
         # the Map when we call `zoom_to_box()`
         self.transform = mapnik2.ProjTransform(longlat,merc)
         merc_bbox = self.transform.forward(bbox)
-    
+
         # Mapnik internally will fix the aspect ratio of the bounding box
         # to match the aspect ratio of the target image width and height
         # This behavior is controlled by setting the `m.aspect_fix_mode`
@@ -98,17 +103,27 @@ class MapnikRenderer:
         #m.aspect_fix_mode = mapnik.GROW_CANVAS
         # Note: aspect_fix_mode is only available in Mapnik >= 0.6.0
         self.m.zoom_to_box(merc_bbox)
-    
+
         # render the map to cairo surface
-        surface = cairo.PDFSurface(map_uri, self.m.width, self.m.height)
+        surface = cairo.PDFSurface(map_uri, self.style['paper_size'][0], self.style['paper_size'][1])
         self.ctx = cairo.Context(surface)
+
+        # save context so we can restore it later
+        self.ctx.save()
+
+        # margins
+        self.ctx.translate(self.style['margin'][0], self.style['margin'][1])
+
+        # normal scaling looks ugly
+        self.ctx.scale(self.style['zoom'], self.style['zoom'])
+
+        # render to context
         mapnik2.render(self.m, self.ctx)
-    
+        #self.ctx.restore()
+
         # draw
-        
-        
         self._draw_areas()
-        
+
         #placex = mapnik.Coord(*placex_ll)
         #merc_placex = self.transform.forward(placex)
         #view_placex = self.m.view_transform().forward(merc_placex)
@@ -116,26 +131,45 @@ class MapnikRenderer:
         #self.ctx.move_to(view_placex.x - 5, view_placex.y)
         #self.ctx.line_to(view_placex.x + 5, view_placex.y)
         #self.ctx.close_path()
+
+        # set brush color and line width
+        self.ctx.set_source_rgba(self.style['area_border_color'][0],
+                                  self.style['area_border_color'][1],
+                                  self.style['area_border_color'][2],
+                                  self.style['area_border_color'][3])
+        self.ctx.set_line_width(self.style['area_border_width'])
         self.ctx.stroke()
+
         surface.finish()
 
         #sys.stdout.write("%s\n" % map_uri)
         self.output_file = map_uri
-    
+
         # Note: instead of creating an image, rendering to it, and then 
         # saving, we can also do this in one step like:
         # mapnik.render_to_file(m, map_uri,'png')
-    
+
         # And in Mapnik >= 0.7.0 you can also use `render_to_file()` to output
         # to Cairo supported formats if you have Mapnik built with Cairo support
         # For example, to render to pdf or svg do:
         # mapnik.render_to_file(m, "image.pdf")
         #mapnik.render_to_file(m, "image.svg")
 
+    """
+    Parses STYLES_FILE json file and saves data to self.style.
+    """
+    def _parse_styles_file(self, style_name):
+        styles_file = os.path.join(sys.path[0], STYLES_FILE)
+        f = open(styles_file, 'r')
+        data = f.read()
+        f.close()
+        obj = json.loads(data)
+        self.style = obj[style_name]
+
     def _draw_areas(self):
         for area in self.areas:
             self._draw_area(area)
-    
+
     def _draw_area(self, area):
         coords = list()
         for coord in area['path']:
@@ -148,8 +182,8 @@ class MapnikRenderer:
         while len(coords):
             coord = coords.pop()
             self.ctx.line_to(coord.x, coord.y)
-        self.ctx.close_path()        
-        
+        self.ctx.close_path()
+
     def _convert_point(self, latlng):
         coord = self._google_to_mapnik_coord(latlng)
         merc_coord = self.transform.forward(coord)
@@ -161,27 +195,16 @@ class MapnikRenderer:
         coord = mapnik2.Coord(latlng[1], latlng[0])
         return coord
 
-    def _foo(self):
-        sys.stdout.write(self.foo)
-        
     def get_output(self):
         return self.output_file
 
 
 if __name__ == "__main__":
 
-    imgx = 933
-    imgy = 600
-
     r = MapnikRenderer(areas)
-    r.render(imgx, imgy)
+    r.render(args.style)
     fn = r.get_output()
     sys.stdout.write("%s" % fn)
-    
 
     #m = mapnik.Map(imgx,imgy)
     #mapnik.load_map(m,mapfile)
-    
-    
-
-    

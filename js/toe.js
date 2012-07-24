@@ -250,7 +250,6 @@ toe.control = {
     var createMode = function(icon, css, title, onClick) {
       var $div = $("<div />");
       $div.css({
-        //'float': 'left',
         'line-height': '0',
         'margin-top': '5px',
         'margin-right': '5px'
@@ -278,12 +277,6 @@ toe.control = {
       $div.find('span').children('div').append($icon_div);
       return $div;
     };
-      //direction: ltr; overflow: hidden; text-align: left; position: relative;
-      // color: rgb(0, 0, 0); font-family: Arial,sans-serif; -moz-user-select: none;
-      // font-size: 13px;
-      // background: -moz-linear-gradient(center top , rgb(255, 255, 255), rgb(230, 230, 230)) repeat scroll 0% 0% transparent;
-      // padding: 4px; border: 1px solid rgb(113, 123, 135);
-      // box-shadow: 0pt 2px 4px rgba(0, 0, 0, 0.4); font-weight: bold;
   },
     
   Area: new function() {
