@@ -9,7 +9,6 @@ import json
 import argparse
 import tempfile
 
-STYLES_FILE="styles.json"
 DEFAULT_STYLE="default"
 
 parser = argparse.ArgumentParser(description='Mapnik renderer.')
@@ -53,6 +52,10 @@ def googleBoundsToBox2d(google_bounds):
     return (min_lng, min_lat, max_lng, max_lat)
 
 class MapnikRenderer:
+
+    STYLES_FILE="styles.json"
+    COPYRIGHT_TEXT="Map data (c) OpenStreetMap contributors, CC-BY-SA"
+
     def __init__(self, areas):
         self.areas = areas
         self.style = None
@@ -124,6 +127,9 @@ class MapnikRenderer:
         # draw
         self._draw_areas()
 
+        # print copyright text
+        self._print_copyright()
+
         #placex = mapnik.Coord(*placex_ll)
         #merc_placex = self.transform.forward(placex)
         #view_placex = self.m.view_transform().forward(merc_placex)
@@ -159,7 +165,7 @@ class MapnikRenderer:
     Parses STYLES_FILE json file and saves data to self.style.
     """
     def _parse_styles_file(self, style_name):
-        styles_file = os.path.join(sys.path[0], STYLES_FILE)
+        styles_file = os.path.join(sys.path[0], self.STYLES_FILE)
         f = open(styles_file, 'r')
         data = f.read()
         f.close()
@@ -183,6 +189,13 @@ class MapnikRenderer:
             coord = coords.pop()
             self.ctx.line_to(coord.x, coord.y)
         self.ctx.close_path()
+
+    def _print_copyright(self):
+        self.ctx.select_font_face("Sans", cairo.FONT_SLANT_NORMAL,
+            cairo.FONT_WEIGHT_NORMAL)
+        self.ctx.set_font_size(8)
+        self.ctx.move_to(10, int((1 / self.style['zoom']) * self.style['map_size'][1]) - 10)
+        self.ctx.show_text(self.COPYRIGHT_TEXT)
 
     def _convert_point(self, latlng):
         coord = self._google_to_mapnik_coord(latlng)
