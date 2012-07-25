@@ -561,7 +561,8 @@ toe.dialog = {
 
     // in export form submit, send values as JSON to server
     var exportFile = function() {
-      $("#print_areas_json").val(toe.AreaManager.toJSON());
+      // print only selected area or all if none selected
+      $("#print_areas_json").val(toe.AreaManager.toJSON(true));
       $("#print_pois_json").val('[]');
       $("#print_map_bounds").val(toe.helper.SelectionBox.toString());
       self.close();
@@ -863,9 +864,14 @@ toe.AreaManager = new function() {
     }
   };
 
-  // serialize all areas to JSON, this is for sending areas to server
-  this.toJSON = function() {
-    var json = toe.util.arrayToJSON(this.areas);
+  // serialize all areas or only selected area to JSON,
+  // made for sending areas to server
+  this.toJSON = function(onlySelectedArea) {
+    var areas = this.areas;
+    if (onlySelectedArea && toe.AreaManager.active_area) {
+      areas = [ toe.AreaManager.active_area ];
+    }
+    var json = toe.util.arrayToJSON(areas);
     console.log("export areas: ", json);
     return json;
   };
