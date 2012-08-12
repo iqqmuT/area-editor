@@ -79,13 +79,6 @@ class MapnikRenderer:
         #placex_ll = (21.7962775, 61.483617)
         #---------------------------------------------------
 
-        self.m = mapnik2.Map(int((1 / self.style['zoom']) * self.style['map_size'][0]),
-                              int((1 / self.style['zoom']) * self.style['map_size'][1]))
-        mapnik2.load_map(self.m, mapfile)
-
-        # ensure the target map projection is mercator
-        self.m.srs = merc.params()
-
         if hasattr(mapnik2,'Box2d'):
             bbox = mapnik2.Box2d(*bounds)
         else:
@@ -97,6 +90,18 @@ class MapnikRenderer:
         # the Map when we call `zoom_to_box()`
         self.transform = mapnik2.ProjTransform(longlat,merc)
         merc_bbox = self.transform.forward(bbox)
+
+        if self.style['orientation'] == 'auto' and merc_bbox.width() / merc_bbox.height() > 1:
+            # default orientation is landscape
+            self._change_orientation()
+
+        # Create the map
+        self.m = mapnik2.Map(int((1 / self.style['zoom']) * self.style['map_size'][0]),
+                              int((1 / self.style['zoom']) * self.style['map_size'][1]))
+        mapnik2.load_map(self.m, mapfile)
+
+        # ensure the target map projection is mercator
+        self.m.srs = merc.params()
 
         # Mapnik internally will fix the aspect ratio of the bounding box
         # to match the aspect ratio of the target image width and height
@@ -117,7 +122,7 @@ class MapnikRenderer:
         # margins
         self.ctx.translate(self.style['margin'][0], self.style['margin'][1])
 
-        # normal scaling looks ugly
+        # apply zoom
         self.ctx.scale(self.style['zoom'], self.style['zoom'])
 
         # render to context
@@ -207,6 +212,12 @@ class MapnikRenderer:
     def _google_to_mapnik_coord(self, latlng):
         coord = mapnik2.Coord(latlng[1], latlng[0])
         return coord
+
+    def _change_orientation(self):
+        # change orientation
+        tmp = self.style['map_size'][1]
+        self.style['map_size'][1] = self.style['map_size'][0]
+        self.style['map_size'][0] = tmp
 
     def get_output(self):
         return self.output_file
