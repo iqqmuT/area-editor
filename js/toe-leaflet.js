@@ -30,16 +30,14 @@ toe.map = {
       zoom: 13
     };
     this.map = new L.Map('map_canvas', mapOptions);
-    var cloudmade = new L.TileLayer('http://{s}.tile.cloudmade.com/f32e8bf95a994abf9d647adc983a33a5/997/256/{z}/{x}/{y}.png', {
+    L.tileLayer('http://{s}.tile.cloudmade.com/f32e8bf95a994abf9d647adc983a33a5/997/256/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
       maxZoom: 18
-    });
+    }).addTo(this.map);
     var lastView = toe._loadBounds();
     if (lastView !== false) {
       this.map.fitBounds(lastView);
     }
-
-    this.map.addLayer(cloudmade);
 
     this.map.addControl(new L.Control.MapMode());
     this.map.addControl(new L.Control.Tools());
@@ -233,7 +231,7 @@ toe.map.Polygon = function(options) {
   this.on('click', options.clicked);
   this.on('dblclick', options.dblclicked);
 };
-toe.map.Polygon.prototype = new L.Polygon;
+toe.map.Polygon.prototype.__proto__ = L.Polygon.prototype;
 
 toe.map.Polygon.prototype.show = function() {
   toe.map.map.addLayer(this);
@@ -358,7 +356,6 @@ toe.map.Rectangle.prototype.toString = function() {
 /**
  * AreaBorderMarker
  */
-
 toe.map.AreaBorderMarker = function(options) {
   var icon = new L.Icon({
     iconUrl: 'images/red_dot.png',
@@ -376,7 +373,7 @@ toe.map.AreaBorderMarker = function(options) {
   toe.map.map.addLayer(this);
 };
 
-toe.map.AreaBorderMarker.prototype = new L.Marker;
+toe.map.AreaBorderMarker.prototype.__proto__ = L.Marker.prototype;
 
 toe.map.AreaBorderMarker.prototype.remove = function() {
   toe.map.map.removeLayer(this);

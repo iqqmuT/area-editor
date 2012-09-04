@@ -37,16 +37,12 @@ include("lib/common.php");
       <script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript" />
     <? } ?>
     <? if ($maplib == $JS_MAP_LEAFLET) { ?>
-      <link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.css" />
-      <!--[if lte IE 8]>
-        <link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.ie.css" />
-      <![endif]-->
-      <script type="text/javascript" src="js/leaflet.js"></script>
+      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css" />
+      <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.js"></script>
     <? } ?>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
     <script type="text/javascript" src="js/i18n.js"></script>
-    <!--<script type="text/javascript" src="js/area.js"></script>-->
     <script type="text/javascript" src="js/toe.js?v=1.0"></script>
     <script type="text/javascript" src="js/toe-<? print $maplib; ?>.js?v=1.0"></script>
     <script type="text/javascript">
@@ -54,7 +50,9 @@ include("lib/common.php");
       var translations = <? print $localization->read_lang_file($lang); ?>;
       setLanguage('<? print $lang; ?>', translations);
       // initialize
-      $(document).ready(function() { toe.init({}); });
+      $(document).ready(function() {
+        toe.init({});
+      });
     </script>
     <title>TOE</title>
   </head>
