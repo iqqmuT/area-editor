@@ -11,12 +11,32 @@
 },
 
 "s12": {
-  "paper_size":        [ 595, 842 ],
+  "paper_size":        [ 842, 595 ],
   "margin":            [ 72, 72 ],
-  "map_size":          [ 212, 397 ],
+  "map_size":          [ 397, 212 ],
   "area_border_color": [ 0.8, 0.0, 0.0, 0.8 ],
   "area_border_width": 4,
   "zoom":              0.3,
+  "orientation":       "auto"
+},
+
+"s12-double": {
+  "paper_size":        [ 842, 595 ],
+  "margin":            [ 72, 72 ],
+  "map_size":          [ 397, 424 ],
+  "area_border_color": [ 0.8, 0.0, 0.0, 0.8 ],
+  "area_border_width": 4,
+  "zoom":              0.5,
+  "orientation":       "auto"
+},
+
+"a4": {
+  "paper_size":        [ 842, 595 ],
+  "margin":            [ 50, 50 ],
+  "map_size":          [ 742, 495 ],
+  "area_border_color": [ 0.8, 0.0, 0.0, 0.8 ],
+  "area_border_width": 4,
+  "zoom":              0.8,
   "orientation":       "auto"
 }
 

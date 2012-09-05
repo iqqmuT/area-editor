@@ -91,8 +91,9 @@ class MapnikRenderer:
         self.transform = mapnik2.ProjTransform(longlat,merc)
         merc_bbox = self.transform.forward(bbox)
 
-        if self.style['orientation'] == 'auto' and merc_bbox.width() / merc_bbox.height() > 1:
-            # default orientation is landscape
+        # auto switch paper and map orientation
+        # default orientation in styles is landscape
+        if self.style['orientation'] == 'auto' and merc_bbox.width() / merc_bbox.height() < 1:
             self._change_orientation()
 
         # Create the map
@@ -218,6 +219,10 @@ class MapnikRenderer:
         tmp = self.style['map_size'][1]
         self.style['map_size'][1] = self.style['map_size'][0]
         self.style['map_size'][0] = tmp
+
+        tmp = self.style['paper_size'][1]
+        self.style['paper_size'][1] = self.style['paper_size'][0]
+        self.style['paper_size'][0] = tmp
 
     def get_output(self):
         return self.output_file

@@ -162,10 +162,6 @@ class MapnikPDFExport extends MapnikExport {
     function export() {
         global $cfg;
 
-        $style = 'default';
-        if (isset($_POST['style']))
-            $style = $_POST['style'];
-
         $descriptorspec = array(
             0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
             1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
@@ -215,10 +211,14 @@ class MapnikPDFExport extends MapnikExport {
 
     function getCommand() {
         global $cfg;
+
         $cmd = $cfg['mapnik_bin'];
         $bounds = $_POST['bbox'];
         $cmd .= ' -b "' . $bounds . '"';
-        $cmd .= ' -s ' . $cfg['mapnik_style'];
+
+        if (isset($_POST['style']))
+            $cmd .= ' -s ' . $_POST['style'];
+
         return $cmd;
     }
 

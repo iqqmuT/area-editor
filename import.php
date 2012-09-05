@@ -31,6 +31,10 @@ if (!strcmp($extension, "osm")) {
     $import = new OSMImport($file);
 }
 
+if (!$import) {
+    die("ERROR: Can't recognize file: " . $name);
+}
+
 $data = $import->parse();
 $output = json_encode($data);
 

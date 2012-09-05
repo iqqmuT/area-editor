@@ -58,6 +58,7 @@ include("lib/common.php");
   </head>
   <body>
     <div id="map_canvas" style="width:100%; height:100%"></div>
+
     <!-- dialogs -->
     <div id="file_open_dialog" style="display:none">
       <form action="import.php" method="post" enctype="multipart/form-data" target="upload_target" id="import_form">
@@ -66,6 +67,7 @@ include("lib/common.php");
         <input type="submit" id="open_button" name="" value="<? print tr('Open'); ?>" class="button" />
       </form>
     </div>
+
     <div id="file_save_dialog" style="display:none">
       <form action="export/" method="post" id="export_form">
         <input type="hidden" name="bbox" value="" id="export_map_bounds" />
@@ -76,6 +78,7 @@ include("lib/common.php");
         <input type="submit" name="" value="<? print tr('Save') ?>" id="save_button" class="button" />
       </form>
     </div>
+
     <div id="print_dialog" style="display:none">
       <form action="export/" method="post" id="print_form">
         <input type="hidden" name="map-type" value="" id="print_map_type" />
@@ -90,13 +93,21 @@ include("lib/common.php");
         <!--<input type="radio" name="format" value="svg_mapnik" id="export_format_svg_mapnik"> <label for="export_format_svg_mapnik">SVG</label><br />
         <input type="radio" name="format" value="dyn" checked="" id="print_format_dyn"> <label for="print_format_dyn">Google Maps API</label><br />
         <input type="radio" name="format" value="svg_osmarender" id="print_format_svg_osmarender"> <label for="print_format_svg_osmarender">SVG (Osmarender)</label><br /><br />-->
+        <? print tr("Style"); ?>:<br />
+        <select name="style">
+          <option value="s12">S12</option>
+          <option value="s12-double"><? print tr("S12 Double"); ?></option>
+          <option value="a4">A4</option>
+        </select><br />
         <p><? print tr("Printable area"); ?></p>
         <input type="submit" name="" value="<? print tr('Print'); ?>" id="print_button" class="button" />
       </form>
     </div>
+
     <div id="help_dialog" style="display:none">
       <? print tr('help_dialog'); ?>
     </div>
+
     <div id="settings_dialog" style="display:none">
       <form action="settings.php" method="post" id="settings_form">
         <input type="hidden" name="language_old" value="<? print $lang; ?>" />
@@ -108,6 +119,7 @@ include("lib/common.php");
         <input type="submit" name="" value="<? print tr('Save'); ?>" id="save_settings_button" class="button" />
       </form>
     </div>
+
     <!-- hidden iframe for ajax file upload -->
     <iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px solid #fff; display: none"></iframe>
   </body>
