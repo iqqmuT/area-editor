@@ -11,4 +11,9 @@ $JS_MAP_LEAFLET     = 'leaflet';
 
 $cfg['js_map_library'] = $JS_MAP_GOOGLE;
 
+// supported mapnik styles when printing (export/mapnik/styles.json)
+$cfg['mapnik_styles'] = array(
+    'default' => 'Default'
+);
+
 ?>

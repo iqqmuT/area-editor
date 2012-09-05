@@ -95,9 +95,9 @@ include("lib/common.php");
         <input type="radio" name="format" value="svg_osmarender" id="print_format_svg_osmarender"> <label for="print_format_svg_osmarender">SVG (Osmarender)</label><br /><br />-->
         <? print tr("Style"); ?>:<br />
         <select name="style">
-          <option value="s12">S12</option>
-          <option value="s12-double"><? print tr("S12 Double"); ?></option>
-          <option value="a4">A4</option>
+          <? foreach ($cfg['mapnik_styles'] as $style => $title) { ?>
+            <option value="<? print $style; ?>"><? print tr($title); ?></option>
+          <? } ?>
         </select><br />
         <p><? print tr("Printable area"); ?></p>
         <input type="submit" name="" value="<? print tr('Print'); ?>" id="print_button" class="button" />
