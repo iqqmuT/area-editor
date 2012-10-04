@@ -44,16 +44,19 @@ $width = 700;
 $height = 700;
 
 $export = null;
-if (!strcmp($format, "osm")) {
+if (!strcmp("osm", $format)) {
     // export data in OSM format
     $export = new OSMExport($pois, $areas, $bounds, $width, $height);
 }
-elseif (!strcmp($format, "svg_osmarender")) {
+elseif (!strcmp("svg_osmarender", $format)) {
     // export data in SVG format
     $export = new OsmarenderSVGExport($pois, $areas, $bounds, $width, $height);
 }
-elseif (!strcmp($format, "pdf")) {
+elseif (!strcmp("pdf", $format)) {
     $export = new MapnikPDFExport($pois, $areas, $bounds, $width, $height);
+}
+elseif (!strcmp("archive", $format)) {
+    $export = new ArchiveExport($pois, $areas, $bounds, $width, $height);
 }
 
 /*
@@ -70,11 +73,10 @@ die();*/
 if ($export) {
     if ($export->export()) {
         // export succeed
-        $export->asFile();
+        $export->printOutput();
     } else {
         // export failed
-        header('HTTP/1.0 500 Internal Server Error', true, 500);
-        echo str_replace("\n", "<br>", $export->getError());
+        $export->printError();
     }
 }
 exit;
@@ -94,8 +96,8 @@ class ExportBase {
         $this->error = '';
     }
 
-    function asFile() {
-        $output = $this->output();
+    function printOutput() {
+        $output = $this->getContent();
         $filename = $this->genFilename();
         header("Content-Type: " . $this->getFiletype());
         header("Content-Size: " . strlen($output));
@@ -107,6 +109,11 @@ class ExportBase {
 
     function getError() {
         return $this->error;
+    }
+
+    function printError() {
+        header('HTTP/1.0 500 Internal Server Error', true, 500);
+        echo str_replace("\n", "<br>", $this->getError());
     }
 }
 
@@ -124,12 +131,32 @@ class OSMExport extends ExportBase {
         return true;
     }
 
-    function output() {
+    function getContent() {
         return $this->dom->saveXML();
     }
 
     function genFilename() {
         return strftime("area_%Y-%m-%d_%H%M%S.osm"); // 'area_2010-10-28180603.osm'
+    }
+}
+
+// Archive Exporter
+class ArchiveExport extends OSMExport {
+
+    private $id;
+
+    function export() {
+        // do not save pois
+        $osm = new OSMGenerator(array(), $this->areas);
+        $this->dom = $osm->generateDOM();
+        $data = $this->dom->saveXML();
+        $archive = new Archive();
+        $this->id = $archive->write($data);
+        return true;
+    }
+
+    function printOutput() {
+        echo $this->id;
     }
 }
 
@@ -139,7 +166,7 @@ class OsmarenderSVGExport extends ExportBase {
         return "text/xml";
     }
 
-    function output() {
+    function getContent() {
         $svg = new OsmarenderSVG($this->pois, $this->areas, $this->bounds, $this->width, $this->height);
         return $svg->output();
     }
@@ -222,7 +249,7 @@ class MapnikPDFExport extends MapnikExport {
         return $cmd;
     }
 
-    function output() {
+    function getContent() {
         return file_get_contents($this->output_file);
     }
 

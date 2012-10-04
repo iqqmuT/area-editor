@@ -14,6 +14,7 @@ TOE uses following JavaScript libraries:
 ## Requirements for PHP server:
  * PHP >= 5.2
  * Magic quotes are disabled
+ * SQLite3
 
 ## Installing OpenStreetMaps data for exporting maps
 

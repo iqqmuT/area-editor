@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2011 Arno Teigseth, Tuomas Jaakola
+ * Copyright 2012 Arno Teigseth, Tuomas Jaakola
  * 
  * This file is part of TOE.
  *
@@ -24,5 +24,6 @@
 include("config.php");
 include("util.php");
 include("osm.php");
+include("archive.php");
 
 ?>
