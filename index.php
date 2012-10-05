@@ -31,7 +31,7 @@ include("lib/common.php");
     <link type="text/css" href="css/ui-darkness/jquery-ui-1.8.23.custom.css" rel="stylesheet" />
     <link type="text/css" href="css/area.css?v=1.0" rel="stylesheet" />
     <? if ($maplib == $JS_MAP_GOOGLE) { ?>
-      <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+      <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
     <? } ?>
     <? if ($maplib == $JS_MAP_OPEN_LAYERS) { ?>
       <script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript" />
