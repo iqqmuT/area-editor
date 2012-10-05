@@ -51,7 +51,9 @@ include("lib/common.php");
       setLanguage('<? print $lang; ?>', translations);
       // initialize
       $(document).ready(function() {
-        toe.init({});
+        toe.init({
+          archive: <? if (isset($_GET['a'])) print "'" . $_GET['a'] . "'"; else print "null"; ?>
+        });
       });
     </script>
     <title>TOE</title>
@@ -90,6 +92,7 @@ include("lib/common.php");
 
         <? print tr("Map format"); ?>:<br />
         <input type="radio" name="format" value="pdf" id="export_format_pdf" checked=""> <label for="export_format_pdf">PDF</label><br />
+        <input type="radio" name="format" value="archive" id="export_format_archive" checked=""> <label for="export_format_archive">Archive</label><br />
         <!--<input type="radio" name="format" value="svg_mapnik" id="export_format_svg_mapnik"> <label for="export_format_svg_mapnik">SVG</label><br />
         <input type="radio" name="format" value="dyn" checked="" id="print_format_dyn"> <label for="print_format_dyn">Google Maps API</label><br />
         <input type="radio" name="format" value="svg_osmarender" id="print_format_svg_osmarender"> <label for="print_format_svg_osmarender">SVG (Osmarender)</label><br /><br />-->

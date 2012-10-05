@@ -25,11 +25,13 @@ class OSMGenerator {
     protected $minLat, $minLng, $maxLat, $maxLng;
     protected $dom, $parnode;
     protected $id_counter;
+    protected $use_timestamps;
     
-    public function __construct($pois, $areas) {
+    public function __construct($pois, $areas, $use_timestamps = true) {
         $this->pois = $pois;
         $this->areas = $areas;
         $this->id_counter = 0;
+        $this->use_timestamps = $use_timestamps;
     }
     
     function getVersion() {
@@ -67,7 +69,8 @@ class OSMGenerator {
         //$newnode->setAttribute("id", $poi->id);
         $newnode->setAttribute("id", $this->getNewNodeId());
         $newnode->setAttribute("visible", "true");
-        $newnode->setAttribute("timestamp", $this->getTimestamp());
+        if ($this->use_timestamps)
+            $newnode->setAttribute("timestamp", $this->getTimestamp());
         $newnode->setAttribute("lat", $poi->latLng[0]);
         $newnode->setAttribute("lon", $poi->latLng[1]);
         $newnode->setAttribute("version", "1");
@@ -125,7 +128,8 @@ class OSMGenerator {
         $newnode = $this->parnode->appendChild($node);
         $newnode->setAttribute("id", $way_node['id']);
         $newnode->setAttribute("visible", "true");
-        $newnode->setAttribute("timestamp", $this->getTimestamp());
+        if ($this->use_timestamps)
+            $newnode->setAttribute("timestamp", $this->getTimestamp());
         $newnode->setAttribute("lat", $way_node['lat']);
         $newnode->setAttribute("lon", $way_node['lng']);
         $newnode->setAttribute("version", "1");
@@ -133,11 +137,13 @@ class OSMGenerator {
 
     function createWay($way_nodes, $area, $node) {
         $newnode = $this->parnode->appendChild($node);
-        $newnode->setAttribute("timestamp", $this->getTimestamp());
+        if ($this->use_timestamps)
+            $newnode->setAttribute("timestamp", $this->getTimestamp());
         //$newnode->setAttribute("id", $area->id);
         $newnode->setAttribute("id", $this->getNewNodeId());
         $newnode->setAttribute("visible", "true");
-        $newnode->setAttribute("timestamp", $this->getTimestamp());
+        if ($this->use_timestamps)
+            $newnode->setAttribute("timestamp", $this->getTimestamp());
         $newnode->setAttribute("version", "1");
         if (isset($area->name) && strcmp($area->name, 'undefined')) {
             $this->addTag($newnode, "name", $area->name);
@@ -178,7 +184,7 @@ class OSMGenerator {
     }
 
     function getTimestamp() {
-        return strftime("%Y-%m-%dT%H:%M:%SZ");	// '2010-10-28T18:06:03Z'
+        return strftime("%Y-%m-%dT%H:%M:%SZ"); // '2010-10-28T18:06:03Z'
     }
 
     function getNewNodeId() {

@@ -29,7 +29,8 @@ var toe = {
     single_click_timeout: 400, // timeout in ms
     snap_boundaries: 5,        // snap to other boundary within 5 px range
     cookie_name: 'toe',        // cookie name
-    cookie_expire_days: 30     // cookie expire in days
+    cookie_expire_days: 30,    // cookie expire in days
+    archive: null              // open archive in read only mode
   },
 
   init: function(options) {
@@ -49,6 +50,9 @@ var toe = {
 
     // initialize file dialog, and open the file-open dialog in initialize
     this.dialog.init(false);
+
+    if (options.archive)
+      this._openArchive(options.archive);
   },
 
   hasUnsavedChanges: function() {
@@ -91,6 +95,17 @@ var toe = {
     cookieTxt += ';expires=' + expireDate.toGMTString();
     //console.log("cookie:", cookieTxt);
     document.cookie = cookieTxt;
+  },
+
+  _openArchive: function(id) {
+    console.log('open archive id', id);
+    var self = this;
+    $.getJSON('archive/', {
+      id:     id
+    }).success(function(data) {
+      console.log('archive opened', data);
+      toe.importData({ areas: data });
+    });
   }
 
   // gets bounds of all stuff we have on the map and zoom the map there
@@ -677,6 +692,33 @@ toe.dialog = {
 };
 
 // ------------------------------------------------------------
+// Commands
+// ------------------------------------------------------------
+toe.command = {
+  history: []
+};
+
+toe.command.execute = function(cmd) {
+  toe.command.history.push(cmd);
+};
+
+toe.command.AddBorder = function() {
+};
+
+toe.command.AddBorder.prototype.undo = function() {
+  console.log('undo');
+};
+
+toe.command.AddBorder.prototype.redo = function() {
+  console.log('undo');
+};
+
+toe.command.AddBorder.prototype.execute = function() {
+  console.log('exec');
+};
+
+
+// ------------------------------------------------------------
 // Handler
 // ------------------------------------------------------------
 toe.handler = {
@@ -915,6 +957,13 @@ toe.AreaManager = new function() {
     for (var i in this.areas) {
       this.areas[i].polygon.setOptions({ clickable: value });
     }
+  };
+
+  this.archive = function() {
+    var jqxhr = $.post('archive/', {
+      data: this.toJSON(true)
+    });
+    return jqxhr;
   };
 };
 

@@ -23,9 +23,8 @@ class Archive {
 
     protected $db;
 
-    public function __construct() {
-        global $cfg;
-        $this->db = new SQLite3($cfg['archive_db']);
+    public function __construct($file) {
+        $this->db = new SQLite3($file);
         $this->createTable();
     }
 
@@ -42,9 +41,8 @@ created timestamp default current_timestamp
 
     public function read($id) {
         $sql = "select data from areas where id='$id'";
-        $results = $this->db->query($sql);
-        if ($results !== false) {
-            $data = $results->fetchSingle();
+        $data = $this->db->querySingle($sql);
+        if ($data !== false) {
             $sql = "update areas set views=views+1,
 last_access=current_timestamp where id='$id'";
             $this->db->exec($sql);
@@ -55,7 +53,7 @@ last_access=current_timestamp where id='$id'";
 
     public function write($data) {
         $id = md5($data);
-        $sql = "insert into areas (id, data) values ('$id', '";
+        $sql = "insert or ignore into areas (id, data) values ('$id', '";
         $sql .= $this->db->escapeString($data) . "')";
         $this->db->exec($sql);
         return $id;

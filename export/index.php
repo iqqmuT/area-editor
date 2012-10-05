@@ -55,9 +55,6 @@ elseif (!strcmp("svg_osmarender", $format)) {
 elseif (!strcmp("pdf", $format)) {
     $export = new MapnikPDFExport($pois, $areas, $bounds, $width, $height);
 }
-elseif (!strcmp("archive", $format)) {
-    $export = new ArchiveExport($pois, $areas, $bounds, $width, $height);
-}
 
 /*
 //echo "pois: " . $pois_json . "<br>";
@@ -137,26 +134,6 @@ class OSMExport extends ExportBase {
 
     function genFilename() {
         return strftime("area_%Y-%m-%d_%H%M%S.osm"); // 'area_2010-10-28180603.osm'
-    }
-}
-
-// Archive Exporter
-class ArchiveExport extends OSMExport {
-
-    private $id;
-
-    function export() {
-        // do not save pois
-        $osm = new OSMGenerator(array(), $this->areas);
-        $this->dom = $osm->generateDOM();
-        $data = $this->dom->saveXML();
-        $archive = new Archive();
-        $this->id = $archive->write($data);
-        return true;
-    }
-
-    function printOutput() {
-        echo $this->id;
     }
 }
 
