@@ -87,7 +87,8 @@ include("lib/common.php");
         <input type="hidden" name="map-center" value="" id="print_map_center" />
         <input type="hidden" name="map-zoom" value="" id="print_map_zoom" />
         <input type="hidden" name="bbox" value="" id="print_map_bounds" />
-        <input type="hidden" name="archive" value="" id="print_archive_id" />
+        <input type="hidden" name="archive_id" value="" id="print_archive_id" />
+        <input type="hidden" name="archive_url" value="" id="print_archive_url" />
         <textarea id="print_areas_json" name="areas" style="display:none"></textarea>
         <textarea id="print_pois_json" name="pois" style="display:none"></textarea>
 

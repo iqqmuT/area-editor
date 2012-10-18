@@ -21,12 +21,6 @@
  * Requires at least PHP 5.2.
  */
 
-/*include("lib/common.php");
-include("lib/util.php");
-include("lib/osm.php");
-include("lib/mapnik.php");
-*/
-
 include("lib/common.php");
 
 // data from browser should come already in UTF-8 encoding
@@ -38,41 +32,25 @@ $pois = array();
 if (isset($_POST['pois']))
     $pois = json_decode($_POST['pois']); // POI information is received as JSON
 
-$qrcode = false;
-if (isset($_POST['archive'])) {
-    // generate QR code
-    $url = sprintf($cfg['archive_url'], $_POST['archive']);
-    $qrcode = Util::generate_qrcode($url);
+$archive_url = null;
+if (isset($_POST['archive_url'])) {
+    $archive_url = $_POST['archive_url'];
+}
+if (isset($_POST['archive_id']) && isset($cfg['archive_url'])) {
+    // cfg overrides given archive_url
+    $archive_url = sprintf($cfg['archive_url'], $_POST['archive_id']);
 }
 
-//$bounds = parse_bounds($_POST['map-bounds']);
-//$bounds = parse_bounds($_POST['bbox']);
-//$bounds = array();
-$width = 700;
-$height = 700;
+$qrcode = get_qrcode();
 
 $export = null;
 if (!strcmp("osm", $format)) {
     // export data in OSM format
-    $export = new OSMExport($pois, $areas, $width, $height, $qrcode);
-}
-elseif (!strcmp("svg_osmarender", $format)) {
-    // export data in SVG format
-    $export = new OsmarenderSVGExport($pois, $areas, $width, $height, $qrcode);
+    $export = new OSMExport($pois, $areas, $qrcode);
 }
 elseif (!strcmp("pdf", $format)) {
-    $export = new MapnikPDFExport($pois, $areas, $width, $height, $qrcode);
+    $export = new MapnikPDFExport($pois, $areas, $qrcode);
 }
-
-/*
-//echo "pois: " . $pois_json . "<br>";
-echo "areas: " . $_POST['areas'];
-echo "<br>";
-$json = '{"a":1,"b":2,"c":3,"d":4,"e":"ä"}';
-var_dump(json_decode($_POST['pois']));
-echo count($pois);
-echo count($areas);
-die();*/
 
 // download output as file
 if ($export) {
@@ -86,18 +64,36 @@ if ($export) {
 }
 exit;
 
+function get_qrcode() {
+    // generate QR code
+    global $cfg;
+
+    $archive_url = null;
+    if (isset($_POST['archive_url'])) {
+        $archive_url = $_POST['archive_url'];
+    }
+    if (isset($_POST['archive_id']) && isset($cfg['archive_url'])) {
+        // cfg overrides given archive_url
+        $archive_url = sprintf($cfg['archive_url'], $_POST['archive_id']);
+    }
+
+    if ($archive_url) {
+        // generate QR code
+        return Util::generate_qrcode($archive_url);
+    }
+    return false;
+}
+
 // EXPORT CLASSES
 // --------------
 
 class ExportBase {
-    public $pois, $areas, $bounds, $width, $height, $filetype, $error;
+    public $pois, $areas, $bounds, $filetype, $error;
     
-    public function __construct($pois, $areas, $width, $height, $qrcode) {
+    public function __construct($pois, $areas, $qrcode) {
         $this->pois = $pois;
         $this->areas = $areas;
         $this->bounds = array();
-        $this->width = $width;
-        $this->height = $height;
         $this->qrcode = $qrcode;
         $this->error = '';
     }
@@ -143,22 +139,6 @@ class OSMExport extends ExportBase {
 
     function genFilename() {
         return strftime("area_%Y-%m-%d_%H%M%S.osm"); // 'area_2010-10-28180603.osm'
-    }
-}
-
-// SVG using Osmarender
-class OsmarenderSVGExport extends ExportBase {
-    function getFiletype() {
-        return "text/xml";
-    }
-
-    function getContent() {
-        $svg = new OsmarenderSVG($this->pois, $this->areas, $this->width, $this->height);
-        return $svg->output();
-    }
-
-    function genFilename() {
-        return strftime("area_%Y-%m-%d_%H%M%S.svg"); // 'area_2010-10-28180603.svg'
     }
 }
 

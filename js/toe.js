@@ -588,8 +588,11 @@ toe.dialog = {
       else {
         // archive first
         toe.AreaManager.archive().success(function(id) {
-          console.log('received data:', id);
           $("#print_archive_id").val(id);
+          var archive_url = document.URL.split('?')[0];
+          archive_url += '?a=' + id;
+          console.log('archive url:', archive_url);
+          $("#print_archive_url").val(archive_url);
           $('#print_form').trigger('submit', true);
         });
         return false;
