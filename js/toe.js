@@ -258,12 +258,12 @@ toe.control = {
       $main_div.append($clear);
 
       $undo = createMode('<img src="images/tango/edit-undo.png"/>', icon_css, tr("Undo"), function() {
-        toe.dialog.Settings.open();
+        toe.command.undo();
       });
       $main_div.append($undo);
 
       $redo = createMode('<img src="images/tango/edit-redo.png"/>', icon_css, tr("Redo"), function() {
-        toe.dialog.Settings.open();
+        toe.command.redo();
       });
       $main_div.append($redo);
 
@@ -728,27 +728,52 @@ toe.dialog = {
 // Commands
 // ------------------------------------------------------------
 toe.command = {
-  history: []
+  undoHistory: [],
+  redoHistory: []
 };
 
 toe.command.execute = function(cmd) {
-  toe.command.history.push(cmd);
+  this.undoHistory.push(cmd);
+  this.redoHistory = [];
 };
 
-toe.command.AddBorder = function() {
+toe.command.undo = function() {
+  var cmd = this.undoHistory.pop();
+  if (cmd) {
+    cmd.undo();
+    this.redoHistory.push(cmd);
+  }
 };
 
-toe.command.AddBorder.prototype.undo = function() {
+toe.command.redo = function() {
+  var cmd = this.redoHistory.pop();
+  if (cmd) {
+    cmd.redo();
+    this.undoHistory.push(cmd);
+  }
+};
+
+toe.command.AddNewBorder = function(area, latLng) {
+  this.area = area;
+  this.latLng = latLng;
+  this.area.addNewBorder(this.latLng);
+  toe.command.execute(this);
+};
+
+//toe.command.AddNewBorder.prototype.execute = function() {
+//  console.log('exec');
+//};
+
+toe.command.AddNewBorder.prototype.undo = function() {
   console.log('undo');
+  toe.BoundaryManager.remove(this.latLng, this.area);
 };
 
-toe.command.AddBorder.prototype.redo = function() {
-  console.log('undo');
+toe.command.AddNewBorder.prototype.redo = function() {
+  console.log('redo');
+  this.area.addNewBorder(this.latLng);
 };
 
-toe.command.AddBorder.prototype.execute = function() {
-  console.log('exec');
-};
 
 
 // ------------------------------------------------------------
@@ -836,7 +861,9 @@ toe.AreaManager = new function() {
     clearTimeout(click_timeout);
     if (self.active_area) {
       console.log("ADD TO AREA ", self.active_area);
-      self.active_area.addNewBorder(event);
+      var latLng = toe.map.getEventLatLng(event);
+      new toe.command.AddNewBorder(self.active_area, latLng);
+      //self.active_area.addNewBorder(latLng);
     } else {
       // create a new area
       console.log("CREATE NEW AREA!", toe.map.getEventLatLng(event));
@@ -1245,7 +1272,9 @@ toe.Area.prototype.doubleClicked = function(event) {
   clearTimeout(this.click_timeout);
   if (toe.control.Mode.selected == toe.control.Mode.AREA) {
     if (toe.AreaManager.active_area) {
-      toe.AreaManager.active_area.addNewBorder(event);
+      var latLng = toe.map.getEventLatLng(event);
+      new toe.command.AddNewBorder(toe.AreaManager.active_area, latLng);
+      //toe.AreaManager.active_area.addNewBorder(latLng);
     }
   }
 };
@@ -1286,8 +1315,7 @@ toe.Area.prototype.deactivate = function() {
 
 // when user clicks the map with shift key,
 // he adds a new boundary for this area
-toe.Area.prototype.addNewBorder = function(event) {
-  var latLng = toe.map.getEventLatLng(event);
+toe.Area.prototype.addNewBorder = function(latLng) {
   console.log("add new border: ", this.name, latLng);
 
   // edit polygon path
@@ -1297,6 +1325,8 @@ toe.Area.prototype.addNewBorder = function(event) {
   this.polygon.addToPath(idx, latLng);
 
   // see if this is already exists in boundaries array
+  //var cmd = new toe.command.AddBoundary(latLng, this);
+  //cmd.execute();
   toe.BoundaryManager.add(latLng, this);
   this._showBorderMarker(latLng);
 };
