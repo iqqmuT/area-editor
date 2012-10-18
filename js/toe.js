@@ -560,7 +560,7 @@ toe.dialog = {
           toe.helper.SelectionBox.hide();
         }
       });
-      $('#print_form').submit(exportFile);
+      $('#print_form').on('submit', exportFile);
     };
 
     this.open = function() {
@@ -575,13 +575,25 @@ toe.dialog = {
     };
 
     // in export form submit, send values as JSON to server
-    var exportFile = function() {
+    var exportFile = function(event, doSubmit) {
       // print only selected area or all if none selected
-      $("#print_areas_json").val(toe.AreaManager.toJSON(true));
-      $("#print_pois_json").val('[]');
-      $("#print_map_bounds").val(toe.helper.SelectionBox.toString());
-      self.close();
-      return true;
+      if (doSubmit === true) {
+        // archive ajax query succeed
+        $("#print_areas_json").val(toe.AreaManager.toJSON(true));
+        $("#print_pois_json").val('[]');
+        $("#print_map_bounds").val(toe.helper.SelectionBox.toString());
+        self.close();
+        return true;
+      }
+      else {
+        // archive first
+        toe.AreaManager.archive().success(function(id) {
+          console.log('received data:', id);
+          $("#print_archive_id").val(id);
+          $('#print_form').trigger('submit', true);
+        });
+        return false;
+      }
     };
   },
 
@@ -1484,7 +1496,7 @@ toe.helper = {
         });
       }
       var bounds = toe.map.getBounds();
-      box.show(bounds.resize(0.9));
+      box.show(bounds.resize(0.85));
     };
 
     this.hide = function() {

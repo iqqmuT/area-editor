@@ -20,15 +20,36 @@
  * util funcs
  */
 
-// parses string "((-37.43997405227057, -126.5625), (37.43997405227057, 126.5625))"
-function parse_bounds($bounds) {
-    $parts = explode(',', $bounds);
-    for ($i = 0; $i < count($parts); $i++) {
-        $parts[$i] = trim($parts[$i], " ()");
+class Util {
+
+    // parses string "((-37.43997405227057, -126.5625), (37.43997405227057, 126.5625))"
+    public static function parse_bounds($bounds) {
+        $parts = explode(',', $bounds);
+        for ($i = 0; $i < count($parts); $i++) {
+            $parts[$i] = trim($parts[$i], " ()");
+        }
+        $bounds_arr = array(array($parts[0], $parts[1]),
+                            array($parts[2], $parts[3]));
+        return $bounds_arr;
     }
-    $bounds_arr = array(array($parts[0], $parts[1]),
-                        array($parts[2], $parts[3]));
-    return $bounds_arr;
+
+    // QR code needs phpqrcode installed to export/lib/phpqrcode/
+    // http://sourceforge.net/projects/phpqrcode/files/releases/phpqrcode-2010100721_1.1.4.zip/download
+    public static function generate_qrcode($url) {
+        $included = @include("phpqrcode/phpqrcode.php");
+        if ($included !== false) {
+            $png = tempnam('/tmp/', 'qrcode');
+            QRCode::png($url, $png, 'L', 4, 2);
+            if (filesize($png) > 0) {
+                // QR code generated
+                return $png;
+            }
+            // QR code generation failed
+            unlink($png);
+        }
+        return false;
+    }
+
 }
 
 ?>

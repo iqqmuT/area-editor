@@ -14,6 +14,7 @@ DEFAULT_STYLE="default"
 parser = argparse.ArgumentParser(description='Mapnik renderer.')
 parser.add_argument('-b', '--bbox', required=True)
 parser.add_argument('-s', '--style', required=False, default=DEFAULT_STYLE)
+parser.add_argument('-q', '--qrcode', required=False, default=None)
 args = parser.parse_args()
 
 #sys.stdout.write("'" + str(args.bbox) + "'\n")
@@ -60,7 +61,7 @@ class MapnikRenderer:
         self.areas = areas
         self.style = None
 
-    def render(self, style_name):
+    def render(self, style_name, qrcode):
         self._parse_styles_file(style_name)
 
         try:
@@ -152,6 +153,9 @@ class MapnikRenderer:
         self.ctx.set_line_width(self.style['area_border_width'])
         self.ctx.stroke()
 
+        if qrcode:
+            self._print_qr_code(qrcode)
+
         surface.finish()
 
         #sys.stdout.write("%s\n" % map_uri)
@@ -200,8 +204,19 @@ class MapnikRenderer:
         self.ctx.select_font_face("Sans", cairo.FONT_SLANT_NORMAL,
             cairo.FONT_WEIGHT_NORMAL)
         self.ctx.set_font_size(8)
-        self.ctx.move_to(10, int((1 / self.style['zoom']) * self.style['map_size'][1]) - 10)
+        x = 10
+        y = int((1 / self.style['zoom']) * self.style['map_size'][1]) - 10
+        self.ctx.move_to(x, y)
         self.ctx.show_text(self.COPYRIGHT_TEXT)
+
+    def _print_qr_code(self, qrcode):
+        img = cairo.ImageSurface.create_from_png(qrcode)
+        margin_x = 10
+        margin_y = 10
+        x = int((1 / self.style['zoom']) * self.style['map_size'][0]) - margin_x - img.get_width()
+        y = int((1 / self.style['zoom']) * self.style['map_size'][1]) - margin_y - img.get_height()
+        self.ctx.set_source_surface(img, x, y)
+        self.ctx.paint()
 
     def _convert_point(self, latlng):
         coord = self._google_to_mapnik_coord(latlng)
@@ -231,7 +246,7 @@ class MapnikRenderer:
 if __name__ == "__main__":
 
     r = MapnikRenderer(areas)
-    r.render(args.style)
+    r.render(args.style, args.qrcode)
     fn = r.get_output()
     sys.stdout.write("%s" % fn)
 

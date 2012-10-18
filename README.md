@@ -43,6 +43,11 @@ Install Mapnik related data:
 
 http://wiki.openstreetmap.org/wiki/Mapnik
 
+## QR Codes
+
+If you want to print QR codes, install PHP QR Code to export/lib/phpqrcode.
+http://phpqrcode.sourceforge.net/
+
 ## License
 
 TOE is published under GPLv3 license [http://www.gnu.org/licenses/gpl-3.0.html].

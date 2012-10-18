@@ -37,23 +37,31 @@ if (isset($_POST['areas']))
 $pois = array();
 if (isset($_POST['pois']))
     $pois = json_decode($_POST['pois']); // POI information is received as JSON
+
+$qrcode = false;
+if (isset($_POST['archive'])) {
+    // generate QR code
+    $url = sprintf($cfg['archive_url'], $_POST['archive']);
+    $qrcode = Util::generate_qrcode($url);
+}
+
 //$bounds = parse_bounds($_POST['map-bounds']);
 //$bounds = parse_bounds($_POST['bbox']);
-$bounds = array();
+//$bounds = array();
 $width = 700;
 $height = 700;
 
 $export = null;
 if (!strcmp("osm", $format)) {
     // export data in OSM format
-    $export = new OSMExport($pois, $areas, $bounds, $width, $height);
+    $export = new OSMExport($pois, $areas, $width, $height, $qrcode);
 }
 elseif (!strcmp("svg_osmarender", $format)) {
     // export data in SVG format
-    $export = new OsmarenderSVGExport($pois, $areas, $bounds, $width, $height);
+    $export = new OsmarenderSVGExport($pois, $areas, $width, $height, $qrcode);
 }
 elseif (!strcmp("pdf", $format)) {
-    $export = new MapnikPDFExport($pois, $areas, $bounds, $width, $height);
+    $export = new MapnikPDFExport($pois, $areas, $width, $height, $qrcode);
 }
 
 /*
@@ -84,12 +92,13 @@ exit;
 class ExportBase {
     public $pois, $areas, $bounds, $width, $height, $filetype, $error;
     
-    public function __construct($pois, $areas, $bounds, $width, $height) {
+    public function __construct($pois, $areas, $width, $height, $qrcode) {
         $this->pois = $pois;
         $this->areas = $areas;
-        $this->bounds = $bounds;
+        $this->bounds = array();
         $this->width = $width;
         $this->height = $height;
+        $this->qrcode = $qrcode;
         $this->error = '';
     }
 
@@ -144,7 +153,7 @@ class OsmarenderSVGExport extends ExportBase {
     }
 
     function getContent() {
-        $svg = new OsmarenderSVG($this->pois, $this->areas, $this->bounds, $this->width, $this->height);
+        $svg = new OsmarenderSVG($this->pois, $this->areas, $this->width, $this->height);
         return $svg->output();
     }
 
@@ -198,6 +207,9 @@ class MapnikPDFExport extends MapnikExport {
             // proc_close in order to avoid a deadlock
             $return_value = proc_close($process);
 
+            if ($this->qrcode)
+                unlink($this->qrcode);
+
             if ($return_value == 0) {
                 $output = trim($output);
                 if (file_exists($output)) {
@@ -222,6 +234,9 @@ class MapnikPDFExport extends MapnikExport {
 
         if (isset($_POST['style']))
             $cmd .= ' -s ' . $_POST['style'];
+
+        if ($this->qrcode)
+            $cmd .= ' --qrcode ' . $this->qrcode;
 
         return $cmd;
     }

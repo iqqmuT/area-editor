@@ -40,7 +40,7 @@ include("lib/common.php");
       <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css" />
       <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.js"></script>
     <? } ?>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js"></script>
     <script type="text/javascript" src="js/i18n.js"></script>
     <script type="text/javascript" src="js/toe.js?v=1.0"></script>
@@ -87,6 +87,7 @@ include("lib/common.php");
         <input type="hidden" name="map-center" value="" id="print_map_center" />
         <input type="hidden" name="map-zoom" value="" id="print_map_zoom" />
         <input type="hidden" name="bbox" value="" id="print_map_bounds" />
+        <input type="hidden" name="archive" value="" id="print_archive_id" />
         <textarea id="print_areas_json" name="areas" style="display:none"></textarea>
         <textarea id="print_pois_json" name="pois" style="display:none"></textarea>
 
