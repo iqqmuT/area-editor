@@ -30,7 +30,8 @@ var toe = {
     snap_boundaries: 5,        // snap to other boundary within 5 px range
     cookie_name: 'toe',        // cookie name
     cookie_expire_days: 30,    // cookie expire in days
-    archive: null              // open archive in read only mode
+    archive: null,             // open archive in read only mode
+    readonly: false
   },
 
   init: function(options) {
@@ -69,6 +70,18 @@ var toe = {
     else return null;
   },
 
+  setReadonly: function(readonly) {
+    this.options.readonly = readonly;
+    if (this.options.readonly) {
+      toe.control.Mode.element.hide();
+      toe.control.Tools.element.hide();
+    }
+    else {
+      toe.control.Mode.element.show();
+      toe.control.Tools.element.show();
+    }
+  },
+
   // loads view from cookie
   _loadBounds: function() {
     if (document.cookie.length > 0) {
@@ -104,6 +117,7 @@ var toe = {
       id:     id
     }).success(function(data) {
       console.log('archive opened', data);
+      toe.setReadonly(true);
       toe.importData({ areas: data });
     });
   }
@@ -153,6 +167,7 @@ toe.control = {
     this.AREA = 1;
 
     this.selected = this.NORMAL;
+    this.element = null;
 
     this.html = function() {
       var $main_div = $("<div />");
@@ -181,7 +196,8 @@ toe.control = {
       });
       $main_div.append($area);
 
-      return $main_div;
+      this.element = $main_div;
+      return this.element;
     };
 
     this.change = function(selection) {
@@ -202,6 +218,7 @@ toe.control = {
     this.AREA = 1;
 
     this.selected = this.NORMAL;
+    this.element = null;
 
     this.html = function() {
       var $main_div = $("<div />");
@@ -255,7 +272,8 @@ toe.control = {
       });
       $main_div.append($help);
 
-      return $main_div;
+      this.element = $main_div;
+      return this.element;
     };
 
     this.change = function(selection) {

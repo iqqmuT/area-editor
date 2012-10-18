@@ -22,6 +22,8 @@
  */
 
 include("lib/common.php");
+$archive_id = (isset($_GET['a'])) ? "'" . $_GET['a'] . "'" : 'null';
+
 ?>
 <html lang="<? print $lang; ?>">
   <head>
@@ -52,7 +54,7 @@ include("lib/common.php");
       // initialize
       $(document).ready(function() {
         toe.init({
-          archive: <? if (isset($_GET['a'])) print "'" . $_GET['a'] . "'"; else print "null"; ?>
+          archive: <? print $archive_id; ?>
         });
       });
     </script>
