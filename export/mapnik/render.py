@@ -9,33 +9,9 @@ import json
 import argparse
 import tempfile
 
-DEFAULT_STYLE="default"
-
-parser = argparse.ArgumentParser(description='Mapnik renderer.')
-parser.add_argument('-b', '--bbox', required=True)
-parser.add_argument('-s', '--style', required=False, default=DEFAULT_STYLE)
-parser.add_argument('-q', '--qrcode', required=False, default=None)
-args = parser.parse_args()
-
-#sys.stdout.write("'" + str(args.bbox) + "'\n")
-
-stdin_data = sys.stdin.read()
-data = json.loads(stdin_data)
-areas = data['areas']
-pois = data['pois']
-
 #sys.stdout.write("areas: '" + str(areas) + "'\n")
 #sys.stdout.write("pois: '" + str(areas) + "'\n")
 #sys.exit(0)
-
-# Set up projections
-# spherical mercator (most common target map projection of osm data imported with osm2pgsql)
-merc = mapnik2.Projection('+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over')
-
-# long/lat in degrees, aka ESPG:4326 and "WGS 84" 
-longlat = mapnik2.Projection('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
-# can also be constructed as:
-#longlat = mapnik.Projection('+init=epsg:4326')
 
 # ensure minimum mapnik version
 if not hasattr(mapnik2,'mapnik_version') and not mapnik2.mapnik_version() >= 600:
@@ -52,6 +28,64 @@ def googleBoundsToBox2d(google_bounds):
     max_lng = float(parts[3].strip(strip_str))
     return (min_lng, min_lat, max_lng, max_lat)
 
+class StyleParser:
+    DEFAULT_STYLE="default"
+    UNIT="unit"
+    UNIT_CM="cm"
+    UNIT_MM="mm"
+    UNIT_PX="px"
+    UNIT_INCH="in"
+    DEFAULT_UNIT=UNIT_PX
+
+    def __init__(self, style_file, style_name):
+        styles_file = os.path.join(sys.path[0], style_file)
+        f = open(styles_file, 'r')
+        data = f.read()
+        f.close()
+        obj = json.loads(data)
+        self.style = obj[style_name or self.DEFAULT_STYLE]
+
+    def get(self, key, default=None):
+        return self.style.get(key, default)
+
+    def get_px(self, key, default=None):
+        value = self.get(key, default)
+        if isinstance(value, list):
+            # convert list values
+            li = list()
+            for v in value:
+                li.append(self.to_px(v))
+            value = li
+        else:
+            # convert value
+            value = self.to_px(value)
+        return value
+
+    def to_px(self, value):
+        """Returns value in px and converts units automatically.
+           Unit may be told with 'unit' key in styles.json."""
+        unit = self.get(self.UNIT, self.DEFAULT_UNIT)
+        if unit == self.UNIT_PX:
+            return value
+        elif unit == self.UNIT_CM:
+            return self._cm_to_px(value)
+        elif unit == self.UNIT_MM:
+            return self._mm_to_px(value)
+        elif unit == self.UNIT_INCH:
+            return self._inch_to_px(value)
+
+    def _cm_to_px(self, v):
+        return int(v * 72 / 2.54)
+
+    def _mm_to_px(self, v):
+        return int(v * 72 / 25.4)
+
+    def _inch_to_px(self, v):
+        return int(v * 72)
+
+    def _get_unit(self):
+        return self.get(self.UNIT, self.DEFAULT_UNIT)
+
 class MapnikRenderer:
 
     STYLES_FILE="styles.json"
@@ -62,7 +96,7 @@ class MapnikRenderer:
         self.style = None
 
     def render(self, style_name, qrcode):
-        self._parse_styles_file(style_name)
+        self.style = StyleParser(self.STYLES_FILE, style_name)
 
         try:
             mapfile = os.environ['MAPNIK_MAP_FILE']
@@ -85,21 +119,32 @@ class MapnikRenderer:
         else:
             bbox = mapnik2.Envelope(*bounds)
 
+        # Set up projections
+        # spherical mercator (most common target map projection of osm data imported with osm2pgsql)
+        merc = mapnik2.Projection('+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over')
+
+        # long/lat in degrees, aka ESPG:4326 and "WGS 84"
+        longlat = mapnik2.Projection('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+        # can also be constructed as:
+        #longlat = mapnik.Projection('+init=epsg:4326')
+
         # Our bounds above are in long/lat, but our map
         # is in spherical mercator, so we need to transform
         # the bounding box to mercator to properly position
         # the Map when we call `zoom_to_box()`
         self.transform = mapnik2.ProjTransform(longlat,merc)
-        merc_bbox = self.transform.forward(bbox)
+        self.merc_bbox = self.transform.forward(bbox)
 
         # auto switch paper and map orientation
         # default orientation in styles is landscape
-        if self.style['orientation'] == 'auto' and merc_bbox.width() / merc_bbox.height() < 1:
-            self._change_orientation()
+        self._get_sizes()
 
         # Create the map
-        self.m = mapnik2.Map(int((1 / self.style['zoom']) * self.style['map_size'][0]),
-                              int((1 / self.style['zoom']) * self.style['map_size'][1]))
+        self.zoom = self.style.get('zoom')
+        self.zoom_f = 1 / self.zoom # zoom factor
+
+        self.m = mapnik2.Map(int(self.zoom_f * self.map_size[0]),
+                              int(self.zoom_f * self.map_size[1]))
         mapnik2.load_map(self.m, mapfile)
 
         # ensure the target map projection is mercator
@@ -112,20 +157,22 @@ class MapnikRenderer:
         # the target image size by setting aspect_fix_mode to GROW_CANVAS
         #m.aspect_fix_mode = mapnik.GROW_CANVAS
         # Note: aspect_fix_mode is only available in Mapnik >= 0.6.0
-        self.m.zoom_to_box(merc_bbox)
+        self.m.zoom_to_box(self.merc_bbox)
 
         # render the map to cairo surface
-        surface = cairo.PDFSurface(map_uri, self.style['paper_size'][0], self.style['paper_size'][1])
+        surface = cairo.PDFSurface(map_uri, self.paper_size[0], self.paper_size[1])
         self.ctx = cairo.Context(surface)
 
-        # save context so we can restore it later
+        # margins
+        margin = self.style.get_px('margin')
+        self.ctx.translate(margin[0],
+                            margin[1])
+
+        # save context before zoom so we can restore it later
         self.ctx.save()
 
-        # margins
-        self.ctx.translate(self.style['margin'][0], self.style['margin'][1])
-
         # apply zoom
-        self.ctx.scale(self.style['zoom'], self.style['zoom'])
+        self.ctx.scale(self.zoom, self.zoom)
 
         # render to context
         mapnik2.render(self.m, self.ctx)
@@ -133,9 +180,6 @@ class MapnikRenderer:
 
         # draw
         self._draw_areas()
-
-        # print copyright text
-        self._print_copyright()
 
         #placex = mapnik.Coord(*placex_ll)
         #merc_placex = self.transform.forward(placex)
@@ -146,14 +190,21 @@ class MapnikRenderer:
         #self.ctx.close_path()
 
         # set brush color and line width
-        self.ctx.set_source_rgba(self.style['area_border_color'][0],
-                                  self.style['area_border_color'][1],
-                                  self.style['area_border_color'][2],
-                                  self.style['area_border_color'][3])
-        self.ctx.set_line_width(self.style['area_border_width'])
+        self.ctx.set_source_rgba(self.style.get('area_border_color')[0],
+                                  self.style.get('area_border_color')[1],
+                                  self.style.get('area_border_color')[2],
+                                  self.style.get('area_border_color')[3])
+        self.ctx.set_line_width(self.style.get('area_border_width'))
         self.ctx.stroke()
 
-        if qrcode:
+        #self.ctx.scale(self.zoom_f, self.zoom_f)
+        self.ctx.restore()
+
+        # print copyright text
+        self._print_copyright()
+
+        #self.ctx.scale(100, 100)
+        if qrcode and self.style.get('qrcode', True):
             self._print_qr_code(qrcode)
 
         surface.finish()
@@ -174,13 +225,13 @@ class MapnikRenderer:
     """
     Parses STYLES_FILE json file and saves data to self.style.
     """
-    def _parse_styles_file(self, style_name):
-        styles_file = os.path.join(sys.path[0], self.STYLES_FILE)
-        f = open(styles_file, 'r')
-        data = f.read()
-        f.close()
-        obj = json.loads(data)
-        self.style = obj[style_name]
+    #def _parse_styles_file(self, style_name):
+    #    styles_file = os.path.join(sys.path[0], self.STYLES_FILE)
+    #    f = open(styles_file, 'r')
+    #    data = f.read()
+    #    f.close()
+    #    obj = json.loads(data)
+    #    self.style = obj[style_name]
 
     def _draw_areas(self):
         for area in self.areas:
@@ -201,22 +252,30 @@ class MapnikRenderer:
         self.ctx.close_path()
 
     def _print_copyright(self):
+        self.ctx.save()
+        zoom = 1
+        self.ctx.scale(zoom, zoom)
         self.ctx.select_font_face("Sans", cairo.FONT_SLANT_NORMAL,
             cairo.FONT_WEIGHT_NORMAL)
-        self.ctx.set_font_size(8)
-        x = 10
-        y = int((1 / self.style['zoom']) * self.style['map_size'][1]) - 10
+        self.ctx.set_font_size(6)
+        margin = self.style.get_px('copyright_margin', [ 3, 3 ])
+        x = margin[0]
+        y = self.map_size[1] - margin[1]
         self.ctx.move_to(x, y)
         self.ctx.show_text(self.COPYRIGHT_TEXT)
+        self.ctx.restore()
 
     def _print_qr_code(self, qrcode):
+        self.ctx.save()
+        zoom = 0.2
+        self.ctx.scale(zoom, zoom)
         img = cairo.ImageSurface.create_from_png(qrcode)
-        margin_x = 10
-        margin_y = 10
-        x = int((1 / self.style['zoom']) * self.style['map_size'][0]) - margin_x - img.get_width()
-        y = int((1 / self.style['zoom']) * self.style['map_size'][1]) - margin_y - img.get_height()
+        margin = self.style.get_px('qrcode_margin', [ 0, 0 ])
+        x = int(1 / zoom * self.map_size[0]) - img.get_width() - margin[0]
+        y = int(1 / zoom * self.map_size[1]) - img.get_height() - margin[1]
         self.ctx.set_source_surface(img, x, y)
         self.ctx.paint()
+        self.ctx.restore()
 
     def _convert_point(self, latlng):
         coord = self._google_to_mapnik_coord(latlng)
@@ -229,21 +288,32 @@ class MapnikRenderer:
         coord = mapnik2.Coord(latlng[1], latlng[0])
         return coord
 
-    def _change_orientation(self):
-        # change orientation
-        tmp = self.style['map_size'][1]
-        self.style['map_size'][1] = self.style['map_size'][0]
-        self.style['map_size'][0] = tmp
-
-        tmp = self.style['paper_size'][1]
-        self.style['paper_size'][1] = self.style['paper_size'][0]
-        self.style['paper_size'][0] = tmp
+    def _get_sizes(self):
+        self.paper_size = self.style.get_px('paper_size')
+        self.map_size = self.style.get_px('map_size')
+        if self.style.get('orientation') == 'auto' and self.merc_bbox.width() / self.merc_bbox.height() < 1:
+            # change orientation
+            self.paper_size.reverse()
+            self.map_size.reverse()
 
     def get_output(self):
         return self.output_file
 
 
 if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description='Mapnik renderer.')
+    parser.add_argument('-b', '--bbox', required=True)
+    parser.add_argument('-s', '--style', required=False, default=None)
+    parser.add_argument('-q', '--qrcode', required=False, default=None)
+    args = parser.parse_args()
+
+    #sys.stdout.write("'" + str(args.bbox) + "'\n")
+
+    stdin_data = sys.stdin.read()
+    data = json.loads(stdin_data)
+    areas = data['areas']
+    pois = data['pois']
 
     r = MapnikRenderer(areas)
     r.render(args.style, args.qrcode)
