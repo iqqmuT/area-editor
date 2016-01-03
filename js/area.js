@@ -1232,7 +1232,8 @@ function Area(id, number, name, path) {
       if (i > 0) {
         json += ",";
       }
-      json += path.getAt(i).toJSON();
+      var latLng = path.getAt(i);
+      json += '[' + latLng.lat() + ', ' + latLng.lng() + ']';
     }
     json += ']';
     json += '}';
