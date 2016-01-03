@@ -1,0 +1,60 @@
+body {
+  font-size: 12px;
+  font-family: times, serif;
+}
+
+.map {
+  border: 1px solid #909090;
+  width: 1400px;
+  height: 830px;
+  page: land;
+}
+
+.poi-list {
+  margin: 0px;
+  padding: 0px;
+  page-break-before: always;
+  border:1px solid;
+  width:100%;
+  border-collapse:collapse;
+  font-size: 150%;
+}
+
+.poi-list th {
+  width:50%;
+  transform:rotate(90deg);
+  position:absolute;
+  display: block;
+}
+
+.poi-list tr {
+  margin: 2px;
+  padding: 1px;
+  border: 1px solid;
+}
+
+.poi-list td {
+  margin: 2px;
+  padding: 1px;
+  border: 1px solid;
+  transform:rotate(90deg);
+  position:absolute;
+  display: block;
+}
+
+.poi-list tr:nth-child(even) {
+  background-color: #eee;
+}
+
+.poi-list .label {
+  font-weight: bold;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+}
+
+    .map-marker-label{
+        position: absolute;
+    color: blue;
+    font-size: 16px;
+    font-weight: bold;
+    }
