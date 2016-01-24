@@ -31,7 +31,7 @@ class OsmarenderSVG {
 	$this->bounds = $bounds;
 	$this->width = $width;
 	$this->height = $height;
-	$this->osmosis = $this->dir . "/osmosis-0.35/bin/osmosis";
+	$this->osmosis = $this->dir . "/osmosis-0.44/bin/osmosis";
     } 
     
     public function write_file() {
