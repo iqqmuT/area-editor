@@ -76,7 +76,7 @@ class OsmarenderSVG {
 	if (!filesize($file_out)) {
 	    // error occurred!
 	    unlink($file_out);
-	    die('Export error when merging the map:<br>' . $cmd . '<br>' . $output);
+	    die('Export error when merging the map:<br>' . $cmd . '<pre>' . $output  . '</pre>');
 	}
 	// add <bounds> tag, osmarender will use it
 	// TODO: is there any other way to add <bounds> tag, perhaps using osmosis?
